@@ -6,4 +6,5 @@ gem 'cancan'
 gem 'fastercsv'
 gem 'rest-client'
 gem 'redirectr'
+gem 'guid'
 

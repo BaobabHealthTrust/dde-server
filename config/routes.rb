@@ -1,13 +1,16 @@
 DdeServer::Application.routes.draw do
   resources :people do
     member do
-      get 'remote', :action => :show_remote
+      get :remote, :action => :show_remote
+    end
+    collection do
+      get :find
     end
   end
 
   resource :login do
     collection do
-      get 'logout'
+      get :logout
     end
   end
 
