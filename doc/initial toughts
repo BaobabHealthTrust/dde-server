@@ -1,0 +1,93 @@
+= Demographic Data Exchange
+
+== Problems to address
+(in no particular order)
+
+=== Concurrent Updates
+We may assume that updates to the Demographic database for single datasets are rarely concurrent. This might only be the case if a patient checks in with one clinic and gets transferred immediately to another nearby clinic. Since a Patient can only be present at one site at a time, his data will be updated in the same manner. We don't even have to rely on immediate updates, it should be enough to push updates every hour or even day. If we encounter a concurrent update, it should be enough to inform someone about the concurrency instead of trying to actually resolve the conflict.
+
+TBD: Who needs to be informed how? If we have a synchronous, user-triggered update it is easy, but how about timer-triggered batch updates (at night)?
+
+=== Unavailable Network connectivity
+Assuming the internet connectivity in cities with a higher clinic density is generally more reliable then GPRS-connected, remote clinics in the countryside where the travelling distance is also longer, we may assume that the time needed for a patient to transfer from one clinic to another is sufficient to create/update his data in the central repository or push that data to the other clinic.
+
+Having a bad connection is an indicator pro central repository instead of a peer-to-peer solution, because the number of connections needed  being potentially smaller and the connectivity of the central site being potentially better.
+
+
+=== ...
+
+=== ...
+
+
+== Solution Ideas
+
+General assumptions:
+ - The solution should be as simple as possible
+ - Measures habe to be taken that data can only be accessed via the valid, non-guessable key (patient ID?)
+
+=== Central Repository
+One huge Database containing all data from all sites, acting as the authoritative source
+Pro: Single point of truth
+Con: Single point of failure, if connectivity to central site is not available, lookups fail.
+
+=== Central Repository and Replication at all Sites (master/slave)
+The central database ensures some kind of single authoritative data source and replication makes that data (possibly a little stale) available at all sites at all times. Updates are kept locally until pushed to the central repository in a batch update.
+Pro: All data is available when needed
+Con: The probability of data being stolen increases with every copy of it. Also, the probability of unauthorized updates increases - data that is not available to a site cannot be updated illegally.
+
+=== P2P with no shared data
+Authoritative data is kept at patient's "main" clinic site and distributed to other sites as needed (i.e, patien checks in with other clinic)
+Pro: Data protection -- what is not stored cannot be stolen/compromised/manipulated
+Con: Connectivity! Both sites need to be online at the same time to exchange data
+
+=== P2P with with replication at all sites (multi-master)
+Data is replicated at all sites, but no central master exists. Some node acts as master until it goes offline, then a new master will be appointed by the nodes remaining online.
+Pro: all data is available to all when needed
+Con: same as with master/slave replication
+
+=== P2P with central Infrastructure
+Basic idea: every site keeps is "own" data, Records are only exchanged as needed
+
+==== Central Database
+???
+
+==== Central Registry
+The registry knows which patient IDs exist and at which site the corresponding demographic data is stored. That site will be queried on demand.
+Pro: Knowing that the data is available is often enough to start with; no sensitive data is stored centrally; If really needed, all data from all sites can be pulled together automatically.
+Con: probability of data from one site being available to other site is small, so longer delays have to be taken into account.
+
+==== Central Bus/Message Queue
+Using asynchronous messages to exchange data as needed: sites "subscribe" to queues (e.g. every site has its own queue) and messages are sent to specific queues. The message bus can handle offline clients by keeping queued messages and ensure a delivery order.
+Pro: actual, ptentially complex message delivery logic is outsourced to the bus system, differend exchange models are possible for different (future) needs. Serialized objects could be sent directly via message Queue.
+Con: Technology could become quite complex. If sending to the central bus fails, the messages would have to be buffered locally anyway.
+
+
+
+== Means of data exchange
+General assumptions:
+ - reliable data exchange means:
+    * the connection may be interrupted at any time and no data may be lost
+    * after a lost connection, either restart the transfer or pick up where it ended
+    * omnipotent actions: if an action is replayed more than once, nothing serious should happen
+    * detection of failed/missing transfers
+    * ...
+ - 
+
+=== MySQL Replication
+Dont't do it, it's not usable with unstable connections.
+
+=== RSync
+Messages as files, transfer via rsync: interesting option, since rsync provides compression, security, re-connects etc.
+
+=== Message Bus (RabbitMQ?)
+Great number of possibilities, but if sending messages to the bus fails, things get complicated.
+
+=== Own Protocol (connection logic + XML/JSON)
+
+=== ...
+
+
+
+There is already some simple remote demographics "protocol" available in the existing BART-code. It is used to exchange demographics between different systems within a clinic. In this case, one of the bart systems (servers) works as a deomographics master, the others are slaves. We could extract that functionality into a separate, locally run demographics server. This server would act as a proxy to what ever infrastructure we will be building to buld a nation wide DDE.
+The Advantage would be, that bart is still using a synchronous REST interface that could be configured to access either a nation wide, central repository or a locally run proxy that caches requests on missing internet connection and sends them out as soon as a connection to the central repo can be restored.
+

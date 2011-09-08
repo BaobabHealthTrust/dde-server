@@ -1,0 +1,22 @@
+default: &default
+  mode: proxy           # allowed: master|proxy
+  master_uri:           # URI of the master instance, if mode=proxy
+  remote_http_options:  # options for remote HTTP operations:
+    user:             # user name to use for basic auth 
+    password:         # password to use for basic auth 
+    timeout:      10  # data timout - increase for connections known to be slow, decrease to allow faster feedback on broken lines
+    open_timeout: 10  # open_timout, same as above
+
+development:
+  <<: *default
+  mode: proxy
+  master_uri: http://localhost:3002
+  remote_http_options:
+    user:         xxxxxxxxxxxxxxxxxxxxxxxxxxxxxx42
+    password:     xxxxxxxxxxxxxxxxxxxxxxxxxxxxxx23
+    timeout:      10
+    open_timeout: 10
+
+integration:
+  mode: master
+

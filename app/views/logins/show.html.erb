@@ -1,0 +1,12 @@
+<%= form_tag login_path, :method => :post do %>
+  <%= hidden_referrer_input_tag %>
+  <div class="field">
+    <%= label_tag :name %><br />
+    <%= text_field_tag :name %></div>
+  <div class="field">
+    <%= label_tag :password %><br />
+    <%= password_field_tag :password %></div>
+    
+  <div><%= submit_tag 'log in' %></div>
+<% end %>
+
