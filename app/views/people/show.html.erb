@@ -1,13 +1,13 @@
 <p id="notice"><%= notice %></p>
 
 <p>
-  <b>National:</b>
-  <%= @person.national_id %>
+  <b>National Patient ID:</b>
+  <%= @person.npid_value %>
 </p>
 
 <p>
   <b>Data:</b>
-  <%= @person.data %>
+  <%= @person.data.to_json %>
 </p>
 
 

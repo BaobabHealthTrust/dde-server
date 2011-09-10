@@ -29,6 +29,7 @@ class ApplicationController < ActionController::Base
   end
 
   def authenticate_from_basic_auth
+  p request.headers
     authenticate_with_http_basic do |user_name, password|
       user = User.find_by_name(user_name)
       if user and user.password_matches?(password)
@@ -46,11 +47,14 @@ class ApplicationController < ActionController::Base
   end
 
   def perform_basic_auth
-    authorize! :access, :anyhing
+    authorize! :access, :anything
   end
 
   def access_denied
-    redirect_to login_path(referrer_param => current_path)
+    respond_to do |format|
+      format.html { redirect_to login_path(referrer_param => current_path) }
+      format.any  { head :unauthorized }
+    end
   end
 
 end

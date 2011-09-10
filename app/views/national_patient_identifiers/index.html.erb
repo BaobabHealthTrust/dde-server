@@ -1,0 +1,29 @@
+<h2>Listing National Patient IDs</h2>
+
+<table>
+  <tr>
+    <th>Value</th>
+    <th>Assigned at</th>
+    <th>Assigner</th>
+    <th>Assigner site</th>
+    <th></th>
+    <th></th>
+    <th></th>
+  </tr>
+
+<% @national_patient_identifiers.each do |npid| %>
+  <tr>
+    <td><%= link_to npid.value, npid%></td>
+    <td><%= npid.assigned_at || '- not assigned yet -' %></td>
+    <td><%= npid.assigner_id || '- not assigned yet -' %></td>
+    <td><%= link_to npid.assigner_site.try(:name), npid.assigner_site %></td>
+    <td><%= link_to 'Show', npid %></td>
+    <td><%= link_to 'Edit', edit_national_patient_identifier_path(npid) %></td>
+    <td><%= link_to 'Destroy', npid, :confirm => 'Are you sure?', :method => :delete %></td>
+  </tr>
+<% end %>
+</table>
+
+<br />
+
+<%= link_to 'New National patient IDs', new_national_patient_identifier_path %>

@@ -1,0 +1,12 @@
+<h2>Request new NPIDs</h2>
+
+<%= form_tag generate_national_patient_identifiers_path, :method => :post do |f| %>
+  <div class="field">
+    <%= label_tag :count, 'Number of IDs to request' %><br />
+    <%= text_field :npid, :count, :value => 10 %>
+  </div>
+
+  <div class="actions">
+    <%= submit_tag 'Request new NPIDs' %>
+  </div>
+<% end %>

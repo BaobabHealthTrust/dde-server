@@ -1,8 +1,20 @@
 DdeServer::Application.routes.draw do
+  resources :users
+
+  resources :sites
+
+  resources :national_patient_identifiers do
+    collection do
+      post :generate
+      post :request
+    end
+  end
+
   resources :people do
     member do
       get :remote, :action => :show_remote
     end
+
     collection do
       get :find
     end

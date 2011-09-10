@@ -10,16 +10,32 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20110908100408) do
+ActiveRecord::Schema.define(:version => 20110909091804) do
+
+  create_table "national_patient_identifiers", :force => true do |t|
+    t.string   "value"
+    t.string   "person_id"
+    t.datetime "assigned_at"
+    t.integer  "assigner_id"
+    t.integer  "assigner_site_id"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
 
   create_table "people", :force => true do |t|
-    t.string   "national_id"
     t.text     "data"
     t.datetime "created_at"
     t.datetime "updated_at"
     t.integer  "version_number",  :default => 0
     t.string   "creator_id"
     t.string   "creator_site_id"
+  end
+
+  create_table "sites", :force => true do |t|
+    t.string   "name"
+    t.string   "annotations"
+    t.datetime "created_at"
+    t.datetime "updated_at"
   end
 
   create_table "users", :force => true do |t|

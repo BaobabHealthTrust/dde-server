@@ -8,7 +8,26 @@
 </head>
 <body>
 
-<%= yield %>
+<div id="container">
+  <% if can? :access, :anything %>
+    <ul id="navigation">
+      <li><%= link_to 'Patient management', people_path %></li>
+      <li><%= link_to 'User management', users_path %></li>
+      <li><%= link_to 'NPID management', national_patient_identifiers_path %></li>
+      <% if can? :manage, Site %>
+        <li><%= link_to 'Site Management', sites_path %></li>
+      <% end %>
+    </ul>
+  <% end %>
+
+  <% if Site.master? %>
+    <h1>DDE Master Server</h1>
+  <% else %>
+    <h1>DDE Proxy for Site <%= Site.current_id %></h1>
+  <% end %>
+
+  <%= yield %>
+</div>
 
 </body>
 </html>

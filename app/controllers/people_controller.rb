@@ -1,5 +1,8 @@
 class PeopleController < ApplicationController
-  
+
+  before_filter :load_person,
+      :only => [:show, :edit, :update, :destroy]
+
   # GET /people
   # GET /people.xml
   def index
@@ -15,10 +18,8 @@ class PeopleController < ApplicationController
   # GET /people/1.xml
   # GET /people/1.json
   def show
-    @person = Person.find_by_national_id!(params[:id])
-
     if @person.nil?
-      if SITE_CONFIG[:mode] == 'master'
+      if Site.master?
         head :not_found
       else
         show_remote
@@ -26,8 +27,8 @@ class PeopleController < ApplicationController
     else
       respond_to do |format|
         format.html # show.html.erb
-        format.xml  { render :xml  => @people.first }
-        format.json { render :json => @people.first.to_json }
+        format.xml  { render :xml  => @person }
+        format.json { render :json => @person.to_json }
       end
     end
   end
@@ -72,7 +73,6 @@ class PeopleController < ApplicationController
 
   # GET /people/1/edit
   def edit
-    @person = Person.find_by_national_id!(params[:id])
   end
 
   # POST /people
@@ -98,8 +98,6 @@ class PeopleController < ApplicationController
   # PUT /people/1
   # PUT /people/1.xml
   def update
-    @person = Person.find_by_national_id!(params[:id])
-
     respond_to do |format|
       if @person.update_attributes(params[:person])
         format.html { redirect_to(@person, :notice => 'Person was successfully updated.') }
@@ -117,7 +115,6 @@ class PeopleController < ApplicationController
   # DELETE /people/1
   # DELETE /people/1.xml
   def destroy
-    @person = Person.find_by_national_id!(params[:id])
     @person.destroy
 
     respond_to do |format|
@@ -130,17 +127,19 @@ class PeopleController < ApplicationController
     logger.info "fetching from remote: #{params[:id]}"
     @person = Person.find_remote(params[:id]) do |response, request, result|
       case result
-      when :not_found
-        head :not_found and return
-#       when :connection_refused
-#         head :service_unavailable, :retry_after => 60
+      when Net::HTTPNotFound
+        respond_to do |format|
+          format.html { render :text => 'Record not found!', :status => :not_found }
+          format.any  { head :not_found }
+        end
+        return
       else
         head :service_unavailable, :retry_after => 60 and return
       end
     end
 
     respond_to do |format|
-      format.html
+      format.html { render :action => 'show' }
       format.json { render :json => @person.to_json }
       format.xml  { render :xml  => @person }
     end
@@ -153,6 +152,11 @@ class PeopleController < ApplicationController
   protected
   def default_path
     people_path
+  end
+
+  def load_person
+    @person   = Person.includes(:national_patient_identifier).where(:'national_patient_identifiers.value' => params[:id]).first
+    @person ||= Person.find(params[:id])
   end
 
 end

@@ -1,23 +1,30 @@
-<h1>Listing people</h1>
+<h2>Listing people</h2>
 
 <table>
   <tr>
-    <th>National</th>
-    <th>Data</th>
-    <th></th>
-    <th></th>
+    <th>NPID</th>
+<!--     <th>Data</th> -->
+    <th>Created at</th>
+    <th>Last updated by</th>
+    <th>Last updated at</th>
     <th></th>
   </tr>
 
-<% @people.each do |person| %>
-  <tr>
-    <td><%= person.national_id %></td>
-    <td><%= person.data %></td>
-    <td><%= link_to 'Show', person %></td>
-    <td><%= link_to 'Edit', edit_person_path(person) %></td>
-    <td><%= link_to 'Destroy', person, :confirm => 'Are you sure?', :method => :delete %></td>
-  </tr>
-<% end %>
+  <% @people.each do |person| %>
+    <tr>
+      <td><%= link_to person.npid_value, person %></td>
+      <td><%= person.created_at %></td>
+      <td><%= person.creator_id %></td>
+      <td><%= person.creator_site_id %></td>
+<!--       <td><%= person.data %></td> -->
+      <td>
+        <%= link_to 'Show', person if can? :show, person %>
+        <%= link_to 'Edit', edit_person_path(person) if can? :edit, person %>
+        <%= link_to 'Destroy', person, :confirm => 'Are you sure?', :method => :delete if can? :destroy, person %>
+        <%= link_to 'Pull from Master', remote_person_path(person) if can? :show_remote, person %>
+      </td>
+    </tr>
+  <% end %>
 </table>
 
 <br />

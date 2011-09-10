@@ -1,0 +1,26 @@
+<h2>Listing sites</h2>
+
+<table>
+  <tr>
+    <th>Name</th>
+    <th>Annotations</th>
+    <th>No of assigned NPIDS</th>
+    <th>No of available NPIDS</th>
+  </tr>
+
+  <% @sites.each do |site| %>
+    <tr>
+      <td><%= link_to site.name, site %></td>
+      <td><%= site.annotations %></td>
+      <td><%= site.assigned_npids.count %></td>
+      <td><%= site.available_npids.count %></td>
+      <td><%= link_to 'Show', site %></td>
+      <td><%= link_to 'Edit', edit_site_path(site) %></td>
+      <td><%= link_to 'Destroy', site, :confirm => 'Are you sure?', :method => :delete %></td>
+    </tr>
+  <% end %>
+</table>
+
+<br />
+
+<%= link_to 'New Site', new_site_path %>

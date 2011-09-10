@@ -1,0 +1,31 @@
+<p id="notice"><%= notice %></p>
+
+<p>
+  <b>Value:</b>
+  <%= @national_patient_identifier.value %>
+</p>
+
+<p>
+  <b>Assigned at:</b>
+  <%= @national_patient_identifier.assigned_at || '- not assigned yet -' %>
+</p>
+
+<p>
+  <b>Assigner:</b>
+  <%= @national_patient_identifier.assigner_id || '- not assigned yet -' %>
+</p>
+
+<p>
+  <b>Assigner site:</b>
+  <%= @national_patient_identifier.assigner_site_id %>
+</p>
+
+<% if @national_patient_identifier.person %>
+  <p>
+    <b>Assigned to:</b>
+    <%= @national_patient_identifier.person.data['name'] %>
+  </p>
+<% end %>
+
+<%= link_to 'Edit', edit_national_patient_identifier_path(@national_patient_identifier) %> |
+<%= link_to 'Back', national_patient_identifiers_path %>
