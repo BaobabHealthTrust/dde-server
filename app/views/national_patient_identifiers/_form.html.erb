@@ -26,10 +26,12 @@
     <%= f.text_field :assigner_id %>
   </div>
 
-  <div class="field">
-    <%= f.label :assigner_site_id %><br />
-    <%= f.collection_select :assigner_site_id, Site.all, :id, :name, :include_blank => true %>
-  </div>
+  <% if Site.master? %>
+    <div class="field">
+      <%= f.label :assigner_site_id %><br />
+      <%= f.collection_select :assigner_site_id, Site.all, :id, :name, :include_blank => true %>
+    </div>
+  <% end %>
 
   <div class="actions">
     <%= f.submit %>

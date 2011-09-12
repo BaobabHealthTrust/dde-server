@@ -6,7 +6,7 @@
 <!--     <th>Data</th> -->
     <th>Created at</th>
     <th>Last updated by</th>
-    <th>Last updated at</th>
+    <th>Last updated at site</th>
     <th></th>
   </tr>
 
@@ -14,8 +14,8 @@
     <tr>
       <td><%= link_to person.npid_value, person %></td>
       <td><%= person.created_at %></td>
-      <td><%= person.creator_id %></td>
-      <td><%= person.creator_site_id %></td>
+      <td><%= person.creator_id || ' - unknown - ' %></td>
+      <td><%= person.creator_site.try(:name) || ' - unknown - ' %></td>
 <!--       <td><%= person.data %></td> -->
       <td>
         <%= link_to 'Show', person if can? :show, person %>

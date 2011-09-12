@@ -1,7 +1,10 @@
 class LoginsController < ApplicationController
 
+  skip_before_filter :perform_basic_auth,
+      :only => :logout
+
   def show
-    
+    # render
   end
 
   def create
@@ -16,7 +19,7 @@ class LoginsController < ApplicationController
 
   def logout
     logout!
-    redirect_to :action => show, referrer_param => referrer
+    redirect_to :action => 'show', referrer_param => referrer_path
   end
 
   protected

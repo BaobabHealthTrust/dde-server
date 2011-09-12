@@ -7,6 +7,8 @@ class NationalPatientIdentifier < ActiveRecord::Base
 
   validates_presence_of :value, :assigner_site_id
 
+  validates_uniqueness_of :person_id # don't allow more than one ID to be assigned to any person
+
   def self.generate!(options)
     raise 'Patient IDs can only be generated in master mode!' unless Site.master?
 
@@ -38,5 +40,15 @@ class NationalPatientIdentifier < ActiveRecord::Base
   def self.base_resource
     RestClient::Resource.new(SITE_CONFIG[:master_uri], SITE_CONFIG[:remote_http_options].to_hash.symbolize_keys)['national_patient_identifiers']
   end
-  
+
+  def self.find_or_create_from_attributes(attrs)
+    if attrs['value']
+      self.find_or_initialize_by_value(attrs['value']).tap do |new_record|
+        new_record.update_attributes(attrs)
+      end
+    else
+      raise ArgumentError, %q(expected attrs hash to have key named 'value')
+    end
+  end
+
 end

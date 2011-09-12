@@ -1,9 +1,14 @@
 class Person < ActiveRecord::Base
   # dummy accessors
   attr_accessor :status, :status_message
-  
+
   has_one :national_patient_identifier
-  
+
+  belongs_to :creator,
+      :class_name => 'User'
+  belongs_to :creator_site,
+      :class_name => 'Site'
+
   before_create :set_version_number, :set_npid
   after_save :save_npid
   after_update :set_version_number
@@ -28,12 +33,16 @@ class Person < ActiveRecord::Base
     self.npid.try(:value) || self.id.to_s
   end
 
+  def to_json
+    {'person' => self.attributes, 'npid' => self.npid.attributes}.to_json
+  end
+
   def self.base_resource
     @base_resource ||= RestClient::Resource.new(SITE_CONFIG[:master_uri], SITE_CONFIG[:remote_http_options].to_hash.symbolize_keys)['people']
   end
 
   def base_resource
-    @base_resource ||= self.class.base_resource[self.npid]
+    @base_resource ||= self.class.base_resource[self.npid_value]
   end
 
   # return a new, unsaved Person object fetched from the central repository.
@@ -46,7 +55,7 @@ class Person < ActiveRecord::Base
       case result
       when Net::HTTPOK
         logger.info "successssfully fetched #{npid} from remote: #{response}"
-        return self.new_from_json response
+        return self.new_from_json npid, response
       else
         logger.error "failed fetching #{npid} from remote: #{result}"
         yield response, request, result if block_given?
@@ -71,7 +80,7 @@ class Person < ActiveRecord::Base
           logger.error "conflict while trying to update #{npid} on remote: #{response}"
           return false
         else
-          logger.error "failed to update #{npid} from remote: #{result}"
+          logger.error "failed to update #{npid} to remote: #{result}"
           yield response, request, result if block_given?
         end
       end
@@ -111,6 +120,17 @@ class Person < ActiveRecord::Base
   end
   alias_method_chain :update_attributes, :version_number_verification
 
+  def update_attributes_with_pushing_to_master(attributes)
+    self.update_attributes_without_pushing_to_master(attributes).tap do |result|
+      if result and Site.proxy?
+        unless update_remote
+          # TODO: enqueue update command for later execution
+        end
+      end
+    end
+  end
+  alias_method_chain :update_attributes, :pushing_to_master
+
   def npid
     self.national_patient_identifier
   end
@@ -120,17 +140,25 @@ class Person < ActiveRecord::Base
   end
 
   def npid_value
-    self.npid.try(:value) || @npid_value
+    @npid_value || self.npid.try(:value)
   end
 
   def npid_value=(new_value)
-    self.set_npid NationalPatientIdentifier.find_by_value(new_value)
-    @npid_value = new_value
+    new_npid = NationalPatientIdentifier.find_by_value(new_value)
+    if new_npid
+      self.set_npid new_npid
+      @npid_value = new_value
+    else
+      raise "NPID #{new_value} does not exist"
+    end
   end
 
-  def self.new_from_json(json_string)
-    options = ActiveSupport::JSON.decode(json_string)['person']
-    self.new options
+  # expects a json string containting two keys: person and npid
+  def self.new_from_json(npid, json_string)
+    attrs = ActiveSupport::JSON.decode(json_string)
+    self.new(attrs['person']).tap do |new_record|
+      new_record.npid = NationalPatientIdentifier.find_or_create_from_attributes(attrs['npid'])
+    end
   end
 
   protected
@@ -145,11 +173,13 @@ class Person < ActiveRecord::Base
   end
 
   def set_npid(npid = nil)
-    npid ||= NationalPatientIdentifier.where(:assigned_at => nil).first
-    if npid
-      self.national_patient_identifier = npid
-    else
-      raise 'You have run out of national patient ids, please request a new block to be asigned to you!'
+    unless self.npid_value and npid.nil?
+      npid ||= NationalPatientIdentifier.where(:assigned_at => nil).first
+      if npid
+        self.national_patient_identifier = npid
+      else
+        raise 'You have run out of national patient ids, please request a new block to be asigned to you!'
+      end
     end
   end
 

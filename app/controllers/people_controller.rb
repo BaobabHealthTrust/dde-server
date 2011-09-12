@@ -138,6 +138,8 @@ class PeopleController < ApplicationController
       end
     end
 
+    @person.save!
+
     respond_to do |format|
       format.html { render :action => 'show' }
       format.json { render :json => @person.to_json }
@@ -155,8 +157,12 @@ class PeopleController < ApplicationController
   end
 
   def load_person
-    @person   = Person.includes(:national_patient_identifier).where(:'national_patient_identifiers.value' => params[:id]).first
-    @person ||= Person.find(params[:id])
+    @person = Person.includes(:national_patient_identifier).where(:'national_patient_identifiers.value' => params[:id]).first
+    if Site.proxy?
+      @person ||= Person.find(params[:id])
+    end
+  rescue ActiveRecord::RecordNotFound
+    # noop
   end
 
 end
