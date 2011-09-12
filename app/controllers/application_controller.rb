@@ -29,7 +29,6 @@ class ApplicationController < ActionController::Base
   end
 
   def authenticate_from_basic_auth
-  p request.headers
     authenticate_with_http_basic do |user_name, password|
       user = User.find_by_name(user_name)
       if user and user.password_matches?(password)
