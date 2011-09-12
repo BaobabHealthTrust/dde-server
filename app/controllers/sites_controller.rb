@@ -7,7 +7,8 @@ class SitesController < ApplicationController
 
     respond_to do |format|
       format.html # index.html.erb
-      format.xml  { render :xml => @sites }
+      format.xml  { render :xml  => @sites }
+      format.json { render :json => @sites }
     end
   end
 

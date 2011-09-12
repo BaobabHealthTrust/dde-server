@@ -2,7 +2,7 @@
 <html>
 <head>
   <title>DdeServer</title>
-  <%= stylesheet_link_tag :all %>
+  <%= stylesheet_link_tag 'scaffold', 'dde' %>
   <%= javascript_include_tag :defaults %>
   <%= csrf_meta_tag %>
 </head>
@@ -23,7 +23,7 @@
   <% if Site.master? %>
     <h1>DDE Master Server</h1>
   <% else %>
-    <h1>DDE Proxy for Site <%= Site.current_id %></h1>
+    <h1>DDE Proxy for Site <%= Site.current_name %></h1>
   <% end %>
 
   <%= yield %>
