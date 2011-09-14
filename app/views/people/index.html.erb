@@ -3,11 +3,10 @@
 <table>
   <tr>
     <th>NPID</th>
-<!--     <th>Data</th> -->
     <th>Created at</th>
     <th>Last updated by</th>
     <th>Last updated at site</th>
-    <th></th>
+    <th>Version</th>
   </tr>
 
   <% @people.each do |person| %>
@@ -16,7 +15,7 @@
       <td><%= person.created_at %></td>
       <td><%= person.creator_id || ' - unknown - ' %></td>
       <td><%= person.creator_site.try(:name) || ' - unknown - ' %></td>
-<!--       <td><%= person.data %></td> -->
+      <td><%= person.version_number %></td>
       <td>
         <%= link_to 'Show', person if can? :show, person %>
         <%= link_to 'Edit', edit_person_path(person) if can? :edit, person %>

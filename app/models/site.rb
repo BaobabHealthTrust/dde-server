@@ -37,9 +37,26 @@ class Site < ActiveRecord::Base
     # TODO: proper error handling
     response = self.base_resource.get(:accept => :json)
     ActiveSupport::JSON.decode(response).each do |data_set|
-      site = Site.find_or_initialize_by_id data_set['site'].delete('id')
-      site.update_attributes data_set['site']
+      self.find_or_create_from_attributes(data_set, :update => true)
     end
+  end
+
+  def self.find_or_create_from_attributes(attrs, options = {:update => false})
+    if attrs['id']
+      self.find_or_initialize_by_id(attrs.delete('id')).tap do |site|
+        site.update_attributes(attrs) if site.new_record? or options[:update]
+      end
+    else
+      raise ArgumentError, %q(expected attrs hash to have key named 'id')
+    end
+  end
+
+  def remote_attributes
+    { 'site' => self.attributes }
+  end
+
+  def to_json
+    self.remote_attributes.to_json
   end
 
   protected

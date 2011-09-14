@@ -1,0 +1,23 @@
+<h2>Oops!</h2>
+
+<p>You ran into a conflict while trying to update this person record. Please
+compare your and the remote version below, edit as necessary and submit the
+version you want to keep.</p>
+
+<div id="side-by-side-container">
+  <div id="left-container">
+    <h3>Your (new) Version</h3>
+    <%= render 'conflict_form', :person => @local_person %>
+  </div>
+
+  <div id="right-container">
+    <h3>Remote (existing) Version</h3>
+    <%= render 'conflict_form', :person => @remote_person %>
+  </div>
+</div>
+
+<hr />
+
+<%= link_to 'Show', @person %> |
+<%= link_to 'Back', people_path %> |
+<%= link_to 'Pull from Master', remote_person_path(@person) if can? :show_remote, @person %>

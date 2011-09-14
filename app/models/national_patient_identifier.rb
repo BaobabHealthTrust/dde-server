@@ -37,18 +37,33 @@ class NationalPatientIdentifier < ActiveRecord::Base
     end
   end
 
-  def self.base_resource
-    RestClient::Resource.new(SITE_CONFIG[:master_uri], SITE_CONFIG[:remote_http_options].to_hash.symbolize_keys)['national_patient_identifiers']
-  end
-
-  def self.find_or_create_from_attributes(attrs)
+  def self.find_or_create_from_attributes(attrs, options = {:update => false})
     if attrs['value']
-      self.find_or_initialize_by_value(attrs['value']).tap do |new_record|
-        new_record.update_attributes(attrs)
+      self.find_or_initialize_by_value(attrs['value']).tap do |npid|
+        npid.update_attributes(attrs) if npid.new_record? or options[:update]
       end
     else
       raise ArgumentError, %q(expected attrs hash to have key named 'value')
     end
+  end
+
+  def remote_attributes
+    { 'npid' => {
+        'value'            => self.value,
+        'assigner_site_id' => self.assigned_at,
+        'assigned_at'      => self.assigned_at
+      }
+    }
+  end
+
+  def to_json
+    self.remote_attributes.to_json
+  end
+
+  protected
+
+  def self.base_resource
+    RestClient::Resource.new(SITE_CONFIG[:master_uri], SITE_CONFIG[:remote_http_options].to_hash.symbolize_keys)['national_patient_identifiers']
   end
 
 end

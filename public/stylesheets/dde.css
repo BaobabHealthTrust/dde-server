@@ -56,3 +56,53 @@ tr:nth-child(even) td {
 h1 {
   margin-top: 30px;
 }
+
+.notice {
+  border: 1px dashed green;
+  background: #FFFEF1;
+  padding: 4px 8px;
+  border-radius: 10px;
+}
+
+#side-by-side-container {
+  width: 760px;
+  display: block;
+  border: 1px dotted 333;
+  background: #eee;
+  padding: 5px;
+  float:left;
+}
+
+#left-container {
+  width: 365px;
+  display: block;
+  border: 1px solid 333;
+  background: #fff;
+  padding: 5px;
+  float:left;
+}
+
+#right-container {
+  width: 365px;
+  display: block;
+  border: 1px solid 333;
+  background: #fff;
+  padding: 5px;
+  float:right;
+}
+
+#right-container:hover,
+#left-container:hover {
+  background: #eef
+}
+
+#side-by-side-container select,
+#side-by-side-container input[type=text],
+#side-by-side-container textarea {
+  width: 100%;
+}
+
+hr {
+  clear: both;
+  display: hidden;
+}

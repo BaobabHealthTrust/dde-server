@@ -1,8 +1,11 @@
-<p id="notice"><%= notice %></p>
-
 <p>
   <b>National Patient ID:</b>
-  <%= @person.npid_value %>
+  <%= link_to @person.npid_value, @person.npid %>
+</p>
+
+<p>
+  <b>Creator Site:</b>
+  <%= link_to @person.creator_site.try(:name), @person.creator_site %>
 </p>
 
 <p>

@@ -1,0 +1,23 @@
+<%= form_for(person) do |f| %>
+  <%= f.hidden_field :remote_version_number %>
+  <%= f.hidden_field :version_number %>
+
+  <div class="field">
+    <%= f.label :npid_value %><br />
+    <%= f.text_field :npid_value %>
+  </div>
+
+  <div class="field">
+    <%= f.label :creator_site_id %><br />
+    <%= f.collection_select :creator_site_id, Site.all, :id, :name, :include_blank => true %>
+  </div>
+
+  <div class="field">
+    <%= f.label :data %><br />
+    <%= f.text_area :data %>
+  </div>
+
+  <div class="actions">
+    <%= f.submit 'Keep this Version' %>
+  </div>
+<% end %>

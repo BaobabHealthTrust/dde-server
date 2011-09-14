@@ -10,7 +10,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20110909091804) do
+ActiveRecord::Schema.define(:version => 20110913135619) do
 
   create_table "national_patient_identifiers", :force => true do |t|
     t.string   "value"
@@ -22,11 +22,24 @@ ActiveRecord::Schema.define(:version => 20110909091804) do
     t.datetime "updated_at"
   end
 
+  create_table "pending_sync_requests", :force => true do |t|
+    t.integer  "record_id"
+    t.string   "record_type"
+    t.string   "url"
+    t.string   "http_method"
+    t.string   "status_code"
+    t.string   "method_name"
+    t.string   "method_arguments"
+    t.text     "request_body"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
   create_table "people", :force => true do |t|
     t.text     "data"
     t.datetime "created_at"
     t.datetime "updated_at"
-    t.integer  "version_number",  :default => 0
+    t.string   "version_number",  :default => "0"
     t.string   "creator_id"
     t.string   "creator_site_id"
   end

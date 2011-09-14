@@ -1,7 +1,7 @@
 class PeopleController < ApplicationController
 
   before_filter :load_person,
-      :only => [:show, :edit, :update, :destroy]
+      :only => [:show, :edit, :update, :destroy, :conflict]
 
   # GET /people
   # GET /people.xml
@@ -78,7 +78,7 @@ class PeopleController < ApplicationController
   # POST /people
   # POST /people.xml
   def create
-    @person = Person.new(params[:person])
+    @person = Person.new(params[:person].merge :creator_site_id => Site.current_id)
 
     respond_to do |format|
       if @person.save
@@ -98,16 +98,33 @@ class PeopleController < ApplicationController
   # PUT /people/1
   # PUT /people/1.xml
   def update
+    if @person.nil? # happens on master if records are 'created' by proxy
+      @person = Person.find_or_initialize_from_attributes(params.slice(:person, :npid, :site))
+      success = @person.save
+    else
+      success = @person.update_attributes(params[:person]) do |remote_person|
+        # this block is only called on collision
+        respond_to do |format|
+          @remote_person = remote_person
+          format.html { conflict }
+          format.any  { head :conflict }
+        end
+        return
+      end
+    end
+
     respond_to do |format|
-      if @person.update_attributes(params[:person])
+      if success
         format.html { redirect_to(@person, :notice => 'Person was successfully updated.') }
-        format.any  { head :ok }
+        format.xml  { render :xml  => @person,         :status => :ok }
+        format.json { render :json => @person.to_json, :status => :ok }
       else
-        status = @person.errors.delete(:status) || :unprocessable_entity
+        status = @person.status || :unprocessable_entity
+        flash[:notice] = @person.status_message unless @person.status_message.blank?
 
         format.html { render :action => 'edit' }
-        format.xml  { render :xml  => @person.errors, :status => status }
-        format.json { render :json => @person.errors, :status => status }
+        format.json { render :json   => @person.to_json(:include => :errors), :status => status }
+        format.xml  { render :xml    => @person, :status => status }
       end
     end
   end
@@ -132,10 +149,14 @@ class PeopleController < ApplicationController
           format.html { render :text => 'Record not found!', :status => :not_found }
           format.any  { head :not_found }
         end
-        return
       else
-        head :service_unavailable, :retry_after => 60 and return
+        respond_to do |format|
+          flash[:notice] = 'Remote Service not available'
+          format.html { redirect_to :action => :index }
+          format.any  { head :service_unavailable, :retry_after => 60 }
+        end
       end
+      return
     end
 
     @person.save!
@@ -147,17 +168,29 @@ class PeopleController < ApplicationController
     end
   end
 
-  def find_remote
-    raise NotImplementedError
+  def conflict
+    if Site.master? # here conflicts can only come from local edit + redirect on failure
+      @local_person  ||= @person # Person.find_or_initialize_from_attributes(params.slice(:person, :npid, :site))
+      @remote_person ||= Person.find_by_npid_value(params[:id])
+    else
+      @local_person  ||= @person
+      @remote_person ||= Person.find_remote(params[:id])
+      @local_person.remote_version_number = @remote_person.version_number
+    end
+
+    respond_to do |format|
+      format.html { render :action => 'conflict' }
+    end
   end
 
   protected
+
   def default_path
     people_path
   end
 
   def load_person
-    @person = Person.includes(:national_patient_identifier).where(:'national_patient_identifiers.value' => params[:id]).first
+    @person = Person.find_by_npid_value(params[:id])
     if Site.proxy?
       @person ||= Person.find(params[:id])
     end

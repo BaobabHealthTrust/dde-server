@@ -30,8 +30,8 @@ class Ability
 
       if Site.proxy?
         cannot :generate, NationalPatientIdentifier
-        can :show_remote, Person do
-          false
+        can :show_remote, Person do |person|
+          person.npid_value
         end
       end
     else

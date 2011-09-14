@@ -7,6 +7,7 @@ DdeServer::Application.routes.draw do
     collection do
       post :generate
       post :request
+      get  :collision
     end
   end
 

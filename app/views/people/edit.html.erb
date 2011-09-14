@@ -3,4 +3,5 @@
 <%= render 'form' %>
 
 <%= link_to 'Show', @person %> |
-<%= link_to 'Back', people_path %>
+<%= link_to 'Back', people_path %> |
+<%= link_to 'Pull from Master', remote_person_path(@person) if can? :show_remote, @person %>
