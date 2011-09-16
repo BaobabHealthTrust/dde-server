@@ -9,10 +9,11 @@ class LoginsController < ApplicationController
 
   def create
     user = User.find_by_name params[:name]
-    if user.password_matches?(params[:password])
+    if user and user.password_matches?(params[:password])
       login! user
       redirect_to back_or_default
     else
+      flash[:notice] = 'That username and/or password were not valid.'
       render :action => 'show'
     end
   end

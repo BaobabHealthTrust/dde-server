@@ -17,6 +17,7 @@
       <% if can? :manage, Site %>
         <li><%= link_to 'Site Management', sites_path %></li>
       <% end %>
+      <li><%= link_to 'Logout', logout_login_path %></li>
     </ul>
   <% end %>
 

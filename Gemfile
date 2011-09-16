@@ -8,3 +8,4 @@ gem 'rest-client'
 gem 'redirectr'
 gem 'guid'
 
+gem 'bcrypt-ruby', :require => 'bcrypt'
