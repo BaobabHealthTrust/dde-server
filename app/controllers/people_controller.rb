@@ -104,11 +104,8 @@ class PeopleController < ApplicationController
     else
       success = @person.update_attributes(params[:person]) do |remote_person|
         # this block is only called on collision
-        respond_to do |format|
-          @remote_person = remote_person
-          format.html { conflict }
-          format.any  { head :conflict }
-        end
+        @remote_person = remote_person
+        conflict
         return
       end
     end
@@ -180,6 +177,7 @@ class PeopleController < ApplicationController
 
     respond_to do |format|
       format.html { render :action => 'conflict' }
+      format.json { render :json => @local_person.to_json, :status => :conflict }
     end
   end
 

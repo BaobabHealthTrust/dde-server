@@ -3,6 +3,7 @@
 <table>
   <tr>
     <th>Name</th>
+    <th>Code</th>
     <th>Annotations</th>
     <th>No of assigned NPIDS</th>
     <th>No of available NPIDS</th>
@@ -11,6 +12,7 @@
   <% @sites.each do |site| %>
     <tr>
       <td><%= link_to site.name, site %></td>
+      <td><%= site.code %></td>
       <td><%= site.annotations %></td>
       <td><%= site.assigned_npids.count %></td>
       <td><%= site.available_npids.count %></td>

@@ -1,7 +1,11 @@
 DdeServer::Application.routes.draw do
   resources :users
 
-  resources :sites
+  resources :sites do
+    collection do
+      get :index_remote
+    end
+  end
 
   resources :national_patient_identifiers do
     collection do

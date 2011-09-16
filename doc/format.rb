@@ -8,7 +8,6 @@ Notes:
 * all the given structures provide the minimum set of keys that MUST be present, unless marked as optional. More keys may be added as needed.
 * the same structure is to be used regardles of request/respone format, be it JSON, XML or HTML Form serialisation.
 * within ruby code, all keys are expected to be accessible as Strings at any time. This does not affect in any way the possibility to access them as symbols within the Rails params Hash (which is technically an ActiveSupport::HashWithIndifferentAccess), wich should however not be relied upon.
-* this definition ist not final and can be extended as needed in the future.
 =end
 
 ADDRESS = {
@@ -21,20 +20,21 @@ ADDRESS = {
 NAMES = {
   'given_name'   => String,
   'family_name'  => String,
-  'family_name2' => String
+  'family_name2' => String  ## Optional (nee name?)
 }
 
 DATE = {
   'day'   => Integer,
-  'month' => Integer,
-  'year'  => Integer 
+  'month' => Integer,  ## 1-12
+  'year'  => Integer   ## YYYY
 }
 
 PARAMS = {
   'gender'       => String, # 'Female'|'Male'
-  'age_estimate' => Integer,
-  'birth_date'   => DATE,
-  'names'        => [NAMES],
+  'age_estimate' => Integer,       ## Remove
+  'birth_date'   => DATE,   
+  'birtdate_estimated' => Boolean, ## 0|1  Add
+  'names'        => NAMES,
   'addresses'    => [ADDRESS],
   'attributes'   => {
     'occupation'          => String,
@@ -45,7 +45,7 @@ PARAMS = {
   },
   'identifiers'  => {
     'National Id' => String,
-    'ARV Number'  => String, # optional
+    'ARV Number'  => String, # optional ## Remove??
     # ...
   }
 }
@@ -58,6 +58,7 @@ NATIONAL_PATIENT_ID = {
 
 SITE = {
   'id'          => Integer,
+  'code'        => String, ## e.g. LLH  Add
   'name'        => String,
   'annotations' => String
 }

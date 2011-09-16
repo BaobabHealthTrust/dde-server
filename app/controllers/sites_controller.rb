@@ -7,8 +7,8 @@ class SitesController < ApplicationController
 
     respond_to do |format|
       format.html # index.html.erb
-      format.xml  { render :xml  => @sites }
       format.json { render :json => @sites }
+      format.xml  { render :xml  => @sites }
     end
   end
 
@@ -19,7 +19,8 @@ class SitesController < ApplicationController
 
     respond_to do |format|
       format.html # show.html.erb
-      format.xml  { render :xml => @site }
+      format.json { render :json => @site }
+      format.xml  { render :xml  => @site }
     end
   end
 
@@ -30,7 +31,8 @@ class SitesController < ApplicationController
 
     respond_to do |format|
       format.html # new.html.erb
-      format.xml  { render :xml => @site }
+      format.json { render :json => @site }
+      format.xml  { render :xml  => @site }
     end
   end
 
@@ -47,10 +49,12 @@ class SitesController < ApplicationController
     respond_to do |format|
       if @site.save
         format.html { redirect_to(@site, :notice => 'Site was successfully created.') }
-        format.xml  { render :xml => @site, :status => :created, :location => @site }
+        format.json { render :json => @site, :status => :created, :location => @site }
+        format.xml  { render :xml  => @site, :status => :created, :location => @site }
       else
         format.html { render :action => "new" }
-        format.xml  { render :xml => @site.errors, :status => :unprocessable_entity }
+        format.json { render :json => @site.errors, :status => :unprocessable_entity }
+        format.xml  { render :xml  => @site.errors, :status => :unprocessable_entity }
       end
     end
   end
@@ -63,10 +67,12 @@ class SitesController < ApplicationController
     respond_to do |format|
       if @site.update_attributes(params[:site])
         format.html { redirect_to(@site, :notice => 'Site was successfully updated.') }
+        format.json { head :ok }
         format.xml  { head :ok }
       else
-        format.html { render :action => "edit" }
-        format.xml  { render :xml => @site.errors, :status => :unprocessable_entity }
+        format.html { render :action => '#edit' }
+        format.json { render :json => @site.errors, :status => :unprocessable_entity }
+        format.xml  { render :xml  => @site.errors, :status => :unprocessable_entity }
       end
     end
   end
@@ -79,7 +85,21 @@ class SitesController < ApplicationController
 
     respond_to do |format|
       format.html { redirect_to(sites_url) }
+      format.json { head :ok }
       format.xml  { head :ok }
+    end
+  end
+
+  def index_remote
+    success = Site.sync_with_master!
+    @sites  = Site.all
+
+    flash[:notice] = 'Could not fetch site information from master, shown data may be out of date.'
+
+    respond_to do |format|
+      format.html { render :action => 'index' }
+      format.json { render :json => @sites }
+      format.xml  { render :xml => @sites }
     end
   end
 

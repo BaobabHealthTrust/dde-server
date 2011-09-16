@@ -10,7 +10,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20110913135619) do
+ActiveRecord::Schema.define(:version => 20110916081743) do
 
   create_table "national_patient_identifiers", :force => true do |t|
     t.string   "value"
@@ -49,6 +49,7 @@ ActiveRecord::Schema.define(:version => 20110913135619) do
     t.string   "annotations"
     t.datetime "created_at"
     t.datetime "updated_at"
+    t.string   "code",        :default => ""
   end
 
   create_table "users", :force => true do |t|

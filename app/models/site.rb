@@ -33,12 +33,15 @@ class Site < ActiveRecord::Base
     SITE_CONFIG[:mode] == 'proxy'
   end
 
-  def self.sync_with_master
-    # TODO: proper error handling
-    response = self.base_resource.get(:accept => :json)
-    ActiveSupport::JSON.decode(response).each do |data_set|
-      self.find_or_create_from_attributes(data_set, :update => true)
+  def self.sync_with_master!
+    if Site.proxy?
+      response = self.base_resource.get(:accept => :json)
+      ActiveSupport::JSON.decode(response).each do |data_set|
+        self.find_or_create_from_attributes(data_set, :update => true)
+      end
     end
+  rescue => e
+    Rails.logger.error "#{e} while trying to fetch site information from master"
   end
 
   def self.find_or_create_from_attributes(attrs, options = {:update => false})
@@ -55,8 +58,8 @@ class Site < ActiveRecord::Base
     { 'site' => self.attributes }
   end
 
-  def to_json
-    self.remote_attributes.to_json
+  def to_json(includes = {})
+    self.remote_attributes.merge(includes).to_json
   end
 
   protected
