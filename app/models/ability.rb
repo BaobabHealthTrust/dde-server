@@ -9,6 +9,7 @@ class Ability
         can :show, Person
         can :edit, Person
         can :update, Person
+        can :manage, User
       end
 
 #       if user.has_role? :clinic_employee

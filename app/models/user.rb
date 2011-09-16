@@ -4,6 +4,11 @@ class User < ActiveRecord::Base
 
   belongs_to :site
 
+  delegate :name,
+      :to        => :site,
+      :prefix    => true,
+      :allow_nil => true
+
   def has_role?(role_name)
     true
   end
