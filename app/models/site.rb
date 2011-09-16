@@ -17,12 +17,18 @@ class Site < ActiveRecord::Base
     SITE_CONFIG[:site_id].to_i
   end
 
-  def self.current
-    self.find self.current_id
+  def self.current     
+    if self.proxy?
+      self.find self.current_id
+    end
   end
 
   def self.current_name
-    self.current.try(:name) || '- unknown -'
+    if self.proxy?
+      self.current.try(:name) || '- unknown -'
+    else
+      'Master Service'
+    end
   end
 
   def self.master?
@@ -37,7 +43,7 @@ class Site < ActiveRecord::Base
     if Site.proxy?
       response = self.base_resource.get(:accept => :json)
       ActiveSupport::JSON.decode(response).each do |data_set|
-        self.find_or_create_from_attributes(data_set, :update => true)
+        self.find_or_create_from_attributes(data_set['site'], :update => true)
       end
     end
   rescue => e

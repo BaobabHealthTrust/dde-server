@@ -1,3 +1,10 @@
+<h2>Person details</h2>
+
+<p>
+  <b>Record Version:</b>
+  <%= @person.version_number  %>
+</p>
+
 <p>
   <b>National Patient ID:</b>
   <%= link_to @person.npid_value, @person.npid %>
@@ -10,7 +17,7 @@
 
 <p>
   <b>Data:</b>
-  <%= @person.data.to_json %>
+  <pre><%= @person.data.to_yaml %></pre>
 </p>
 
 

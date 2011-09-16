@@ -1,11 +1,12 @@
 <h2>Listing Users</h2>
 
-<table>
+<table class="table">
   <tr>
     <th>Name</th>
     <th>Email</th>
     <th>Site</th>
     <th>Disabled?</th>
+    <th>actions</th>
   </tr>
 
   <% @users.each do |user| %>
@@ -14,9 +15,11 @@
       <td><%= user.email %></td>
       <td><%= user.site_name %></td>
       <td><%= user.disabled ? 'Yes' : 'No' %></td>
-      <td><%= link_to 'Show', user %></td>
-      <td><%= link_to 'Edit', edit_user_path(user) %></td>
-      <td><%= link_to 'Destroy', user, :confirm => 'Are you sure?', :method => :delete %></td>
+      <td>
+        <%= link_to 'Show', user %> |
+        <%= link_to 'Edit', edit_user_path(user) %> |
+        <%= link_to 'Destroy', user, :confirm => 'Are you sure?', :method => :delete %>
+      </td>
     </tr>
   <% end %>
 </table>

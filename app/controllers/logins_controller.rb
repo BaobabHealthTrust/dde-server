@@ -3,6 +3,8 @@ class LoginsController < ApplicationController
   skip_before_filter :perform_basic_auth,
       :only => :logout
 
+  layout 'login'
+
   def show
     # render
   end
@@ -13,13 +15,14 @@ class LoginsController < ApplicationController
       login! user
       redirect_to back_or_default
     else
-      flash[:notice] = 'That username and/or password were not valid.'
+      flash[:error] = 'That username and/or password was not valid.'
       render :action => 'show'
     end
   end
 
   def logout
     logout!
+    flash[:notice] = 'You have been logged out. Good Bye!'
     redirect_to :action => 'show', referrer_param => referrer_path
   end
 

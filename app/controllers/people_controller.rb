@@ -102,22 +102,39 @@ class PeopleController < ApplicationController
       @person = Person.find_or_initialize_from_attributes(params.slice(:person, :npid, :site))
       success = @person.save
     else
-      success = @person.update_attributes(params[:person]) do |remote_person|
-        # this block is only called on collision
-        @remote_person = remote_person
-        conflict
-        return
+      success = @person.update_attributes(params[:person]) do |response, request, result|
+        # this block is only called on error
+        case result
+        when Net::HTTPConflict
+          logger.error "Conflict while updating #{params[:id]} on remote: #{response}"
+          decoded_response = ActiveSupport::JSON.decode(response)
+          remote_person    = Person.initialize_from_attributes(decoded_response)
+          flash[:error] = "Conflicting versions: local (#{@person.version_number_was.last(12)}) vs. remote (#{remote_person.version_number.last(12)})"
+          handle_remote_conflict(@person, remote_person) and return
+        when :connection_refused
+          msg = "No connection to master service while updating #{params[:id]} on remote."
+          logger.error msg
+          flash[:warning] = msg
+        else
+          flash[:warning] = "An error occured while updating #{params[:id]} remotely: #{result.try(:message)}"
+        end
       end
     end
 
     respond_to do |format|
       if success
-        format.html { redirect_to(@person, :notice => 'Person was successfully updated.') }
+        flash[:notice] = 'Person was successfully updated.'
+        format.html { redirect_to(@person) }
         format.xml  { render :xml  => @person,         :status => :ok }
         format.json { render :json => @person.to_json, :status => :ok }
       else
-        status = @person.status || :unprocessable_entity
-        flash[:notice] = @person.status_message unless @person.status_message.blank?
+        status        = @person.status || :unprocessable_entity
+        flash[:error] = @person.status_message unless @person.status_message.blank?
+
+        if status == :conflict
+          flash[:error] = "Conflicting versions: new (#{params[:person][:version_number].last(12)}) vs. old (#{@person.version_number.last(12)})"
+          handle_local_conflict(@person, @person.dup.reload) and return
+        end
 
         format.html { render :action => 'edit' }
         format.json { render :json   => @person.to_json(:include => :errors), :status => status }
@@ -148,7 +165,7 @@ class PeopleController < ApplicationController
         end
       else
         respond_to do |format|
-          flash[:notice] = 'Remote Service not available'
+          flash[:error] = 'Remote Service is not available'
           format.html { redirect_to :action => :index }
           format.any  { head :service_unavailable, :retry_after => 60 }
         end
@@ -165,15 +182,11 @@ class PeopleController < ApplicationController
     end
   end
 
-  def conflict
-    if Site.master? # here conflicts can only come from local edit + redirect on failure
-      @local_person  ||= @person # Person.find_or_initialize_from_attributes(params.slice(:person, :npid, :site))
-      @remote_person ||= Person.find_by_npid_value(params[:id])
-    else
-      @local_person  ||= @person
-      @remote_person ||= Person.find_remote(params[:id])
-      @local_person.remote_version_number = @remote_person.version_number
-    end
+  protected
+
+  def handle_local_conflict(local_person, remote_person)
+    @local_person  = local_person
+    @remote_person = remote_person
 
     respond_to do |format|
       format.html { render :action => 'conflict' }
@@ -181,7 +194,16 @@ class PeopleController < ApplicationController
     end
   end
 
-  protected
+  def handle_remote_conflict(local_person, remote_person)
+    @local_person  = local_person
+    @remote_person = remote_person
+    @local_person.remote_version_number = @remote_person.version_number
+
+    respond_to do |format|
+      format.html { render :action => 'conflict' }
+      format.json { render :json => @local_person.to_json, :status => :conflict }
+    end
+  end
 
   def default_path
     people_path

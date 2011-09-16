@@ -1,3 +1,5 @@
+<h2>User <%= @user.name %>: Details</h2>
+
 <p>
   <b>Name:</b>
   <%= @user.name %>
@@ -27,7 +29,6 @@
   <b>Created at:</b>
   <%= @user.created_at %>
 </p>
-
 
 <%= link_to 'Edit', edit_user_path(@user) %> |
 <%= link_to 'Back', users_path %>

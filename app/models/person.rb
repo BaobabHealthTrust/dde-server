@@ -9,15 +9,15 @@ class Person < ActiveRecord::Base
   belongs_to :creator_site,
       :class_name => 'Site'
 
-  before_create :set_version_number, :set_npid
+  before_create :set_npid
   after_save :save_npid
-  before_update :set_version_number,
-      :if => lambda { Site.master? }
 
   validates_presence_of :national_patient_identifier, :data
 
   def data
     ActiveSupport::JSON.decode(read_attribute :data)
+  rescue
+    {}
   end
 
   def data=(new_data)
@@ -57,10 +57,9 @@ class Person < ActiveRecord::Base
         logger.info "successssfully fetched #{npid} from remote: #{response}"
         return self.find_or_initialize_from_attributes ActiveSupport::JSON.decode(response)
       else
-        PendingSyncRequest.find_or_create_by_record_type_and_method_name_and_method_arguments(
+        PendingSyncRequest.get(
           :record_type      => 'Person',
           :method_name      => 'find_remote',
-          :http_method      => 'get',
           :method_arguments => [npid].to_json,
           :status_code      => result.message,
           :url              => request.url)
@@ -70,10 +69,9 @@ class Person < ActiveRecord::Base
     end
     nil
   rescue Errno::ECONNREFUSED
-    PendingSyncRequest.find_or_create_by_record_type_and_method_name_and_method_arguments(
+    PendingSyncRequest.get(
       :record_type      => 'Person',
       :method_name      => 'find_remote',
-      :http_method      => 'get',
       :method_arguments => [npid].to_json,
       :status_code      => 'Connection Refused',
       :url              => base_resource[npid].url)
@@ -86,7 +84,7 @@ class Person < ActiveRecord::Base
   def update_remote(&block)
     ensure_no_recursive_update_calls do
       with_remote_site do |remote|
-        remote.put(self.remote_attributes, :accept => :json) do |response, request, result, &block|
+        remote.put(self.remote_attributes, :accept => :json) do |response, request, result|
           decoded_response = ActiveSupport::JSON.decode(response) rescue nil
           case result
           when Net::HTTPOK
@@ -101,68 +99,61 @@ class Person < ActiveRecord::Base
             end
             return true
           else
-            logger.error "failed to update #{self.npid_value} to remote: #{result}"
+            logger.error "Failed to update #{self.npid_value} to remote: #{result.message}"
+            PendingSyncRequest.put(
+              :record       => self,
+              :method_name  => 'update_remote',
+              :status_code  => result.message,
+              :request_body => response,
+              :url          => request.url)
             yield response, request, result if block_given?
+            return false
           end
         end
         nil
       end
     end
+  rescue Errno::ECONNREFUSED
+    PendingSyncRequest.put(
+      :record      => self,
+      :method_name => 'update_remote',
+      :status_code => 'Connection Refused',
+      :url         => base_resource.url)
+    yield nil, base_resource, :connection_refused if block_given?
+    nil
   end
 
-  def save_remote(&block)
-    with_remote_site do |remote|
-    end
-  end
-
-  def create_remote(&block)
-    with_remote_site do |remote|
-    end
-  end
-
-  def with_remote_site(&block)
+  def with_remote_site
     return nil if Site.master?
-    base_resource.instance_variable_set '@block', block
     yield base_resource
-#   rescue Errno::ECONNREFUSED
-#     yield nil, nil, :connection_refused if block_given?
-#     nil
   end
 
-  def update_attributes_with_version_number_verification(attributes)
-    version = attributes.delete(:version_number)
+  # Updates the record if the version number provided was correct.
+  def update_attributes_with_version_number_verification(options)
+    attributes = options.dup
+    version    = attributes.delete(:version_number)
     if self.version_number_was.to_s == version.to_s
+      self.set_version_number
       return self.update_attributes_without_version_number_verification(attributes)
     else
-      logger.error "conflict while trying to update #{self.npid_value} locally."
       self.attributes = attributes
-      yield self.dup.reload if block_given?
+      self.status = :conflict
+      logger.error "Conflict while trying to update #{self.npid_value} locally."
       return false
     end
   end
   alias_method_chain :update_attributes, :version_number_verification
 
+  # Returns true if the _local_ version was successfully saved for remote
+  # error handling that may or may not occur during remote update, please
+  # use a block that will be passed the response, request and result objects
+  # from the HTTP library
   def update_attributes_with_pushing_to_master(attributes, &block)
-    self.update_attributes_without_pushing_to_master(attributes, &block).tap do |result|
-      if result and Site.proxy?
-        self.version_number = attributes['remote_version_number'] unless attributes['remote_version_number'].blank?
-        self.update_remote do |response, request, result|
-          case result
-          when Net::HTTPConflict
-            logger.error "conflict while trying to update #{self.npid_value} on remote: #{response}"
-            if block_given?
-              decoded_response = ActiveSupport::JSON.decode(response)
-              yield self.class.initialize_from_attributes(decoded_response)
-            end
-          else
-            PendingSyncRequest.find_or_create_by_record_type_and_method_name_and_method_arguments(
-              :record      => self,
-              :http_method => 'put',
-              :status_code => result.message,
-              :url         => request.url)
-          end
-          return false
-        end
+    attributes['remote_version_number'] ||= version_number_was
+    self.update_attributes_without_pushing_to_master(attributes).tap do |local_success|
+      if local_success and Site.proxy?
+        self.version_number = attributes['remote_version_number']
+        self.update_remote &block
       end
     end
   end
@@ -227,6 +218,14 @@ class Person < ActiveRecord::Base
         'creator_site_id' => Site.current_id
       }
     }.merge(self.npid.try(:remote_attributes) || {}).merge(self.creator_site.try(:remote_attributes) || {})
+  end
+
+  def data_as_yaml
+    self.data.to_yaml
+  end
+
+  def data_as_yaml=(new_str)
+    self.data = YAML.load(new_str)
   end
 
   protected

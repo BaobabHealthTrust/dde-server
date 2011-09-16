@@ -1,12 +1,13 @@
 <h2>Listing people</h2>
 
-<table>
+<table class="table">
   <tr>
     <th>NPID</th>
     <th>Created at</th>
     <th>Last updated by</th>
     <th>Last updated at site</th>
     <th>Version</th>
+    <th style="width: 130px;"></th>
   </tr>
 
   <% @people.each do |person| %>
@@ -15,12 +16,11 @@
       <td><%= person.created_at %></td>
       <td><%= person.creator_id || ' - unknown - ' %></td>
       <td><%= person.creator_site.try(:name) || ' - unknown - ' %></td>
-      <td><%= person.version_number %></td>
+      <td><%= person.version_number.last(12) %></td>
       <td>
-        <%= link_to 'Show', person if can? :show, person %>
-        <%= link_to 'Edit', edit_person_path(person) if can? :edit, person %>
-        <%= link_to 'Destroy', person, :confirm => 'Are you sure?', :method => :delete if can? :destroy, person %>
-        <%= link_to 'Pull from Master', remote_person_path(person) if can? :show_remote, person %>
+        <%= link_to 'Show', person if can? :show, person %> |
+        <%= link_to 'Edit', edit_person_path(person) if can? :edit, person %> |
+        <%= link_to 'Sync', remote_person_path(person) if can? :show_remote, person %>
       </td>
     </tr>
   <% end %>

@@ -1,6 +1,6 @@
 # Be sure to restart your server when you modify this file.
 
-DdeServer::Application.config.session_store :cookie_store, :key => '_dde-server_session'
+DdeServer::Application.config.session_store :cookie_store, :key => '_dde-server_session' + Rails.env
 
 # Use the database for sessions instead of the cookie-based default,
 # which shouldn't be used to store highly confidential information

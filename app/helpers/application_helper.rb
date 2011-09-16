@@ -1,8 +1,13 @@
 module ApplicationHelper
 
-  def notice
-    unless flash[:notice].blank?
-      content_tag :p, flash[:notice], :class => 'notice'
+  def flash_messages
+    msgs = flash.map do |type, message|
+      content_tag :div, :class => ['message', type] do
+        content_tag :p, message
+      end
     end
+
+    content_tag :div, msgs.join.html_safe, :class => 'flash'
   end
+
 end

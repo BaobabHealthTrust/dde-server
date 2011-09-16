@@ -71,6 +71,7 @@ GEM
     treetop (1.4.9)
       polyglot (>= 0.3.1)
     tzinfo (0.3.29)
+    web-app-theme (0.7.0)
 
 PLATFORMS
   ruby
@@ -84,3 +85,4 @@ DEPENDENCIES
   redirectr
   rest-client
   sqlite3
+  web-app-theme

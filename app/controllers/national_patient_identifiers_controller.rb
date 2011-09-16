@@ -2,7 +2,7 @@ class NationalPatientIdentifiersController < ApplicationController
   # GET /national_patient_identifiers
   # GET /national_patient_identifiers.xml
   def index
-    @national_patient_identifiers = NationalPatientIdentifier.all
+    @national_patient_identifiers = NationalPatientIdentifier.all :include => :assigner_site
 
     respond_to do |format|
       format.html # index.html.erb
@@ -71,8 +71,8 @@ class NationalPatientIdentifiersController < ApplicationController
           number_of_needed_ids = params[:npid][:count].to_i - generated_but_not_sent_ids.count
           if number_of_needed_ids > 0
             params[:npid][:count] = number_of_needed_ids
+            NationalPatientIdentifier.generate! params[:npid]
           end
-          NationalPatientIdentifier.generate! params[:npid]
         end
         @npids = generated_but_not_sent_ids.reload.all
       else
@@ -83,7 +83,10 @@ class NationalPatientIdentifiersController < ApplicationController
     end
 
     respond_to do |format|
-      format.html { redirect_to :action => 'index' }
+      format.html do
+        flash[:notice] = "You have now #{@npids.size} new NPIDS assigned to your site."
+        redirect_to :action => 'index'
+      end
       format.json { render :json => @npids.to_json, :status => :created }
       format.xml  { render :xml  => @npids, :status => :created }
     end

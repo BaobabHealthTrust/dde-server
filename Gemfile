@@ -9,3 +9,5 @@ gem 'redirectr'
 gem 'guid'
 
 gem 'bcrypt-ruby', :require => 'bcrypt'
+
+gem 'web-app-theme'

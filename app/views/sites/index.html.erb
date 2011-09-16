@@ -1,12 +1,15 @@
 <h2>Listing sites</h2>
 
-<table>
+<table class="table">
   <tr>
     <th>Name</th>
     <th>Code</th>
     <th>Annotations</th>
-    <th>No of assigned NPIDS</th>
-    <th>No of available NPIDS</th>
+    <% if Site.master? %>
+      <th>No of assigned NPIDS</th>
+      <th>No of available NPIDS</th>
+    <% end %>
+    <th style="width: 130px;"></th>
   </tr>
 
   <% @sites.each do |site| %>
@@ -14,15 +17,20 @@
       <td><%= link_to site.name, site %></td>
       <td><%= site.code %></td>
       <td><%= site.annotations %></td>
-      <td><%= site.assigned_npids.count %></td>
-      <td><%= site.available_npids.count %></td>
-      <td><%= link_to 'Show', site %></td>
-      <td><%= link_to 'Edit', edit_site_path(site) %></td>
-      <td><%= link_to 'Destroy', site, :confirm => 'Are you sure?', :method => :delete %></td>
+      <% if Site.master? %>
+        <td><%= site.assigned_npids.count %></td>
+        <td><%= site.available_npids.count %></td>
+      <% end %>
+      <td>
+        <%= link_to 'Show', site %> |
+        <%= link_to 'Edit', edit_site_path(site) if can? :edit, site %> |
+        <%= link_to 'Destroy', site, :confirm => 'Are you sure?', :method => :delete if can? :destroy, site %>
+      </td>
     </tr>
   <% end %>
 </table>
 
 <br />
 
-<%= link_to 'New Site', new_site_path %>
+<%= link_to 'New Site', new_site_path if can? :create, Site %>
+<%= link_to 'Synchronize with Master', index_remote_sites_path %>

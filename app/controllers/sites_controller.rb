@@ -1,5 +1,5 @@
 class SitesController < ApplicationController
-
+  
   # GET /sites
   # GET /sites.xml
   def index
@@ -104,7 +104,11 @@ class SitesController < ApplicationController
   end
 
   def perform_basic_auth
-    authorize! :manage, Site
+    if %w(index show index_remote).include? params[:action]
+      super
+    else
+      authorize! :manage, Site
+    end
   end
 
 end

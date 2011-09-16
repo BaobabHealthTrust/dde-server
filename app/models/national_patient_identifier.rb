@@ -7,7 +7,9 @@ class NationalPatientIdentifier < ActiveRecord::Base
 
   validates_presence_of :value, :assigner_site_id
 
-  validates_uniqueness_of :person_id # don't allow more than one ID to be assigned to any person
+  # don't allow more than one ID to be assigned to any person
+  validates_uniqueness_of :person_id,
+      :allow_nil => true
 
   def self.generate!(options)
     raise 'Patient IDs can only be generated in master mode!' unless Site.master?
@@ -33,6 +35,7 @@ class NationalPatientIdentifier < ActiveRecord::Base
       else
         logger.error "failed fetching new NPIDs from remote: #{result}"
         yield response, request, result if block_given?
+        []
       end
     end
   end
