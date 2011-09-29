@@ -71,16 +71,18 @@ class NationalPatientIdentifiersController < ApplicationController
           number_of_needed_ids = params[:npid][:count].to_i - generated_but_not_sent_ids.count
           if number_of_needed_ids > 0
             params[:npid][:count] = number_of_needed_ids
-            NationalPatientIdentifier.generate! params[:npid]
+            NationalPatientIdentifier.generate! :count => count, :assigner_site_id => params[:site_id]
           end
         end
         @npids = generated_but_not_sent_ids.reload.all
       else
-        @npids = NationalPatientIdentifier.generate! params[:npid]
+        @npids = NationalPatientIdentifier.generate! :count => count, :assigner_site_id => params[:site_id]
       end
     else
       @npids = NationalPatientIdentifier.request! params[:npid].merge(:assigner_site_id => Site.current_id)
     end
+
+    redirect_to site_specific_national_patient_identifiers_path(params[:npid])
 
     respond_to do |format|
       format.html do

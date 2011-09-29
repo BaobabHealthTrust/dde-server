@@ -11,6 +11,8 @@ DdeServer::Application.routes.draw do
     collection do
       post :generate
       post :request
+      get  'site/:site_id', :action => :for_site, :as => :site_specific
+      post 'site/:site_id', :action => :generate, :as => :site_specific
     end
   end
 

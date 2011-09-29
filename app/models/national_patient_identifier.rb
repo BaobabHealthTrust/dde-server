@@ -11,35 +11,6 @@ class NationalPatientIdentifier < ActiveRecord::Base
   validates_uniqueness_of :person_id,
       :allow_nil => true
 
-  def self.generate!(options)
-    raise 'Patient IDs can only be generated in master mode!' unless Site.master?
-
-    count = options.delete(:count).to_i
-    if count > 0
-      0.upto count do |i|
-        self.create! options.merge(:value => Guid.new.to_s)
-      end
-    end
-  end
-
-  def self.request!(options)
-    raise 'Patient IDs can only be requested in proxy mode!' unless Site.proxy?
-    payload = {:npid => options, :last_timestamp => self.order(:created_at).last.try(:created_at)}
-    base_resource['generate'].post(payload, :accept => :json) do |response, request, result, &block|
-      case result
-      when Net::HTTPCreated
-        logger.info "successssfully fetched new NPIDs from remote: #{response}"
-        return ActiveSupport::JSON.decode(response).map do |attributes|
-          self.create! attributes['national_patient_identifier']
-        end
-      else
-        logger.error "failed fetching new NPIDs from remote: #{result}"
-        yield response, request, result if block_given?
-        []
-      end
-    end
-  end
-
   def self.find_or_create_from_attributes(attrs, options = {:update => false})
     if attrs['value']
       self.find_or_initialize_by_value(attrs['value']).tap do |npid|
@@ -66,7 +37,37 @@ class NationalPatientIdentifier < ActiveRecord::Base
   protected
 
   def self.base_resource
-    RestClient::Resource.new(SITE_CONFIG[:master_uri], SITE_CONFIG[:remote_http_options].to_hash.symbolize_keys)['national_patient_identifiers']
+    RestClient::Resource.new(SITE_CONFIG[:master_uri], SITE_CONFIG[:remote_http_options].to_hash.symbolize_keys)['national_patient_identifiers']['site'][Site.current_id]
+  end
+
+  def self.next_id_val(site_code, last_number = nil)
+    npid_version  = '1'
+    npid_prefix   = "P#{npid_version}#{site_code.rjust(3, '0')}"
+    last_number ||= self.first(:conditions => ['left(value, 5) = ?', npid_prefix], :order => 'value DESC').try(:value) || '0'
+
+    next_number = (last_number[5..-2].to_i + 1).to_s.rjust(7, '0')
+    national_id_without_check_digit = "#{npid_prefix}#{next_number}"
+    "#{national_id_without_check_digit}#{self.check_digit(national_id_without_check_digit[1..-1])}"
+  end
+
+  def self.check_digit(number)
+    # This is Luhn's algorithm for checksums
+    # http://en.wikipedia.org/wiki/Luhn_algorithm
+    # Same algorithm used by PIH (except they allow characters)
+    number = number.to_s
+    number = number.split(//).collect(&:to_i)
+    parity = number.length % 2
+
+    sum = 0
+    number.each_with_index do |digit, index|
+      digit = digit * 2 if index % 2 == parity
+      digit = digit - 9 if digit > 9
+      sum  += digit
+    end
+
+    checkdigit = 0
+    checkdigit += 1 while ((sum + checkdigit) % 10) != 0
+    return checkdigit
   end
 
 end

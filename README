@@ -4,6 +4,17 @@ This is the proxy and master service for Demographics Data Exchange to be used w
 
 This is Work In Progress! Nothing that can be found here should be considered final or even remotely operational.
 
+=== Installation
+
+$ bundle install
+
+# for proxy mode
+$ RAILS_ENV=development rake db:create db:migrate db:seed
+
+# for master mode
+$ RAILS_ENV=integration rake db:create db:migrate db:seed
+
+
 Written by Willem van Kerkhof <willem.van-kerkhof@innoq.com>
 
 Copyright (c) 2011 Baobab Health Trust, Lilongwe, Malawi.

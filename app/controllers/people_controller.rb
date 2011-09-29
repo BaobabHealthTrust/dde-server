@@ -40,10 +40,10 @@ class PeopleController < ApplicationController
 
     case @people.size
     when 0
-      if SITE_CONFIG[:mode] == 'master'
+      if Site.master?
         head :not_found
       else
-        find_remote
+#         find_remote
       end
     when 1
       respond_to do |format|
@@ -102,21 +102,27 @@ class PeopleController < ApplicationController
       @person = Person.find_or_initialize_from_attributes(params.slice(:person, :npid, :site))
       success = @person.save
     else
-      success = @person.update_attributes(params[:person]) do |response, request, result|
-        # this block is only called on error
-        case result
-        when Net::HTTPConflict
-          logger.error "Conflict while updating #{params[:id]} on remote: #{response}"
-          decoded_response = ActiveSupport::JSON.decode(response)
-          remote_person    = Person.initialize_from_attributes(decoded_response)
-          flash[:error] = "Conflicting versions: local (#{@person.version_number_was.last(12)}) vs. remote (#{remote_person.version_number.last(12)})"
-          handle_remote_conflict(@person, remote_person) and return
-        when :connection_refused
-          msg = "No connection to master service while updating #{params[:id]} on remote."
-          logger.error msg
-          flash[:warning] = msg
-        else
-          flash[:warning] = "An error occured while updating #{params[:id]} remotely: #{result.try(:message)}"
+      success = @person.update_attributes(params[:person]) do # this block is only called on conflict
+        flash[:error] = "Conflicting versions: new (#{params[:person][:version_number].last(12)}) vs. old (#{@person.version_number.last(12)}). NO changes have been saved!"
+        handle_local_conflict(@person, @person.dup.reload) and return
+      end
+
+      if success and Site.proxy?
+        @person.push_to_remote do |response, request, result| # this block is only called on error
+          case result
+          when Net::HTTPConflict
+            logger.error "Conflict while updating #{params[:id]} on remote: #{response}"
+            decoded_response = ActiveSupport::JSON.decode(response)
+            remote_person    = Person.initialize_from_attributes(decoded_response)
+            flash[:warning]  = "Conflicting versions: local (#{@person.version_number_was.last(12)}) vs. remote (#{remote_person.version_number.last(12)}). Your changes have been saved locally, so you may also resolve this conflict later."
+            handle_remote_conflict(@person, remote_person) and return
+          when :connection_refused
+            msg = "No connection to master service while updating #{params[:id]} on remote."
+            logger.error msg
+            flash[:warning] = msg
+          else
+            flash[:warning] = "An error occured while updating #{params[:id]} remotely: #{result.try(:message)}"
+          end
         end
       end
     end
@@ -131,11 +137,6 @@ class PeopleController < ApplicationController
         status        = @person.status || :unprocessable_entity
         flash[:error] = @person.status_message unless @person.status_message.blank?
 
-        if status == :conflict
-          flash[:error] = "Conflicting versions: new (#{params[:person][:version_number].last(12)}) vs. old (#{@person.version_number.last(12)})"
-          handle_local_conflict(@person, @person.dup.reload) and return
-        end
-
         format.html { render :action => 'edit' }
         format.json { render :json   => @person.to_json(:include => :errors), :status => status }
         format.xml  { render :xml    => @person, :status => status }
@@ -144,7 +145,7 @@ class PeopleController < ApplicationController
   end
 
   # DELETE /people/1
-  # DELETE /people/1.xml
+  # DELETE /people/1.xml 
   def destroy
     @person.destroy
 
@@ -155,8 +156,7 @@ class PeopleController < ApplicationController
   end
 
   def show_remote
-    logger.info "fetching from remote: #{params[:id]}"
-    @person = Person.find_remote(params[:id]) do |response, request, result|
+    @person = Person.pull_from_master(params[:id]) do |response, request, result|
       case result
       when Net::HTTPNotFound
         respond_to do |format|
@@ -172,8 +172,6 @@ class PeopleController < ApplicationController
       end
       return
     end
-
-    @person.save!
 
     respond_to do |format|
       format.html { render :action => 'show' }
@@ -211,11 +209,10 @@ class PeopleController < ApplicationController
 
   def load_person
     @person = Person.find_by_npid_value(params[:id])
-    if Site.proxy?
-      @person ||= Person.find(params[:id])
-    end
+    @person ||= Person.find(params[:id]) if Site.proxy?
   rescue ActiveRecord::RecordNotFound
     # noop
   end
 
 end
+

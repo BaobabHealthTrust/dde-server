@@ -50,6 +50,7 @@ class Person < ActiveRecord::Base
   # yielded and can be used to do error handling.
   def self.find_remote(npid, &block)
     return nil if Site.master?
+    logger.info "fetching from remote: #{npid}"
     base_resource.instance_variable_set '@block', block
     base_resource[npid].get(:accept => :json) do |response, request, result, &block|
       case result
@@ -57,24 +58,12 @@ class Person < ActiveRecord::Base
         logger.info "successssfully fetched #{npid} from remote: #{response}"
         return self.find_or_initialize_from_attributes ActiveSupport::JSON.decode(response)
       else
-        PendingSyncRequest.get(
-          :record_type      => 'Person',
-          :method_name      => 'find_remote',
-          :method_arguments => [npid].to_json,
-          :status_code      => result.message,
-          :url              => request.url)
         logger.error "failed fetching #{npid} from remote: #{result}"
         yield response, request, result if block_given?
       end
     end
     nil
   rescue Errno::ECONNREFUSED
-    PendingSyncRequest.get(
-      :record_type      => 'Person',
-      :method_name      => 'find_remote',
-      :method_arguments => [npid].to_json,
-      :status_code      => 'Connection Refused',
-      :url              => base_resource[npid].url)
     yield nil, base_resource[npid], :connection_refused if block_given?
     nil
   end
@@ -100,12 +89,6 @@ class Person < ActiveRecord::Base
             return true
           else
             logger.error "Failed to update #{self.npid_value} to remote: #{result.message}"
-            PendingSyncRequest.put(
-              :record       => self,
-              :method_name  => 'update_remote',
-              :status_code  => result.message,
-              :request_body => response,
-              :url          => request.url)
             yield response, request, result if block_given?
             return false
           end
@@ -114,11 +97,6 @@ class Person < ActiveRecord::Base
       end
     end
   rescue Errno::ECONNREFUSED
-    PendingSyncRequest.put(
-      :record      => self,
-      :method_name => 'update_remote',
-      :status_code => 'Connection Refused',
-      :url         => base_resource.url)
     yield nil, base_resource, :connection_refused if block_given?
     nil
   end
@@ -129,6 +107,7 @@ class Person < ActiveRecord::Base
   end
 
   # Updates the record if the version number provided was correct.
+  # If there was a conflict (i.e. version number mismatch) the block is yielded
   def update_attributes_with_version_number_verification(options)
     attributes = options.dup
     version    = attributes.delete(:version_number)
@@ -137,27 +116,27 @@ class Person < ActiveRecord::Base
       return self.update_attributes_without_version_number_verification(attributes)
     else
       self.attributes = attributes
-      self.status = :conflict
       logger.error "Conflict while trying to update #{self.npid_value} locally."
+      yield if block_given?
       return false
     end
   end
   alias_method_chain :update_attributes, :version_number_verification
 
-  # Returns true if the _local_ version was successfully saved for remote
-  # error handling that may or may not occur during remote update, please
-  # use a block that will be passed the response, request and result objects
-  # from the HTTP library
-  def update_attributes_with_pushing_to_master(attributes, &block)
-    attributes['remote_version_number'] ||= version_number_was
-    self.update_attributes_without_pushing_to_master(attributes).tap do |local_success|
-      if local_success and Site.proxy?
-        self.version_number = attributes['remote_version_number']
-        self.update_remote &block
-      end
-    end
-  end
-  alias_method_chain :update_attributes, :pushing_to_master
+#   # Returns true if the _local_ version was successfully saved for remote
+#   # error handling that may or may not occur during remote update, please
+#   # use a block that will be passed the response, request and result objects
+#   # from the HTTP library
+#   def update_attributes_with_pushing_to_master(attributes, &block)
+#     attributes['remote_version_number'] ||= version_number_was
+#     self.update_attributes_without_pushing_to_master(attributes).tap do |local_success|
+#       if local_success and Site.proxy?
+#         self.version_number = attributes['remote_version_number']
+#         self.update_remote &block
+#       end
+#     end
+#   end
+#   alias_method_chain :update_attributes, :pushing_to_master
 
   def npid
     self.national_patient_identifier
@@ -211,7 +190,7 @@ class Person < ActiveRecord::Base
   def remote_attributes
     { 'person' => {
         'data'            => self.data,
-        'version_number'  => self.version_number,
+        'version_number'  => self.remote_version_number,
         'created_at'      => self.created_at,
         'updated_at'      => self.updated_at,
         'creator_id'      => self.creator_id,
@@ -226,6 +205,36 @@ class Person < ActiveRecord::Base
 
   def data_as_yaml=(new_str)
     self.data = YAML.load(new_str)
+  end
+
+  def self.pull_from_master(npid_or_person)
+    if npid_or_person.is_a? Person
+      npid = npid_or_person.npid_value
+    else
+      npid = npid_or_person
+    end
+
+    person = self.find_remote(npid) do |response, request, result|
+      PendingSyncRequest.get(
+        :record_type      => 'Person',
+        :method_name      => 'pull_from_master',
+        :method_arguments => [npid].to_json,
+        :status_code      => (result.respond_to?(:message) ? result.message : result),
+        :url              => request.url)
+    end
+    person.save if person
+  end
+
+  def push_to_remote
+    self.version_number = self.remote_version_number
+    self.update_remote do |response, request, result|
+      PendingSyncRequest.put(
+        :record           => self,
+        :method_name      => 'push_to_remote',
+        :method_arguments => [npid].to_json,
+        :status_code      => (result.respond_to?(:message) ? result.message : result),
+        :url              => request.url)
+    end
   end
 
   protected
@@ -261,11 +270,6 @@ class Person < ActiveRecord::Base
       yield
       @update_in_progress = false
     end
-  end
-
-  class Conflict < StandardError; end
-  def handle_conflict(response)
-    raise Conflict
   end
 
   def ensure_key_present(hash, key)
