@@ -21,22 +21,20 @@ class NationalPatientIdentifiersController < ApplicationController
     end
   end
 
+  def for_site
+    @site = Site.find_by_code params[:site_id]
+    @national_patient_identifiers = @site.national_patient_identifiers.all :include => :assigner_site
+
+    respond_to do |format|
+      format.html { render :action => 'index' }
+      format.xml  { render :xml => @national_patient_identifiers }
+    end
+  end
+
   # GET /national_patient_identifiers/new
   # GET /national_patient_identifiers/new.xml
   def new
-    if Site.master?
-      @national_patient_identifier = NationalPatientIdentifier.new
-
-      respond_to do |format|
-        format.html # new.html.erb
-        format.xml  { render :xml => @national_patient_identifier }
-      end
-    else
-      respond_to do |format|
-        format.html # new.html.erb
-        format.xml  { head :not_implemented }
-      end
-    end
+    redirect_to new_npid_request_path
   end
 
   # GET /national_patient_identifiers/1/edit
@@ -57,40 +55,6 @@ class NationalPatientIdentifiersController < ApplicationController
         format.html { render :action => 'new' }
         format.xml  { render :xml => @national_patient_identifier.errors, :status => :unprocessable_entity }
       end
-    end
-  end
-
-  # POST /national_patient_identifiers
-  def generate
-    if Site.master?
-      if params[:last_timestamp]
-        if params[:last_timestamp].blank?
-          generated_but_not_sent_ids = NationalPatientIdentifier.where(:assigned_at => nil)
-        else
-          generated_but_not_sent_ids = NationalPatientIdentifier.where(['created_at > ?', params[:last_timestamp]])
-          number_of_needed_ids = params[:npid][:count].to_i - generated_but_not_sent_ids.count
-          if number_of_needed_ids > 0
-            params[:npid][:count] = number_of_needed_ids
-            NationalPatientIdentifier.generate! :count => count, :assigner_site_id => params[:site_id]
-          end
-        end
-        @npids = generated_but_not_sent_ids.reload.all
-      else
-        @npids = NationalPatientIdentifier.generate! :count => count, :assigner_site_id => params[:site_id]
-      end
-    else
-      @npids = NationalPatientIdentifier.request! params[:npid].merge(:assigner_site_id => Site.current_id)
-    end
-
-    redirect_to site_specific_national_patient_identifiers_path(params[:npid])
-
-    respond_to do |format|
-      format.html do
-        flash[:notice] = "You have now #{@npids.size} new NPIDS assigned to your site."
-        redirect_to :action => 'index'
-      end
-      format.json { render :json => @npids.to_json, :status => :created }
-      format.xml  { render :xml  => @npids, :status => :created }
     end
   end
 

@@ -36,10 +36,6 @@ class NationalPatientIdentifier < ActiveRecord::Base
 
   protected
 
-  def self.base_resource
-    RestClient::Resource.new(SITE_CONFIG[:master_uri], SITE_CONFIG[:remote_http_options].to_hash.symbolize_keys)['national_patient_identifiers']['site'][Site.current_id]
-  end
-
   def self.next_id_val(site_code, last_number = nil)
     npid_version  = '1'
     npid_prefix   = "P#{npid_version}#{site_code.rjust(3, '0')}"

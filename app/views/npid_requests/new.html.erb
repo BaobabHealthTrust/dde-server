@@ -1,0 +1,33 @@
+<h2>Request new NPIDs</h2>
+
+<%= form_for @npid_request do |f| %>
+  <% if @npid_request.errors.any? %>
+    <div id="error_explanation">
+      <h2><%= pluralize(@npid_request.errors.count, 'error') %></h2>
+
+      <ul>
+        <% @npid_request.errors.full_messages.each do |msg| %>
+          <li><%= msg %></li>
+        <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <div class="field">
+    <%= f.label :count, 'Number of IDs to request' %><br />
+    <%= f.text_field :count %>
+  </div>
+
+  <% if Site.master? %>
+    <div class="field">
+      <%= f.label :site_code, 'Site' %><br />
+      <%= f.collection_select :site_code, Site.all, :code, :name %>
+    </div>
+  <% end %>
+
+  <div class="actions">
+    <%= f.submit 'Request new NPIDs' %>
+  </div>
+<% end %>
+
+<%= link_to 'Back', national_patient_identifiers_path %>

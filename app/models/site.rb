@@ -31,6 +31,14 @@ class Site < ActiveRecord::Base
     end
   end
 
+  def self.current_code
+    if self.proxy?
+      self.current.try(:code) || '???'
+    else
+      'DDE'
+    end
+  end
+
   def self.master?
     SITE_CONFIG[:mode] == 'master'
   end

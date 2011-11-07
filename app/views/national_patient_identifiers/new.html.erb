@@ -1,7 +1,0 @@
-<% if Site.master? %>
-  <%= render 'new_master' %>
-<% else %>
-  <%= render 'new_proxy' %>
-<% end %>
-
-<%= link_to 'Back', national_patient_identifiers_path %>

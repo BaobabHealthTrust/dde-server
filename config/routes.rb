@@ -7,12 +7,11 @@ DdeServer::Application.routes.draw do
     end
   end
 
+  resources :npid_requests
+
   resources :national_patient_identifiers do
     collection do
-      post :generate
-      post :request
       get  'site/:site_id', :action => :for_site, :as => :site_specific
-      post 'site/:site_id', :action => :generate, :as => :site_specific
     end
   end
 
