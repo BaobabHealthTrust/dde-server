@@ -1,5 +1,5 @@
 <h2>Listing National Patient IDs</h2>
-
+<% if Site.proxy? %>
 <% if Site.proxy? %>
   <p>You have currently <strong><%= Site.current.available_npids.count %> available National IDs</strong>
   and <strong><%= Site.current.assigned_npids.count %> assigned National IDs</strong></p>

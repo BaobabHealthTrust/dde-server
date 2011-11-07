@@ -1,6 +1,6 @@
 class Person < ActiveRecord::Base
   # dummy accessors
-  attr_accessor :status, :status_message, :remote_version_number
+  attr_accessor :status, :status_message
 
   has_one :national_patient_identifier
 
@@ -82,7 +82,8 @@ class Person < ActiveRecord::Base
             # This we have to store locally, otherwise future update requests would fail.
             new_version_number = decoded_response['person']['version_number']
             if new_version_number
-              self.update_attribute :version_number, new_version_number
+              self.remote_version_number = new_version_number
+              self.version_number        = new_version_number
             else
               raise 'The response from the server did not contain a new version number!'
             end
@@ -191,6 +192,7 @@ class Person < ActiveRecord::Base
     { 'person' => {
         'data'            => self.data,
         'version_number'  => self.remote_version_number,
+        'remote_version_number' => self.remote_version_number,
         'created_at'      => self.created_at,
         'updated_at'      => self.updated_at,
         'creator_id'      => self.creator_id,
@@ -249,7 +251,7 @@ class Person < ActiveRecord::Base
       if npid
         self.national_patient_identifier = npid
       else
-        raise 'You have run out of national patient ids, please request a new block to be asigned to you!'
+        raise 'You have run out of national patient ids, please request a new block to be assigned to you!'
       end
     end
   end
