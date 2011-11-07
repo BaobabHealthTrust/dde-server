@@ -1,18 +1,64 @@
 == DDE-Server
 
-This is the proxy and master service for Demographics Data Exchange to be used with the BART2 system build by Baobab.
+This is the proxy and master service for Demographics Data Exchange to be used
+with the BART2 system build by Baobab.
 
-This is Work In Progress! Nothing that can be found here should be considered final or even remotely operational.
+This is Work In Progress! Nothing that can be found here should be considered
+final or even remotely operational.
 
-=== Installation
+=== Installation in a development environment
 
 $ bundle install
 
+Edit config/database.yml to match your local database setup.
+
 # for proxy mode
-$ RAILS_ENV=development rake db:create db:migrate db:seed
+$ export RAILS_ENV=development
+$ rake db:create db:migrate db:seed
+$ rails server -p 3001
 
 # for master mode
-$ RAILS_ENV=integration rake db:create db:migrate db:seed
+$ export RAILS_ENV=integration
+$ rake db:create db:migrate db:seed
+$ rails server -p 3002
+
+This will generate a user 'admin' with password 'admin' on the proxy and the
+master service, then start the server. The master will be listeing on port 3002,
+the proxy on port 3001.
+
+=== Installation in a production environment
+
+Just as above, edit your config/database.yaml to match your database setup, then run
+
+$ rake db:migrate db:seed
+
+Put the following into config/site_config.yml for the master service
+
+    production:
+      mode:    master
+      site_id: 0
+
+Log into the master service with user name 'admin' and password 'admin'.
+Change the password first.
+
+For each proxy instance, log into the master service, go to 'Site Administration'
+and create a Site record with the apropriate information.
+
+Then go to 'User Management' and create a user for each site. These users
+will be used by the proxy to access the master service.
+
+Put the following into config/site_config.yml for each proxy instance:
+
+    production:
+      mode:    proxy
+      site_id: 9999          # ID of the site this service is runnig on. Get it from the master.
+      master_uri: http://... # URI of the master instance
+      remote_http_options:   # options for remote HTTP operations:
+        user:         ''     # user name to use for basic auth, as configured in the Master server's user setup
+        password:     ''     # password to use for basic auth, as configured in the Master server's user setup
+        timeout:      10     # data timout in seconds - increase for connections known to be slow, decrease to allow faster feedback on broken lines
+        open_timeout: 10     # open_timout, same as above
+
 
 
 Written by Willem van Kerkhof <willem.van-kerkhof@innoq.com>
