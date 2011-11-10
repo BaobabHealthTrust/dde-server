@@ -10,7 +10,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20110916091559) do
+ActiveRecord::Schema.define(:version => 20110921115702) do
 
   create_table "national_patient_identifiers", :force => true do |t|
     t.string   "value"
@@ -39,9 +39,10 @@ ActiveRecord::Schema.define(:version => 20110916091559) do
     t.text     "data"
     t.datetime "created_at"
     t.datetime "updated_at"
-    t.string   "version_number",  :default => "0"
+    t.string   "version_number",        :default => "0"
     t.string   "creator_id"
     t.string   "creator_site_id"
+    t.string   "remote_version_number"
   end
 
   create_table "sites", :force => true do |t|
