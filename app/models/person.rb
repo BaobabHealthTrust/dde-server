@@ -9,7 +9,8 @@ class Person < ActiveRecord::Base
   belongs_to :creator_site,
       :class_name => 'Site'
 
-  before_create :set_npid
+  before_validation :set_npid
+  
   after_save :save_npid
 
   validates_presence_of :national_patient_identifier, :data
