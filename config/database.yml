@@ -4,14 +4,14 @@ development:
   adapter: mysql2
   database: dde_development
   username: root
-  password: blubberbrutzel
+  password: letusout
   host: localhost
 
 integration:
   adapter: mysql2
   database: dde_integration
   username: root
-  password: blubberbrutzel
+  password: letusout
   host: localhost
 
 # Warning: The database defined as "test" will be erased and
@@ -21,7 +21,7 @@ test: &TEST
   adapter: mysql2
   database: dde_test
   username: root
-  password: blubberbrutzel
+  password: letusout
   host: localhost
 
 production:

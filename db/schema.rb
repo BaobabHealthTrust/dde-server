@@ -10,7 +10,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20110921115702) do
+ActiveRecord::Schema.define(:version => 20120103153216) do
 
   create_table "national_patient_identifiers", :force => true do |t|
     t.string   "value"
@@ -43,6 +43,9 @@ ActiveRecord::Schema.define(:version => 20110921115702) do
     t.string   "creator_id"
     t.string   "creator_site_id"
     t.string   "remote_version_number"
+    t.string   "given_name"
+    t.string   "family_name"
+    t.string   "gender"
   end
 
   create_table "sites", :force => true do |t|
