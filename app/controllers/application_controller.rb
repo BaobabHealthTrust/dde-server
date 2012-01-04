@@ -25,6 +25,7 @@ class ApplicationController < ActionController::Base
   def current_user
     unless @current_user == false # meaning a user has previously been established as not logged in
       @current_user ||= authenticate_from_session || authenticate_from_basic_auth || false
+      User.current_user = @current_user
     end
   end
 
