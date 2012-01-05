@@ -1,6 +1,7 @@
 class User < ActiveRecord::Base
   attr_reader :password
   attr_accessor :password_confirmation
+  cattr_accessor :current_user
 
   belongs_to :site
 

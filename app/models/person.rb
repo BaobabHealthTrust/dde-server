@@ -9,7 +9,10 @@ class Person < ActiveRecord::Base
   belongs_to :creator_site,
       :class_name => 'Site'
 
-  before_validation :set_npid
+  before_validation do |person| 
+    set_npid
+    person.creator_id = User.current_user.id
+  end
   
   after_save :save_npid
 
@@ -247,7 +250,7 @@ class Person < ActiveRecord::Base
   end
 
   def set_npid(npid = nil)
-    unless self.npid_value and npid.nil?
+    if self.npid_value.blank? and npid.nil?
       npid ||= NationalPatientIdentifier.where(:assigned_at => nil).first
       if npid
         self.national_patient_identifier = npid
@@ -258,7 +261,7 @@ class Person < ActiveRecord::Base
   end
 
   def save_npid
-    if self.npid.changed?
+    if self.npid.assigned_at.blank?
       self.npid.update_attributes \
           :assigned_at      => Time.now,
           :assigner_id      => self.creator_id,

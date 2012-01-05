@@ -16,8 +16,8 @@ development:
   remote_http_options:
     user:         admin
     password:     admin
-    timeout:      100
-    open_timeout: 100
+    timeout:      10
+    open_timeout: 10
 
 integration:
   mode: master

@@ -47,7 +47,10 @@ class PeopleController < ApplicationController
       end
     when 1
       respond_to do |format|
-        format.html # show.html.erb
+        format.html do |f| 
+          @person = @people.first
+          render :action => 'show'
+        end
         format.xml  { render :xml  => @people }
         format.json { render :json => @people.to_json }
       end
@@ -78,7 +81,12 @@ class PeopleController < ApplicationController
   # POST /people
   # POST /people.xml
   def create
-    @person = Person.new(params[:person].merge :creator_site_id => Site.current_id)
+    @person = Person.new(params[:person].merge( 
+                         {:creator_site_id => Site.current_id ,
+                         :given_name => params[:person]["data"]["names"]["given_name"] ,
+                         :family_name => params[:person]["data"]["names"]["family_name"] ,
+                         :gender => params[:person]["data"]["gender"]}
+                        ))
 
     respond_to do |format|
       if @person.save

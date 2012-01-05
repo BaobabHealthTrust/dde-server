@@ -4,3 +4,17 @@ log/*.log
 tmp/
 config/database.yml
 config/site_config.yml
+.DS_Store
+*.swp
+*.swo
+config/database.yml
+config/settings.yml
+notes
+doc
+development.sql
+development_structure.sql
+schema.rb
+*~
+mockups
+rerun.txt
+nbproject
