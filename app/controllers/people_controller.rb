@@ -47,7 +47,10 @@ class PeopleController < ApplicationController
       end
     when 1
       respond_to do |format|
-        format.html # show.html.erb
+        format.html do |f| 
+          @person = @people.first
+          render :action => 'show'
+        end
         format.xml  { render :xml  => @people }
         format.json { render :json => @people.to_json }
       end
