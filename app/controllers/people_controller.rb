@@ -85,7 +85,9 @@ class PeopleController < ApplicationController
                          {:creator_site_id => Site.current_id ,
                          :given_name => params[:person]["data"]["names"]["given_name"] ,
                          :family_name => params[:person]["data"]["names"]["family_name"] ,
-                         :gender => params[:person]["data"]["gender"]}
+                         :gender => params[:person]["data"]["gender"] ,
+                         :birthdate => params[:person]["data"]["birthdate"] ,
+                         :birthdate_estimated => params[:person]["data"]["birthdate_estimated"]}
                         ))
 
     respond_to do |format|
