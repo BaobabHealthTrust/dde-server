@@ -36,7 +36,8 @@ class PeopleController < ApplicationController
   # GET /people/find
   # GET /people/find.xml?given_name=:given_name&family_name=:family_name
   def find
-    @people = Person.where params.slice(:given_name, :family_name, :family_name2, :city_village, :gender)
+    @people = Person.where(params.slice(:given_name,:family_name, :family_name2,
+    :city_village, :gender)).joins(:national_patient_identifier).select("people.*,value")
 
     case @people.size
     when 0
