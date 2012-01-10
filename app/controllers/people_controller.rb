@@ -44,7 +44,12 @@ class PeopleController < ApplicationController
       if Site.master?
         head :not_found
       else
-#         find_remote
+#       find_remote
+        respond_to do |format|
+          format.json do |f| 
+            render :text => {}.to_json
+          end
+        end
       end
     when 1
       respond_to do |format|
