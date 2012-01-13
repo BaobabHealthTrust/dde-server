@@ -36,15 +36,26 @@ class PeopleController < ApplicationController
   # GET /people/find
   # GET /people/find.xml?given_name=:given_name&family_name=:family_name
   def find
-    @people = Person.where(params.slice(:given_name,:family_name, :family_name2,
-    :city_village, :gender)).joins(:national_patient_identifier).select("people.*,value")
+    if not params[:value].blank?
+      @people = Person.joins(:national_patient_identifier).where(params.slice(:given_name,
+      :family_name, :family_name2,:city_village,                                  
+      :gender).merge("national_patient_identifiers.value" => params[:value])).select("people.*,value")
+    else
+      @people = Person.where(params.slice(:given_name,:family_name, :family_name2,
+      :city_village, :gender)).joins(:national_patient_identifier).select("people.*,value")
+    end
 
     case @people.size
     when 0
       if Site.master?
         head :not_found
       else
-#         find_remote
+#       find_remote
+        respond_to do |format|
+          format.json do |f| 
+            render :text => {}.to_json
+          end
+        end
       end
     when 1
       respond_to do |format|
