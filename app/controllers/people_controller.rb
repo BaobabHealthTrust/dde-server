@@ -82,6 +82,11 @@ class PeopleController < ApplicationController
   # POST /people
   # POST /people.xml
   def create
+    @healthdata_patient = MasterPatientRecord.create_healthdata_patient(params)
+    if @healthdata_patient
+      params[:person]["data"]["patient"]["identifiers"]["old_identification_number"] = "#{@healthdata_patient.Site_ID.to_s}#{@healthdata_patient.Pat_ID.to_i.to_s}"
+    end
+
     @person = Person.new(params[:person].merge( 
                          {:creator_site_id => Site.current_id ,
                          :given_name => params[:person]["data"]["names"]["given_name"] ,
