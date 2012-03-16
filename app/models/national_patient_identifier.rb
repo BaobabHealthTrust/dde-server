@@ -3,7 +3,7 @@ class NationalPatientIdentifier < ActiveRecord::Base
   belongs_to :assigner,
       :class_name => 'User'
   belongs_to :assigner_site,
-      :class_name => 'Site'
+      :class_name => 'Site', :foreign_key => 'assigner_site_id'
 
   validates_presence_of :value, :assigner_site_id
 
