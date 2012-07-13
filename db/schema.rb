@@ -43,7 +43,6 @@ ActiveRecord::Schema.define(:version => 20120103153216) do
     t.string   "creator_id"
     t.string   "creator_site_id"
     t.string   "remote_version_number"
-    t.string   "national_id"
     t.string   "given_name"
     t.string   "family_name"
     t.string   "gender"

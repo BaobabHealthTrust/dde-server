@@ -2,16 +2,16 @@
 #   gem install sqlite3
 development:
   adapter: mysql2
-  database: dde_development
-  username: 
-  password: 
+  database: dde_development_db
+  username: root
+  password: admin
   host: localhost
 
 integration:
   adapter: mysql2
-  database: dde_integration
-  username: 
-  password: 
+  database: dde_integration_db
+  username: root
+  password: admin
   host: localhost
 
 # Warning: The database defined as "test" will be erased and
@@ -20,8 +20,8 @@ integration:
 test: &TEST
   adapter: mysql2
   database: dde_test
-  username: 
-  password: 
+  username: root
+  password: admin
   host: localhost
 
 production:
