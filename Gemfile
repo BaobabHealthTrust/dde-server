@@ -11,3 +11,5 @@ gem 'guid'
 gem 'bcrypt-ruby', :require => 'bcrypt'
 
 gem 'web-app-theme'
+
+gem 'composite_primary_keys', '=3.1.0'

@@ -36,8 +36,14 @@ class PeopleController < ApplicationController
   # GET /people/find
   # GET /people/find.xml?given_name=:given_name&family_name=:family_name
   def find
-    @people = Person.where(params.slice(:given_name,:family_name, :family_name2,
-    :city_village, :gender)).joins(:national_patient_identifier).select("people.*,value")
+    if not params[:value].blank?
+      @people = Person.joins(:national_patient_identifier).where(params.slice(:given_name,
+      :family_name, :family_name2,:city_village,                                  
+      :gender).merge("national_patient_identifiers.value" => params[:value])).select("people.*,value")
+    else
+      @people = Person.where(params.slice(:given_name,:family_name, :family_name2,
+      :city_village, :gender)).joins(:national_patient_identifier).select("people.*,value")
+    end
 
     case @people.size
     when 0
@@ -87,6 +93,11 @@ class PeopleController < ApplicationController
   # POST /people
   # POST /people.xml
   def create
+    @healthdata_patient = MasterPatientRecord.create_healthdata_patient(params)
+    if @healthdata_patient
+      params[:person]["data"]["patient"]["identifiers"]["old_identification_number"] = "#{@healthdata_patient.Site_ID.to_s}#{@healthdata_patient.Pat_ID.to_i.to_s}"
+    end
+
     @person = Person.new(params[:person].merge( 
                          {:creator_site_id => Site.current_id ,
                          :given_name => params[:person]["data"]["names"]["given_name"] ,
