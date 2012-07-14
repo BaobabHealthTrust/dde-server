@@ -32,6 +32,8 @@ GEM
     bcrypt-ruby (2.1.4)
     builder (2.1.2)
     cancan (1.6.5)
+    composite_primary_keys (3.1.0)
+      activerecord (>= 3.0.3)
     erubis (2.6.6)
       abstract (>= 1.0.0)
     fastercsv (1.5.4)
@@ -84,6 +86,7 @@ PLATFORMS
 DEPENDENCIES
   bcrypt-ruby
   cancan
+  composite_primary_keys (= 3.1.0)
   fastercsv
   guid
   mysql2 (= 0.2.7)
