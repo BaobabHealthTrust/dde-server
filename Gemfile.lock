@@ -47,6 +47,7 @@ GEM
       treetop (~> 1.4.8)
     mime-types (1.16)
     mysql2 (0.2.7)
+    national_patient_id (0.1.1)
     polyglot (0.3.2)
     rack (1.2.4)
     rack-mount (0.6.14)
@@ -90,6 +91,7 @@ DEPENDENCIES
   fastercsv
   guid
   mysql2 (= 0.2.7)
+  national_patient_id
   rails (= 3.0.9)
   redirectr
   rest-client

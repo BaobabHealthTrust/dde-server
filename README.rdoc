@@ -37,6 +37,10 @@ Put the following into config/site_config.yml for the master service
     production:
       mode:    master
       site_id: 0
+      npid_version: 3 # or 4
+      base_npid: 24300000
+      npid_range: 48599999   # no. of ids from base_npid to pick random numbers from
+      
 
 Log into the master service with user name 'admin' and password 'admin'.
 Change the password first.

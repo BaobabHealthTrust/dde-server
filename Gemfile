@@ -13,3 +13,4 @@ gem 'bcrypt-ruby', :require => 'bcrypt'
 gem 'web-app-theme'
 
 gem 'composite_primary_keys', '=3.1.0'
+gem 'national_patient_id'

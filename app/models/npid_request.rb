@@ -72,8 +72,11 @@ class NpidRequest
 
     if self.count and self.count > 0
       last_number = nil
-      (0 .. self.count).map do
-        id = NationalPatientIdentifier.create! :value => NationalPatientIdentifier.next_id_val(self.site_code, last_number), :assigner_site => self.site
+      (1 .. self.count).map do
+        id = NationalPatientIdentifier.create!(
+               :value => NationalPatientIdentifier.next_id_val(SITE_CONFIG[:npid_version],
+                                                               self.site_code, last_number),
+               :assigner_site => self.site)
         last_number = id.value
         id
       end
