@@ -54,6 +54,8 @@ class Site < ActiveRecord::Base
         self.find_or_create_from_attributes(data_set['site'], :update => true)
       end
     end
+    
+    "OK"
   rescue => e
     Rails.logger.error "#{e} while trying to fetch site information from master"
   end

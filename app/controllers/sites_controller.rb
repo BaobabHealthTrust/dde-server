@@ -91,10 +91,14 @@ class SitesController < ApplicationController
   end
 
   def index_remote
-    success = Site.sync_with_master!
+    resp = Site.sync_with_master!
     @sites  = Site.all
 
-    flash[:notice] = 'Could not fetch site information from master, shown data may be out of date.'
+    if resp == "OK" 
+      flash[:notice] = 'Sync with master completed successfully!'
+    else 
+      flash[:error] = resp
+    end
 
     respond_to do |format|
       format.html { render :action => 'index' }
