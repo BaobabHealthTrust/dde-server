@@ -8,19 +8,19 @@ final or even remotely operational.
 
 === Installation in a development environment
 
-$ bundle install
+  $ bundle install
 
 Edit config/database.yml to match your local database setup.
 
 # for proxy mode
-$ export RAILS_ENV=development
-$ rake db:create db:migrate db:seed
-$ rails server -p 3001
+  $ export RAILS_ENV=development
+  $ bundle exec rake db:create db:migrate db:seed
+  $ bundle exec rails server -p 3001
 
 # for master mode
-$ export RAILS_ENV=integration
-$ rake db:create db:migrate db:seed
-$ rails server -p 3002
+  $ export RAILS_ENV=integration
+  $ rake db:create db:migrate db:seed
+  $ rails server -p 3002
 
 This will generate a user 'admin' with password 'admin' on the proxy and the
 master service, then start the server. The master will be listeing on port 3002,
@@ -30,7 +30,7 @@ the proxy on port 3001.
 
 Just as above, edit your config/database.yaml to match your database setup, then run
 
-$ rake db:migrate db:seed
+  $ rake db:migrate db:seed
 
 Put the following into config/site_config.yml for the master service
 
