@@ -24,7 +24,7 @@ class NationalPatientIdentifiersController < ApplicationController
 
   def for_site
     @site = Site.find_by_code params[:site_id]
-    @national_patient_identifiers = @site.national_patient_identifiers.all :include => :assigner_site
+    @national_patient_identifiers = @site.national_patient_identifiers.page(params[:page]).all :include => :assigner_site
 
     respond_to do |format|
       format.html { render :action => 'index' }
