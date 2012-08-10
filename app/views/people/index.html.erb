@@ -26,6 +26,10 @@
   <% end %>
 </table>
 
+<%= will_paginate @people %>
 <br />
-
-<%= link_to 'New Person', new_person_path %>
+<p>
+  <div id="new" align="center">
+    <%= link_to 'New Person', new_person_path %>
+  </div>
+</p>

@@ -18,6 +18,8 @@ class Person < ActiveRecord::Base
 
   validates_presence_of :national_patient_identifier, :data
 
+  self.per_page = 20
+
   def data
     ActiveSupport::JSON.decode(read_attribute :data)
   rescue

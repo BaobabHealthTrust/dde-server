@@ -6,14 +6,19 @@
 
 <table class="table">
   <tr>
+    <th>#</th>
     <th>Value</th>
     <th>Assigned at</th>
     <th>Assigner site</th>
     <th style="width: 130px;"></th>
   </tr>
 
-  <% @national_patient_identifiers.each do |npid| %>
+  <% @national_patient_identifiers.each_with_index do |npid, i| %>
+  <% index = i + 1
+     index += (params[:page].to_i - 1 || 0) * 10 unless params[:page].blank?
+  %>
     <tr>
+      <td><%= index %></td>
       <td><%= link_to npid.value, npid%></td>
       <td><%= npid.assigned_at || '- not assigned yet -' %></td>
       <td><%= link_to npid.assigner_site.try(:name), npid.assigner_site %></td>
@@ -26,6 +31,10 @@
   <% end %>
 </table>
 
-<br />
-
+<%= will_paginate @national_patient_identifiers %>
+<br/>
+<p>
+<div id="new" align="center">
 <%= link_to 'New National patient IDs', new_national_patient_identifier_path %>
+</div>
+</p>

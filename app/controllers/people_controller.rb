@@ -6,7 +6,7 @@ class PeopleController < ApplicationController
   # GET /people
   # GET /people.xml
   def index
-    @people = Person.all
+    @people = Person.page(params[:page]).all
 
     respond_to do |format|
       format.html # index.html.erb

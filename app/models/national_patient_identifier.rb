@@ -11,6 +11,8 @@ class NationalPatientIdentifier < ActiveRecord::Base
   validates_uniqueness_of :person_id,
       :allow_nil => true
 
+  self.per_page = 20
+
   def self.find_or_create_from_attributes(attrs, options = {:update => false})
     if attrs['value']
       self.find_or_initialize_by_value(attrs['value']).tap do |npid|

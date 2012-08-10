@@ -80,6 +80,7 @@ GEM
       polyglot (>= 0.3.1)
     tzinfo (0.3.30)
     web-app-theme (0.7.0)
+    will_paginate (3.0.3)
 
 PLATFORMS
   ruby
@@ -96,3 +97,4 @@ DEPENDENCIES
   redirectr
   rest-client
   web-app-theme
+  will_paginate (~> 3.0)

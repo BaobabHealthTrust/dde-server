@@ -2,7 +2,8 @@ class NationalPatientIdentifiersController < ApplicationController
   # GET /national_patient_identifiers
   # GET /national_patient_identifiers.xml
   def index
-    @national_patient_identifiers = NationalPatientIdentifier.all :include => :assigner_site
+    @national_patient_identifiers = NationalPatientIdentifier.page(params[:page]
+                                                                  ).all(:include => :assigner_site) 
 
     respond_to do |format|
       format.html # index.html.erb
