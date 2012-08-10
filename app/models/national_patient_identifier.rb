@@ -46,7 +46,7 @@ class NationalPatientIdentifier < ActiveRecord::Base
       last_number ||= self.first(:conditions => ['left(value, 5) = ?', npid_prefix], :order => 'value DESC').try(:value) || nil
       last_number ||= SITE_CONFIG[:base_npid] || '0'
       
-      next_number = (last_number[5..-2].to_i + 1).to_s.rjust(7, '0')
+      next_number = (last_number.to_s[5..-2].to_i + 1).to_s.rjust(7, '0')
       national_id_without_check_digit = "#{npid_prefix}#{next_number}"
       
       "#{national_id_without_check_digit}#{NationalPatientId.check_digit(national_id_without_check_digit[1..-1])}"
