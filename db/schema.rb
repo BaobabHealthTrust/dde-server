@@ -10,10 +10,11 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20120103153216) do
+ActiveRecord::Schema.define(:version => 20120812171100) do
 
   create_table "national_patient_identifiers", :force => true do |t|
     t.string   "value"
+    t.integer  "decimal_num"
     t.string   "person_id"
     t.datetime "assigned_at"
     t.integer  "assigner_id"
@@ -21,6 +22,8 @@ ActiveRecord::Schema.define(:version => 20120103153216) do
     t.datetime "created_at"
     t.datetime "updated_at"
   end
+
+  add_index "national_patient_identifiers", ["decimal_num"], :name => "index_national_patient_identifiers_on_decimal_num", :unique => true
 
   create_table "pending_sync_requests", :force => true do |t|
     t.integer  "record_id"

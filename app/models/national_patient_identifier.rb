@@ -1,3 +1,6 @@
+# v3 Id: P + Version + Site Code + Sequential Number + Check Digit
+# v4 Id: base30(Random Number + Check Digit)
+#
 class NationalPatientIdentifier < ActiveRecord::Base
   belongs_to :person
   belongs_to :assigner,
@@ -11,6 +14,14 @@ class NationalPatientIdentifier < ActiveRecord::Base
   validates_uniqueness_of :person_id,
       :allow_nil => true
 
+  # create the decimal equivalent of the Id value if it has not yet been set
+  before_save do |npid|
+    if npid.value.length <= 7 and npid.decimal_num.blank?
+      num = NationalPatientId.to_decimal(npid.value, 30) / 10
+      npid.decimal_num = num unless NationalPatientIdentifier.find_by_decimal_num(num)
+    end
+  end
+  
   self.per_page = 20
 
   def self.find_or_create_from_attributes(attrs, options = {:update => false})
@@ -51,13 +62,20 @@ class NationalPatientIdentifier < ActiveRecord::Base
       
       "#{national_id_without_check_digit}#{NationalPatientId.check_digit(national_id_without_check_digit[1..-1])}"
     elsif version == 4
-      base_number ||= SITE_CONFIG[:base_npid].to_i
-      new_number = base_number + rand(SITE_CONFIG[:npid_range])
-      
-      NationalPatientId.new(new_number).value
+      NationalPatientId.new(NationalPatientIdentifier.next_random_num).value
     else
       raise ArgumentError, %Q(Unsupported version "#{version}". Should be 3 or 4)
     end
+  end
+  
+  def self.next_random_num
+    min = SITE_CONFIG[:base_npid].to_i
+    max = min + SITE_CONFIG[:npid_range].to_i
+    possible_ids = (min..max).map
+    generated_ids = NationalPatientIdentifier.where('decimal_num IS NOT NULL').map(&:decimal_num)
+    available_ids = possible_ids - generated_ids
+    
+    available_ids[rand(available_ids.length)]
   end
 
 end
