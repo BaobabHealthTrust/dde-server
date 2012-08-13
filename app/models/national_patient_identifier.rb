@@ -16,13 +16,20 @@ class NationalPatientIdentifier < ActiveRecord::Base
 
   # create the decimal equivalent of the Id value if it has not yet been set
   before_save do |npid|
-    if npid.value.length <= 7 and npid.decimal_num.blank?
+    if npid.decimal_num.blank?
       num = NationalPatientId.to_decimal(npid.value, 30) / 10
-      npid.decimal_num = num unless NationalPatientIdentifier.find_by_decimal_num(num)
+      npid.decimal_num = num
     end
   end
   
   self.per_page = 20
+
+  min = SITE_CONFIG[:base_npid].to_i
+  max = min + SITE_CONFIG[:npid_range].to_i
+  @@possible_ids ||= (min..max).map
+  
+  @@generated_ids ||= NationalPatientIdentifier.where('decimal_num IS NOT NULL').map(&:decimal_num)
+  @@last_id ||= NationalPatientIdentifier.last.id rescue nil
 
   def self.find_or_create_from_attributes(attrs, options = {:update => false})
     if attrs['value']
@@ -69,11 +76,13 @@ class NationalPatientIdentifier < ActiveRecord::Base
   end
   
   def self.next_random_num
-    min = SITE_CONFIG[:base_npid].to_i
-    max = min + SITE_CONFIG[:npid_range].to_i
-    possible_ids = (min..max).map
-    generated_ids = NationalPatientIdentifier.where('decimal_num IS NOT NULL').map(&:decimal_num)
-    available_ids = possible_ids - generated_ids
+    if @@last_id
+      @@generated_ids += NationalPatientIdentifier.select('id').where(['id > ?', @@last_id]).map(&:id)
+    else
+      @@generated_ids = NationalPatientIdentifier.select('id').map(&:id)
+    end
+    @@last_id = NationalPatientIdentifier.select('id').last.id rescue nil
+    available_ids = @@possible_ids - @@generated_ids
     
     available_ids[rand(available_ids.length)]
   end
