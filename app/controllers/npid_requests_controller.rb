@@ -51,11 +51,35 @@ class NpidRequestsController < ApplicationController
         uri = "http://admin:admin@dde-master/npid_requests/ack/"
         ack = RestClient.post(uri,"ids[]=#{npid}")
       end
-      render :text  => "#{ack}" 
-      return
+      resp = "#{ack}" 
+    else
+      @npid_request = NpidRequest.new params[:npid_request]
+      saved = @npid_request.save
+      ids = @npid_request.npids.map(&:value) rescue []
+      
+      if ids.length == 1
+        resp = ids.first
+      else
+        resp = ids.to_json
+      end 
     end
-    render :text  => "Err" 
+    
+    render :text => resp
     return
+  end
+  
+  def ack
+    patient_ids = []
+    patient_ids = params[:ids] if params[:ids]
+    patient_ids.each do |id|
+      npid = NationalPatientIdentifier.find_by_value(id)
+      npid.pulled = true
+      npid.save
+    end
+    
+    respond_to do |format|
+      format.txt { render :text => 'OK' }
+    end
   end
 
 end

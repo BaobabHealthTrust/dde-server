@@ -9,7 +9,7 @@ DdeServer::Application.routes.draw do
 
   resources :npid_requests do
     collection do
-      get :get_npids
+      post :get_npids, :ack
     end
   end
 
