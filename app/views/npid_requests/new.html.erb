@@ -22,9 +22,7 @@ var numberOfAssignedIDs = 1;
    }    
 
   var params = "npid_request[count]=1&npid_request[last_timestamp]=" + (new Date()) 
-  params += "&npid_request[site_code]=";
-  params += "9999";
-  xmlhttp.open("GET","http://dde-master/npid_requests/get_npids?" + params,true);            
+  xmlhttp.open("GET","/npid_requests/get_npids?" + params,true);            
   xmlhttp.send();
  
 }
@@ -49,8 +47,8 @@ function doDelayLoop() {
     break                                                                       
   }      
   
-  //if (numberOfNewIDsRequested < 1)                                                                       
-   // window.location = '/national_patient_identifiers';
+  if (numberOfNewIDsRequested < 1)                                                                       
+    window.location = '/national_patient_identifiers';
                                                
 } 
 

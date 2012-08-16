@@ -41,13 +41,20 @@ class NpidRequestsController < ApplicationController
 
   def get_npids
     if Site.proxy?
-      params[:npid_request].merge!('site_code' => Site.current_code)
+      params[:npid_request].merge!('site_code' => Site.current.code)
+      uri = "http://admin:admin@dde-master/npid_requests/get_npids/"
+      npid = RestClient.post(uri,params)
+
+      ack = false
+      if npid
+        NationalPatientIdentifier.create!(:value => npid,:assigner_site_id => Site.current.id)
+        uri = "http://admin:admin@dde-master/npid_requests/ack/"
+        ack = RestClient.post(uri,"ids[]=#{npid}")
+      end
+      render :text  => "#{ack}" 
+      return
     end
-
-    @npid_request = NpidRequest.new params[:npid_request]
-    saved = @npid_request.save
-
-    render :text  => "#{saved}" 
+    render :text  => "Err" 
     return
   end
 
