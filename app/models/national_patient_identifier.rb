@@ -29,6 +29,7 @@ class NationalPatientIdentifier < ActiveRecord::Base
   @@possible_ids ||= (min..max).map
   
   @@generated_ids ||= NationalPatientIdentifier.where('decimal_num IS NOT NULL').map(&:decimal_num)
+  @@last_id = nil
   @@last_id ||= NationalPatientIdentifier.last.id rescue nil
 
   def self.find_or_create_from_attributes(attrs, options = {:update => false})
