@@ -7,7 +7,11 @@ DdeServer::Application.routes.draw do
     end
   end
 
-  resources :npid_requests
+  resources :npid_requests do
+    collection do
+      get :get_npids
+    end
+  end
 
   resources :national_patient_identifiers do
     collection do

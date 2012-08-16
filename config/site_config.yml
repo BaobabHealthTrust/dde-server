@@ -12,12 +12,12 @@ development:
   <<: *default
   mode: proxy
   site_id: 1
-  master_uri: http://localhost:3002
+  master_uri: http://dde-master
   remote_http_options:
     user:         admin
     password:     admin
-    timeout:      10
-    open_timeout: 10
+    timeout:      600
+    open_timeout: 600
 
 integration:
   mode: master

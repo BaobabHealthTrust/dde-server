@@ -1,4 +1,69 @@
-<h2>Request new NPIDs</h2>
+<script>
+
+var numberOfNewIDsRequested = 0;                                             
+var numberOfAssignedIDs = 1;                      
+                                                                                
+ function getID() { 
+   var notice = document.getElementsByTagName('h2')[0];
+                                                   
+   if (window.XMLHttpRequest) {// code for IE7+, Firefox, Chrome, Opera, Safari
+     xmlhttp=new XMLHttpRequest();                                             
+   }else{// code for IE6, IE5                                                  
+     xmlhttp=new ActiveXObject("Microsoft.XMLHTTP");                           
+   }
+  
+   xmlhttp.onreadystatechange=function() {                                     
+     if (xmlhttp.readyState==4 && xmlhttp.status==200) {                       
+       var results = xmlhttp.responseText;                                     
+       notice.innerHTML = "Request new NPIDs (" + numberOfAssignedIDs++ + ")";                       
+       numberOfNewIDsRequested--;                                                   
+       doDelayLoop();                                                            
+     }     
+   }    
+
+  var params = "npid_request[count]=1&npid_request[last_timestamp]=" + (new Date()) 
+  params += "&npid_request[site_code]=";
+  params += "9999";
+  xmlhttp.open("GET","http://dde-master/npid_requests/get_npids?" + params,true);            
+  xmlhttp.send();
+ 
+}
+
+function requestIDs() {                                                            
+  numberOfNewIDsRequested = document.getElementById('npid_request_count').value
+  try{ 
+    numberOfNewIDsRequested = parseInt(numberOfNewIDsRequested);
+  }catch(e){
+    numberOfNewIDsRequested = 0;
+  }
+
+  if(numberOfNewIDsRequested < 1 || isNaN(numberOfNewIDsRequested))
+    return;
+
+  doDelayLoop();                                                                
+}                                                                               
+                                                                                
+function doDelayLoop() {                                                        
+  for(i=0 ; i < numberOfNewIDsRequested; i++){                                                               
+    getID();                                                     
+    break                                                                       
+  }      
+  
+  //if (numberOfNewIDsRequested < 1)                                                                       
+   // window.location = '/national_patient_identifiers';
+                                               
+} 
+
+
+</script>
+
+<style>
+  /*h4 { display: none; }*/
+
+</style>
+
+
+<h2>Request new NPIDs</h2><br />
 
 <%= form_for @npid_request do |f| %>
   <% if @npid_request.errors.any? %>
@@ -26,7 +91,8 @@
   <% end %>
 
   <div class="actions">
-    <%= f.submit 'Request new NPIDs' %>
+    <%#= f.submit 'Request new NPIDs' %>
+    <%= button_to_function 'Request new NPIDs' , 'requestIDs()' %>
   </div>
 <% end %>
 

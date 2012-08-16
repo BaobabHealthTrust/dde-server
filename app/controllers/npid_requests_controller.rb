@@ -29,12 +29,26 @@ class NpidRequestsController < ApplicationController
         end
         format.json { render :json => @npids.to_json, :status => :created }
         format.xml  { render :xml  => @npids, :status => :created }
+        format.txt  { render :text  => 'Assigned ID' }
       else
         format.html { render :action => 'new' }
         format.json { render :json => @npid_request.errors, :status => :internal_server_error }
         format.xml  { render :xml  => @npid_request.errors, :status => :internal_server_error }
+        format.txt  { render :text  => 'Assigned ID' }
       end
     end
+  end
+
+  def get_npids
+    if Site.proxy?
+      params[:npid_request].merge!('site_code' => Site.current_code)
+    end
+
+    @npid_request = NpidRequest.new params[:npid_request]
+    saved = @npid_request.save
+
+    render :text  => "#{saved}" 
+    return
   end
 
 end
