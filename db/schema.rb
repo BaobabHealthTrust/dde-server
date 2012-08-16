@@ -10,12 +10,13 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20120812171100) do
+ActiveRecord::Schema.define(:version => 20120816133151) do
 
   create_table "national_patient_identifiers", :force => true do |t|
     t.string   "value"
     t.integer  "decimal_num"
     t.string   "person_id"
+    t.boolean  "pulled"
     t.datetime "assigned_at"
     t.integer  "assigner_id"
     t.integer  "assigner_site_id"

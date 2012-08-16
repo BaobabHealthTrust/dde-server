@@ -21,8 +21,8 @@ var numberOfAssignedIDs = 1;
      }     
    }    
 
-  var params = "npid_request[count]=1&npid_request[last_timestamp]=" + (new Date()) 
-  xmlhttp.open("GET","/npid_requests/get_npids?" + params,true);            
+  var params = "npid_request[count]=1&npid_request[last_timestamp]=" + (new Date());
+  xmlhttp.open("GET","/npid_requests/get_npids?" + params , true);            
   xmlhttp.send();
  
 }
