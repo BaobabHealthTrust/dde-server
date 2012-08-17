@@ -29,6 +29,13 @@ var numberOfAssignedIDs = 1;
 
 function requestIDs() {                                                            
   numberOfNewIDsRequested = document.getElementById('npid_request_count').value
+  <%unless Site.proxy? %>
+    var siteCode = document.getElementById('npid_request_site_code').value
+    var parameters = "npid_request[count]=" + numberOfNewIDsRequested + "&npid_request[last_timestamp]=" + (new Date());
+    parameters += "&npid_request[site_code]=" + siteCode;
+    window.location = "/npid_requests/get_npids?" + parameters;            
+    return
+  <%end%>
   try{ 
     numberOfNewIDsRequested = parseInt(numberOfNewIDsRequested);
   }catch(e){
