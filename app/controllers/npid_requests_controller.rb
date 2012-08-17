@@ -55,13 +55,14 @@ class NpidRequestsController < ApplicationController
     else
       @npid_request = NpidRequest.new params[:npid_request]
       saved = @npid_request.save
-      ids = @npid_request.npids.map(&:value) rescue []
+      ids = @npid_request.npids.map(&:value) 
       
       if ids.length == 1
         resp = ids.first
       else
         resp = ids.to_json
       end 
+      redirect_to :controller => :national_patient_identifiers and return
     end
     
     render :text => resp
@@ -70,6 +71,7 @@ class NpidRequestsController < ApplicationController
   
   def ack
     patient_ids = []
+    raise params.to_yaml
     patient_ids = params[:ids] if params[:ids]
     patient_ids.each do |id|
       npid = NationalPatientIdentifier.find_by_value(id)
