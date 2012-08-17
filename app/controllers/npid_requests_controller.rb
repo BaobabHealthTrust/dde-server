@@ -52,6 +52,7 @@ class NpidRequestsController < ApplicationController
         ack = RestClient.post(uri,"ids[]=#{npid}")
       end
       resp = "#{ack}" 
+      redirect_to :controller => :national_patient_identifiers and return
     else
       @npid_request = NpidRequest.new params[:npid_request]
       saved = @npid_request.save
@@ -62,7 +63,6 @@ class NpidRequestsController < ApplicationController
       else
         resp = ids.to_json
       end 
-      redirect_to :controller => :national_patient_identifiers and return
     end
     
     render :text => resp
