@@ -52,7 +52,6 @@ class NpidRequestsController < ApplicationController
         ack = RestClient.post(uri,"ids[]=#{npid}")
       end
       resp = "#{ack}" 
-      redirect_to :controller => :national_patient_identifiers and return
     else
       @npid_request = NpidRequest.new params[:npid_request]
       saved = @npid_request.save
@@ -65,13 +64,15 @@ class NpidRequestsController < ApplicationController
       end 
     end
     
+    unless Site.proxy?
+      redirect_to :controller => :national_patient_identifiers and return
+    end
     render :text => resp
     return
   end
   
   def ack
     patient_ids = []
-    raise params.to_yaml
     patient_ids = params[:ids] if params[:ids]
     patient_ids.each do |id|
       npid = NationalPatientIdentifier.find_by_value(id)
