@@ -64,9 +64,6 @@ class NpidRequestsController < ApplicationController
       end 
     end
     
-    unless Site.proxy?
-      redirect_to :controller => :national_patient_identifiers and return
-    end
     render :text => resp
     return
   end
