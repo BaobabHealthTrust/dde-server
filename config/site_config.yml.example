@@ -1,0 +1,27 @@
+default: &default
+  mode:    proxy        # allowed: master|proxy
+  site_id: 9999         # ID of the site this service is runnig on.
+  master_uri:           # URI of the master instance, if mode=proxy
+  remote_http_options:  # options for remote HTTP operations:
+    user:             # user name to use for basic auth 
+    password:         # password to use for basic auth 
+    timeout:      10  # data timout - increase for connections known to be slow, decrease to allow faster feedback on broken lines
+    open_timeout: 10  # open_timout, same as above
+
+development:
+  <<: *default
+  mode: proxy
+  site_id: 2
+  master_uri: http://localhost:3002
+  remote_http_options:
+    user:         admin
+    password:     admin
+    timeout:      600
+    open_timeout: 600
+
+integration:
+  mode: master
+  site_id: 0
+  npid_version: 4                                                    
+  base_npid: 40000000                                                       
+  npid_range: 10000000   # no. of ids from base_npid to pick random numbers from
