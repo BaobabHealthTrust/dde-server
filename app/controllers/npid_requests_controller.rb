@@ -57,27 +57,22 @@ class NpidRequestsController < ApplicationController
       saved = @npid_request.save
       ids = @npid_request.npids.map(&:value) 
       
-      if ids.length == 1
-        resp = ids.first
-      else
-        #resp = ids.to_json
-        filename = Time.now().strftime('%Y%m%d%H%M%S') + '.txt'
-        `touch #{Rails.root}/npids/#{filename}`
-        l = Logger.new(Rails.root.join("npids",filename)) 
+      filename = (params[:npid_request]['site_code']) + Time.now().strftime('%Y%m%d%H%M%S') + '.txt'
+      `touch #{Rails.root}/npids/#{filename}`
+      l = Logger.new(Rails.root.join("npids",filename)) 
 
-        (ids).each do |id|
-          l.info "#{id}"
-        end
+      (ids).each do |id|
+        l.info "#{id}"
+      end
 
-        batch_info = {}
+      batch_info = {}
 
-        file_info = `cksum #{Rails.root}/npids/#{filename}`.split(' ')
-        batch_info[:check_sum] = file_info[0]
-        batch_info[:file_size] = file_info[1]
-        batch_info[:file_name] = filename
-        batch_info[:ids] = ids
-        resp = batch_info.to_json
-      end 
+      file_info = `cksum #{Rails.root}/npids/#{filename}`.split(' ')
+      batch_info[:check_sum] = file_info[0]
+      batch_info[:file_size] = file_info[1]
+      batch_info[:file_name] = filename
+      batch_info[:ids] = ids
+      resp = batch_info.to_json
     end
     
     render :text => resp

@@ -98,8 +98,12 @@ function requestIDs() {
 
     xmlhttp.open("GET","/npid_requests/get_npids?" + parameters , true);            
     xmlhttp.send();
-    return
+    return;
   <%end%>
+
+  BatchRequestIDs();
+  return;
+
   try{ 
     numberOfNewIDsRequested = parseInt(numberOfNewIDsRequested);
   }catch(e){
@@ -163,7 +167,7 @@ function doDelayLoop() {
     <%#= f.submit 'Request new NPIDs' %>
     <%= button_to_function 'Request new NPIDs' , 'requestIDs()' %>&nbsp;
     <% if Site.proxy? %>
-      <%= button_to_function 'Request new NPIDs (Batch format)' , 'BatchRequestIDs()' %>
+      <%#= button_to_function 'Request new NPIDs (Batch format)' , 'BatchRequestIDs()' %>
     <% end %>
   </div>
 <% end %>
