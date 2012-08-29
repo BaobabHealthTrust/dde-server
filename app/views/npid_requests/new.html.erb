@@ -41,8 +41,12 @@ function BatchRequestIDs() {
 
   xmlhttp.onreadystatechange=function() {                                     
     if (xmlhttp.readyState==4 && xmlhttp.status==200) {                       
-      window.location = "/national_patient_identifiers";
-      return
+      if (xmlhttp.responseText.match(".txt")) {
+        acknowledge(xmlhttp.responseText)
+      }else{
+        window.location = "/national_patient_identifiers";
+        return
+      }
     }     
   }    
 
@@ -51,6 +55,26 @@ function BatchRequestIDs() {
   return
 
 }
+
+function acknowledge(filename) {
+  if (window.XMLHttpRequest) {// code for IE7+, Firefox, Chrome, Opera, Safari
+    xmlhttp=new XMLHttpRequest();                                             
+  }else{// code for IE6, IE5                                                  
+    xmlhttp=new ActiveXObject("Microsoft.XMLHTTP");                           
+  }
+
+  xmlhttp.onreadystatechange=function() {                                     
+    if (xmlhttp.readyState==4 && xmlhttp.status==200) {                       
+      window.location = "/national_patient_identifiers";
+      return
+    }     
+  }    
+
+  xmlhttp.open("GET","/npid_requests/acknowledge?file=" + filename , true);            
+  xmlhttp.send();
+  return
+}
+
 
 function requestIDs() {                                                            
   numberOfNewIDsRequested = document.getElementById('npid_request_count').value

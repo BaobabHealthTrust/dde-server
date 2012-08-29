@@ -120,7 +120,16 @@ class NpidRequestsController < ApplicationController
         batch_info[:check_sum] = file_info[0]
         batch_info[:file_size] = file_info[1]
         batch_info[:file_name] = filename
-        render :text => (filename == batch_info[:file_name])
+        complete_tranfer = (filename == batch_info[:file_name])
+
+        if complete_tranfer
+          (ids['ids']).each do |id|
+            NationalPatientIdentifier.create!(:value => id,:assigner_site_id => Site.current.id)
+          end
+        end
+
+        render :text => filename if complete_tranfer
+        render :text => complete_tranfer unless complete_tranfer
         return
       end
     end
@@ -128,6 +137,19 @@ class NpidRequestsController < ApplicationController
   end
 
   def acknowledge
+    if Site.proxy?
+      uri = "http://admin:admin@localhost:3002/npid_requests/acknowledge/"
+      resp = RestClient.post(uri,params) 
+    else
+      resp = false
+      File.open("#{Rails.root}/npids/#{params[:file]}", "r").each_line do |line|
+        id = line.sub("\n",'')
+        npid = NationalPatientIdentifier.find_by_value(id)
+        npid.pulled = true
+        resp = npid.save
+      end
+    end
+    render :text => resp and return
   end
 
 
