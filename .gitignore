@@ -1,6 +1,7 @@
 .bundle
 db/*.sqlite3
 log/*.log
+npids/*.txt
 tmp/
 config/database.yml
 config/site_config.yml
