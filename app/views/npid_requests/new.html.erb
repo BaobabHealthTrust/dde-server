@@ -29,7 +29,7 @@ var numberOfAssignedIDs = 1;
 
 function BatchRequestIDs() {
   numberOfNewIDsRequested = document.getElementById('npid_request_count').value
-  var siteCode = document.getElementById('npid_request_site_code').value
+  var siteCode = "<%=Site.current.code rescue nil %>"
   var parameters = "npid_request[count]=" + numberOfNewIDsRequested + "&npid_request[last_timestamp]=" + (new Date());
   parameters += "&npid_request[site_code]=" + siteCode;
 
@@ -46,7 +46,7 @@ function BatchRequestIDs() {
     }     
   }    
 
-  xmlhttp.open("GET","/npid_requests/get_npids?" + parameters , true);            
+  xmlhttp.open("GET","/npid_requests/get_npids_in_batch?" + parameters , true);            
   xmlhttp.send();
   return
 
@@ -138,7 +138,9 @@ function doDelayLoop() {
   <div class="actions">
     <%#= f.submit 'Request new NPIDs' %>
     <%= button_to_function 'Request new NPIDs' , 'requestIDs()' %>&nbsp;
-    <%= button_to_function 'Request new NPIDs (Batch format)' , 'BatchRequestIDs()' %>
+    <% if Site.proxy? %>
+      <%= button_to_function 'Request new NPIDs (Batch format)' , 'BatchRequestIDs()' %>
+    <% end %>
   </div>
 <% end %>
 

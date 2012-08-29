@@ -60,7 +60,23 @@ class NpidRequestsController < ApplicationController
       if ids.length == 1
         resp = ids.first
       else
-        resp = ids.to_json
+        #resp = ids.to_json
+        filename = Time.now().strftime('%Y%m%d%H%M%S') + '.txt'
+        `touch #{Rails.root}/npids/#{filename}`
+        l = Logger.new(Rails.root.join("npids",filename)) 
+
+        (ids).each do |id|
+          l.info "#{id}"
+        end
+
+        batch_info = {}
+
+        file_info = `cksum #{Rails.root}/npids/#{filename}`.split(' ')
+        batch_info[:check_sum] = file_info[0]
+        batch_info[:file_size] = file_info[1]
+        batch_info[:file_name] = filename
+        batch_info[:ids] = ids
+        resp = batch_info.to_json
       end 
     end
     
@@ -81,5 +97,38 @@ class NpidRequestsController < ApplicationController
       format.txt { render :text => 'OK' }
     end
   end
+  
+  def get_npids_in_batch
+    if Site.proxy?
+      params[:npid_request].merge!('site_code' => Site.current.code)
+      uri = "http://admin:admin@localhost:3002/npid_requests/get_npids/"
+      json_text = RestClient.post(uri,params)
+      ids = JSON.parse(json_text)
+
+      unless ids.blank?
+        filename = ids['file_name']
+        `touch #{Rails.root}/npids/#{filename}`
+        l = Logger.new(Rails.root.join("npids",filename)) 
+
+        (ids['ids']).each do |id|
+          l.info "#{id}"
+        end
+
+        batch_info = {}
+
+        file_info = `cksum #{Rails.root}/npids/#{filename}`.split(' ')
+        batch_info[:check_sum] = file_info[0]
+        batch_info[:file_size] = file_info[1]
+        batch_info[:file_name] = filename
+        render :text => (filename == batch_info[:file_name])
+        return
+      end
+    end
+    
+  end
+
+  def acknowledge
+  end
+
 
 end

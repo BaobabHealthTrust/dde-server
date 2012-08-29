@@ -9,8 +9,8 @@ DdeServer::Application.routes.draw do
 
   resources :npid_requests do
     collection do
-      post :get_npids, :ack
-      get :get_npids, :ack
+      post :get_npids, :ack, :get_npids_in_batch, :acknowledge
+      get :get_npids, :ack, :get_npids_in_batch, :acknowledge
     end
   end
 
