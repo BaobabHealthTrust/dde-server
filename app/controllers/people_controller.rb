@@ -40,6 +40,13 @@ class PeopleController < ApplicationController
       @people = Person.joins(:national_patient_identifier).where(params.slice(:given_name,
       :family_name, :family_name2,:city_village,                                  
       :gender).merge("national_patient_identifiers.value" => params[:value])).select("people.*,value")
+
+      if @people.blank?
+        national_id = params[:value].gsub('-','')
+        @people = Person.joins([:national_patient_identifier,
+          :legacy_national_ids]).where('legacy_national_ids.value' => national_id).select("people.*,national_patient_identifiers.value")
+      end
+
     else
       @people = Person.where(params.slice(:given_name,:family_name, :family_name2,
       :city_village, :gender)).joins(:national_patient_identifier).select("people.*,value")
@@ -98,6 +105,24 @@ class PeopleController < ApplicationController
     #  params[:person]["data"]["patient"]["identifiers"]["old_identification_number"] = "#{@healthdata_patient.Site_ID.to_s}#{@healthdata_patient.Pat_ID.to_i.to_s}"
     # end
 
+    passed_national_id = (params[:person]['data']['patient']['identifiers']['national_id'])
+
+    unless passed_national_id.blank?
+      national_id = passed_national_id.gsub('-','').strip
+      @person = Person.where("national_patient_identifiers.value = ? OR legacy_national_ids.value = ?",
+        national_id,national_id).includes([:national_patient_identifier,
+        :legacy_national_ids]).first rescue nil
+
+      if @person
+        respond_to do |format|
+            format.html { redirect_to(@person, :notice => 'Person was successfully created.') }
+            format.xml  { render :xml  => @person, :status => :created, :location => @person }
+            format.json { render :json => @person, :status => :created, :location => @person }
+        end
+      end
+      return if not @person.blank?
+    end
+
     @person = Person.new(params[:person].merge( 
                          {:creator_site_id => Site.current_id ,
                          :given_name => params[:person]["data"]["names"]["given_name"] ,
@@ -109,6 +134,12 @@ class PeopleController < ApplicationController
 
     respond_to do |format|
       if @person.save
+        if not passed_national_id.blank?
+          legacy_national_id = LegacyNationalIds.new()
+          legacy_national_id.person_id = @person.id
+          legacy_national_id.value = national_id
+          legacy_national_id.save
+        end
         format.html { redirect_to(@person, :notice => 'Person was successfully created.') }
         format.xml  { render :xml  => @person, :status => :created, :location => @person }
         format.json { render :json => @person, :status => :created, :location => @person }
