@@ -10,7 +10,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20120903134306) do
+ActiveRecord::Schema.define(:version => 20120904102323) do
 
   create_table "legacy_national_ids", :force => true do |t|
     t.string   "value"

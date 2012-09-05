@@ -1,4 +1,4 @@
-class LegacyNationalIds < ActiveRecord::Migration
+class CreateLegacyNationalIds < ActiveRecord::Migration
   def self.up
     create_table :legacy_national_ids do |t|                           
       t.string   :value                                                         
