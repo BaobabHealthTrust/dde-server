@@ -105,7 +105,7 @@ class PeopleController < ApplicationController
     #  params[:person]["data"]["patient"]["identifiers"]["old_identification_number"] = "#{@healthdata_patient.Site_ID.to_s}#{@healthdata_patient.Pat_ID.to_i.to_s}"
     # end
 
-    passed_national_id = (params[:person]['data']['patient']['identifiers']['national_id'])
+    passed_national_id = (params[:person]['data']['patient']['identifiers']['old_identification_number'])
 
     unless passed_national_id.blank?
       national_id = passed_national_id.gsub('-','').strip
