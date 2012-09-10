@@ -117,10 +117,14 @@ class NpidRequestsController < ApplicationController
         batch_info[:file_name] = filename
         complete_tranfer = (filename == batch_info[:file_name])
 
+        batch_ids = []
+
         if complete_tranfer
           (ids['ids']).each do |id|
-            NationalPatientIdentifier.create!(:value => id,:assigner_site_id => Site.current.id)
+            #NationalPatientIdentifier.create!(:value => id,:assigner_site_id => Site.current.id)
+            batch_ids << NationalPatientIdentifier.new(:value => id,:assigner_site_id => Site.current.id)
           end
+          NationalPatientIdentifier.import batch_ids
         end
 
         render :text => filename if complete_tranfer
@@ -137,12 +141,17 @@ class NpidRequestsController < ApplicationController
       resp = RestClient.post(uri,params) 
     else
       resp = false
+      ids = []
       File.open("#{Rails.root}/npids/#{params[:file]}", "r").each_line do |line|
-        id = line.sub("\n",'')
-        npid = NationalPatientIdentifier.find_by_value(id)
-        npid.pulled = true
-        resp = npid.save
+        ids << line.sub("\n",'')
+        #npid = NationalPatientIdentifier.find_by_value(id)
+        #npid.pulled = true
+        #resp = npid.save
       end
+      
+      resp = NationalPatientIdentifier.where('value IN(?) AND pulled IS NULL', 
+        ids).update_all(:hidden => true) != 0
+
     end
     render :text => resp and return
   end
