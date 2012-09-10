@@ -57,11 +57,22 @@ class NpidRequestsController < ApplicationController
       saved = @npid_request.save
       ids = @npid_request.npids.map(&:value) 
       
-      if ids.length == 1
-        resp = ids.first
-      else
-        resp = ids.to_json
-      end 
+      filename = (params[:npid_request]['site_code']) + Time.now().strftime('%Y%m%d%H%M%S') + '.txt'
+      `touch #{Rails.root}/npids/#{filename}`
+      l = Logger.new(Rails.root.join("npids",filename)) 
+
+      (ids).each do |id|
+        l.info "#{id}"
+      end
+
+      batch_info = {}
+
+      file_info = `cksum #{Rails.root}/npids/#{filename}`.split(' ')
+      batch_info[:check_sum] = file_info[0]
+      batch_info[:file_size] = file_info[1]
+      batch_info[:file_name] = filename
+      batch_info[:ids] = ids
+      resp = batch_info.to_json
     end
     
     render :text => resp
@@ -81,5 +92,60 @@ class NpidRequestsController < ApplicationController
       format.txt { render :text => 'OK' }
     end
   end
+  
+  def get_npids_in_batch
+    if Site.proxy?
+      params[:npid_request].merge!('site_code' => Site.current.code)
+      uri = "http://admin:admin@localhost:3002/npid_requests/get_npids/"
+      json_text = RestClient.post(uri,params)
+      ids = JSON.parse(json_text)
+
+      unless ids.blank?
+        filename = ids['file_name']
+        `touch #{Rails.root}/npids/#{filename}`
+        l = Logger.new(Rails.root.join("npids",filename)) 
+
+        (ids['ids']).each do |id|
+          l.info "#{id}"
+        end
+
+        batch_info = {}
+
+        file_info = `cksum #{Rails.root}/npids/#{filename}`.split(' ')
+        batch_info[:check_sum] = file_info[0]
+        batch_info[:file_size] = file_info[1]
+        batch_info[:file_name] = filename
+        complete_tranfer = (filename == batch_info[:file_name])
+
+        if complete_tranfer
+          (ids['ids']).each do |id|
+            NationalPatientIdentifier.create!(:value => id,:assigner_site_id => Site.current.id)
+          end
+        end
+
+        render :text => filename if complete_tranfer
+        render :text => complete_tranfer unless complete_tranfer
+        return
+      end
+    end
+    
+  end
+
+  def acknowledge
+    if Site.proxy?
+      uri = "http://admin:admin@localhost:3002/npid_requests/acknowledge/"
+      resp = RestClient.post(uri,params) 
+    else
+      resp = false
+      File.open("#{Rails.root}/npids/#{params[:file]}", "r").each_line do |line|
+        id = line.sub("\n",'')
+        npid = NationalPatientIdentifier.find_by_value(id)
+        npid.pulled = true
+        resp = npid.save
+      end
+    end
+    render :text => resp and return
+  end
+
 
 end

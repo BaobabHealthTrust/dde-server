@@ -3,6 +3,8 @@ class Person < ActiveRecord::Base
   attr_accessor :status, :status_message
 
   has_one :national_patient_identifier
+  has_many :legacy_national_ids,:class_name => 'LegacyNationalIds', 
+           :foreign_key => 'person_id' 
 
   belongs_to :creator,
       :class_name => 'User'

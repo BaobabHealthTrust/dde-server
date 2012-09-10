@@ -27,6 +27,55 @@ var numberOfAssignedIDs = 1;
  
 }
 
+function BatchRequestIDs() {
+  numberOfNewIDsRequested = document.getElementById('npid_request_count').value
+  var siteCode = "<%=Site.current.code rescue nil %>"
+  var parameters = "npid_request[count]=" + numberOfNewIDsRequested + "&npid_request[last_timestamp]=" + (new Date());
+  parameters += "&npid_request[site_code]=" + siteCode;
+
+  if (window.XMLHttpRequest) {// code for IE7+, Firefox, Chrome, Opera, Safari
+    xmlhttp=new XMLHttpRequest();                                             
+  }else{// code for IE6, IE5                                                  
+    xmlhttp=new ActiveXObject("Microsoft.XMLHTTP");                           
+  }
+
+  xmlhttp.onreadystatechange=function() {                                     
+    if (xmlhttp.readyState==4 && xmlhttp.status==200) {                       
+      if (xmlhttp.responseText.match(".txt")) {
+        acknowledge(xmlhttp.responseText)
+      }else{
+        window.location = "/national_patient_identifiers";
+        return
+      }
+    }     
+  }    
+
+  xmlhttp.open("GET","/npid_requests/get_npids_in_batch?" + parameters , true);            
+  xmlhttp.send();
+  return
+
+}
+
+function acknowledge(filename) {
+  if (window.XMLHttpRequest) {// code for IE7+, Firefox, Chrome, Opera, Safari
+    xmlhttp=new XMLHttpRequest();                                             
+  }else{// code for IE6, IE5                                                  
+    xmlhttp=new ActiveXObject("Microsoft.XMLHTTP");                           
+  }
+
+  xmlhttp.onreadystatechange=function() {                                     
+    if (xmlhttp.readyState==4 && xmlhttp.status==200) {                       
+      window.location = "/national_patient_identifiers";
+      return
+    }     
+  }    
+
+  xmlhttp.open("GET","/npid_requests/acknowledge?file=" + filename , true);            
+  xmlhttp.send();
+  return
+}
+
+
 function requestIDs() {                                                            
   numberOfNewIDsRequested = document.getElementById('npid_request_count').value
   <%unless Site.proxy? %>
@@ -49,8 +98,12 @@ function requestIDs() {
 
     xmlhttp.open("GET","/npid_requests/get_npids?" + parameters , true);            
     xmlhttp.send();
-    return
+    return;
   <%end%>
+
+  BatchRequestIDs();
+  return;
+
   try{ 
     numberOfNewIDsRequested = parseInt(numberOfNewIDsRequested);
   }catch(e){
@@ -112,7 +165,10 @@ function doDelayLoop() {
 
   <div class="actions">
     <%#= f.submit 'Request new NPIDs' %>
-    <%= button_to_function 'Request new NPIDs' , 'requestIDs()' %>
+    <%= button_to_function 'Request new NPIDs' , 'requestIDs()' %>&nbsp;
+    <% if Site.proxy? %>
+      <%#= button_to_function 'Request new NPIDs (Batch format)' , 'BatchRequestIDs()' %>
+    <% end %>
   </div>
 <% end %>
 

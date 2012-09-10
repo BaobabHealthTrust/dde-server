@@ -18,7 +18,27 @@
 <% if @national_patient_identifier.person %>
   <p>
     <b>Assigned to:</b>
-    <%= link_to @national_patient_identifier.person.data['person']['names'].values_at('given_name', 'family_name', 'family_name2').join(', '), @national_patient_identifier.person %>
+    <%= link_to @national_patient_identifier.person.data['names'].values_at('given_name', 'family_name', 'family_name2').join(', '), @national_patient_identifier.person rescue nil%>
+  </p>
+  <p>
+    <b>Gender:</b>
+    <%= link_to @national_patient_identifier.person.data['gender'], @national_patient_identifier.person rescue nil%>
+  </p>
+  <p>
+    <b>Birthdate:</b>
+    <%= link_to @national_patient_identifier.person.data['birthdate'], @national_patient_identifier.person rescue nil%>
+  </p>
+  <p>
+    <b>Address:</b>
+    <%= link_to @national_patient_identifier.person.data['addresses'].values_at('county_district','city_village','state_province','address2').join(': '), @national_patient_identifier.person rescue nil%>
+  </p>
+  <p>
+    <b>Occupation:</b>
+    <%= link_to @national_patient_identifier.person.data['attributes'].values_at('occupation'), @national_patient_identifier.person rescue nil%>
+  </p>
+  <p>
+    <b>Cell phone number:</b>
+    <%= link_to @national_patient_identifier.person.data['attributes'].values_at('cell_phone_number'), @national_patient_identifier.person rescue nil%>
   </p>
 <% end %>
 
