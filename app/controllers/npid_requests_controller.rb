@@ -118,7 +118,7 @@ class NpidRequestsController < ApplicationController
         complete_tranfer = (filename == batch_info[:file_name])
 
         if complete_tranfer
-          IdentifiersToBeAssigned.create!(:file => filename,:assigned => 1, :pulled_at => Time.now())
+          IdentifiersToBeAssigned.create!(:file => filename,:assigned => 0, :pulled_at => Time.now())
         end
 
         render :text => filename if complete_tranfer
@@ -148,14 +148,17 @@ class NpidRequestsController < ApplicationController
 
   def save_requested_ids
     resp = false
-    ActiveRecord::Base.transaction do
-      File.open("#{Rails.root}/npids/#{params[:file]}", "r").each_line do |line|
-        (ids['ids']).each do |id|
+    file_found = IdentifiersToBeAssigned.where(:file => params[:file], :assigned => 0).blank? != true
+
+    if Site.proxy? 
+      ActiveRecord::Base.transaction do
+        File.open("#{Rails.root}/npids/#{params[:file]}", "r").each_line do |line|
+          id = line.sub("\n",'')
           NationalPatientIdentifier.create!(:value => id,:assigner_site_id => Site.current.id)
         end
+        resp = IdentifiersToBeAssigned.where(:file => params[:file],:assigned => 0).update_all(:assigned => 1) != 0
       end
-      resp = IdentifiersToBeAssigned.where(:file => filename,:assigned => 1).update_all(:assigned => 0) != 0
-    end
+    end if file_found
 
     render :text => resp and return
   end

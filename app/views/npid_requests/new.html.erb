@@ -2,7 +2,7 @@
 
 var numberOfNewIDsRequested = 0;                                             
 var numberOfAssignedIDs = 1;                      
-var requestID = document.getElementById('request_ids');
+var requestID = null;
                                                                                 
  function getID() { 
    var notice = document.getElementsByTagName('h2')[0];
@@ -66,7 +66,6 @@ function acknowledge(filename) {
 
   xmlhttp.onreadystatechange=function() {                                     
     if (xmlhttp.readyState==4 && xmlhttp.status==200) {                       
-      //window.location = "/national_patient_identifiers";
       requestID.value = 'Save new NPIDs';
       requestID.setAttribute("OnClick","saveRequestedIds('" + filename + "')");
       requestID.disabled = false;
@@ -80,6 +79,7 @@ function acknowledge(filename) {
 }
 
 function saveRequestedIds(filename) {
+  requestID.disabled = true;
   if (window.XMLHttpRequest) {// code for IE7+, Firefox, Chrome, Opera, Safari
     xmlhttp=new XMLHttpRequest();                                             
   }else{// code for IE6, IE5                                                  
@@ -99,6 +99,7 @@ function saveRequestedIds(filename) {
 }
 
 function requestIDs() {                                                            
+  requestID = document.getElementById('request_ids');
   numberOfNewIDsRequested = document.getElementById('npid_request_count').value
   requestID.disabled = true;
 
