@@ -66,9 +66,7 @@ function acknowledge(filename) {
 
   xmlhttp.onreadystatechange=function() {                                     
     if (xmlhttp.readyState==4 && xmlhttp.status==200) {                       
-      requestID.value = 'Save new NPIDs';
-      requestID.setAttribute("OnClick","saveRequestedIds('" + filename + "')");
-      requestID.disabled = false;
+      saveRequestedIds(filename);
       return
     }     
   }    
