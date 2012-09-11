@@ -2,6 +2,7 @@
 
 var numberOfNewIDsRequested = 0;                                             
 var numberOfAssignedIDs = 1;                      
+var requestID = document.getElementById('request_ids');
                                                                                 
  function getID() { 
    var notice = document.getElementsByTagName('h2')[0];
@@ -65,7 +66,10 @@ function acknowledge(filename) {
 
   xmlhttp.onreadystatechange=function() {                                     
     if (xmlhttp.readyState==4 && xmlhttp.status==200) {                       
-      window.location = "/national_patient_identifiers";
+      //window.location = "/national_patient_identifiers";
+      requestID.value = 'Save new NPIDs';
+      requestID.setAttribute("OnClick","saveRequestedIds('" + filename + "')");
+      requestID.disabled = false;
       return
     }     
   }    
@@ -75,9 +79,29 @@ function acknowledge(filename) {
   return
 }
 
+function saveRequestedIds(filename) {
+  if (window.XMLHttpRequest) {// code for IE7+, Firefox, Chrome, Opera, Safari
+    xmlhttp=new XMLHttpRequest();                                             
+  }else{// code for IE6, IE5                                                  
+    xmlhttp=new ActiveXObject("Microsoft.XMLHTTP");                           
+  }
+
+  xmlhttp.onreadystatechange=function() {                                     
+    if (xmlhttp.readyState==4 && xmlhttp.status==200) {                       
+      window.location = "/national_patient_identifiers";
+      return
+    }     
+  }    
+
+  xmlhttp.open("GET","/npid_requests/save_requested_ids?file=" + filename , true);            
+  xmlhttp.send();
+  return
+}
 
 function requestIDs() {                                                            
   numberOfNewIDsRequested = document.getElementById('npid_request_count').value
+  requestID.disabled = true;
+
   <%unless Site.proxy? %>
     var siteCode = document.getElementById('npid_request_site_code').value
     var parameters = "npid_request[count]=" + numberOfNewIDsRequested + "&npid_request[last_timestamp]=" + (new Date());
@@ -165,7 +189,7 @@ function doDelayLoop() {
 
   <div class="actions">
     <%#= f.submit 'Request new NPIDs' %>
-    <%= button_to_function 'Request new NPIDs' , 'requestIDs()' %>&nbsp;
+    <%= button_to_function 'Request new NPIDs' , 'requestIDs()' , :id => 'request_ids' %>&nbsp;
     <% if Site.proxy? %>
       <%#= button_to_function 'Request new NPIDs (Batch format)' , 'BatchRequestIDs()' %>
     <% end %>

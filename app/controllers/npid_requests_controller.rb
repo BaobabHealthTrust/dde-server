@@ -118,11 +118,7 @@ class NpidRequestsController < ApplicationController
         complete_tranfer = (filename == batch_info[:file_name])
 
         if complete_tranfer
-          ActiveRecord::Base.transaction do
-            (ids['ids']).each do |id|
-              NationalPatientIdentifier.create!(:value => id,:assigner_site_id => Site.current.id)
-            end
-          end
+          IdentifiersToBeAssigned.create!(:file => filename,:assigned => 1, :pulled_at => Time.now())
         end
 
         render :text => filename if complete_tranfer
@@ -147,6 +143,20 @@ class NpidRequestsController < ApplicationController
       resp = NationalPatientIdentifier.where('value IN(?) AND pulled IS NULL',ids).update_all(:pulled => true) != 0
 
     end
+    render :text => resp and return
+  end
+
+  def save_requested_ids
+    resp = false
+    ActiveRecord::Base.transaction do
+      File.open("#{Rails.root}/npids/#{params[:file]}", "r").each_line do |line|
+        (ids['ids']).each do |id|
+          NationalPatientIdentifier.create!(:value => id,:assigner_site_id => Site.current.id)
+        end
+      end
+      resp = IdentifiersToBeAssigned.where(:file => filename,:assigned => 1).update_all(:assigned => 0) != 0
+    end
+
     render :text => resp and return
   end
 
