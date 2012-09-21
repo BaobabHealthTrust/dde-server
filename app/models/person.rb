@@ -246,6 +246,10 @@ class Person < ActiveRecord::Base
         :url              => request.url)
     end
   end
+  
+  def assign_npid
+    self.set_npid
+  end
 
   protected
 
