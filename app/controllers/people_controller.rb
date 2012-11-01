@@ -113,9 +113,12 @@ class PeopleController < ApplicationController
 
     unless passed_national_id.blank?
       national_id = passed_national_id.gsub('-','').strip
-      @person = Person.where("national_patient_identifiers.value = ? OR legacy_national_ids.value = ?",
-        national_id,national_id).includes([:national_patient_identifier,
-        :legacy_national_ids]).first rescue nil
+      
+      @person = Person.where("legacy_national_ids.value = ?",national_id).includes([:legacy_national_ids]).first rescue nil
+      
+      if @person.blank?
+        @person = Person.where("national_patient_identifiers.value = ?",national_id).includes([:national_patient_identifier]).first rescue nil
+      end
 
       if @person
         respond_to do |format|
