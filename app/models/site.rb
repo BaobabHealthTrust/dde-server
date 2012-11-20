@@ -6,13 +6,21 @@ class Site < ActiveRecord::Base
       :foreign_key => :assigner_site_id
 
   def available_npids
-    self.national_patient_identifiers.where(:assigned_at => nil)
+    if SITE_CONFIG[:mode] == 'master'
+      self.national_patient_identifiers.where(:pulled => nil)
+    else
+      self.national_patient_identifiers.where(:assigned_at => nil)
+    end
   end
 
   def assigned_npids
-    self.national_patient_identifiers.where('assigned_at IS NOT NULL')
+    if SITE_CONFIG[:mode] == 'master'
+      self.national_patient_identifiers.where(:pulled => true)
+    else
+      self.national_patient_identifiers.where('assigned_at IS NOT NULL')
+    end
   end
-
+  
   def self.current_id
     SITE_CONFIG[:site_id].to_i
   end
