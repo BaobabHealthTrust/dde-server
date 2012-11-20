@@ -238,6 +238,11 @@ class PeopleController < ApplicationController
       return
     end
 
+    
+    if @person.blank?
+      @person = Person.joins(:national_patient_identifier).where(:'national_patient_identifiers.value' => params[:id]).first
+    end
+    
     respond_to do |format|
       format.html { render :action => 'show' }
       format.json { render :json => @person.to_json }
