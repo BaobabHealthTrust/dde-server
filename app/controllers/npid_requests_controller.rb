@@ -42,13 +42,13 @@ class NpidRequestsController < ApplicationController
   def get_npids
     if Site.proxy?
       params[:npid_request].merge!('site_code' => Site.current.code)
-      uri = "http://admin:admin@192.168.6.194:3002/npid_requests/get_npids/"
+      uri = "http://#{dde_master_user}:#{dde_master_password}@#{dde_master_uri}/npid_requests/get_npids/"
       npid = RestClient.post(uri,params)
 
       ack = false
       if npid
         NationalPatientIdentifier.create!(:value => npid,:assigner_site_id => Site.current.id)
-        uri = "http://admin:admin@194.168.6.194:3002/npid_requests/ack/"
+        uri = "http://#{dde_master_user}:#{dde_master_password}@#{dde_master_uri}/npid_requests/ack/"
         ack = RestClient.post(uri,"ids[]=#{npid}")
       end
       resp = "#{ack}" 
@@ -96,7 +96,7 @@ class NpidRequestsController < ApplicationController
   def get_npids_in_batch
     if Site.proxy?
       params[:npid_request].merge!('site_code' => Site.current.code)
-      uri = "http://admin:admin@194.168.6.194:3002/npid_requests/get_npids/"
+      uri = "http://#{dde_master_user}:#{dde_master_password}@#{dde_master_uri}/npid_requests/get_npids/"
       json_text = RestClient.post(uri,params)
       ids = JSON.parse(json_text)
 
@@ -131,7 +131,7 @@ class NpidRequestsController < ApplicationController
 
   def acknowledge
     if Site.proxy?
-      uri = "http://admin:admin@194.168.6.194:3002/npid_requests/acknowledge/"
+      uri = "http://#{dde_master_user}:#{dde_master_password}@#{dde_master_uri}/npid_requests/acknowledge/"
       resp = RestClient.post(uri,params) 
     else
       resp = false

@@ -8,6 +8,23 @@ class ApplicationController < ActionController::Base
 
   helper_method :current_user
 
+  def dde_master_password
+    site_config_yml["remote_http_options"]["password"]
+  end
+
+  def dde_master_user
+    site_config_yml["remote_http_options"]["user"]
+  end
+
+  def dde_master_uri
+    site_config_yml["master_uri"].sub("http://","")
+  end
+
+  def site_config_yml
+    YAML.load(File.open(File.join(RAILS_ROOT, 
+     "config/site_config.yml"), "r"))[Rails.env]
+  end
+
   protected
 
   # some common auth related stubs, can later be replaced by any
