@@ -3,13 +3,11 @@ db/*.sqlite3
 log/*.log
 npids/*.txt
 tmp/
-config/database.yml
 config/site_config.yml
+config/database.yml
 .DS_Store
 *.swp
 *.swo
-config/database.yml
-config/settings.yml
 notes
 doc
 development.sql
