@@ -71,7 +71,7 @@ class NpidRequestsController < ApplicationController
       batch_info[:check_sum] = file_info[0]
       batch_info[:file_size] = file_info[1]
       batch_info[:file_name] = filename
-      #batch_info[:ids] = ids
+      batch_info[:ids] = ids
       resp = batch_info.to_json
     end
     
