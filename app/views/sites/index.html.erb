@@ -5,9 +5,9 @@
     <th>Name</th>
     <th>Code</th>
     <th>Annotations</th>
+    <th>No of available NPIDS</th>
     <% if Site.master? %>
       <th>No of assigned NPIDS</th>
-      <th>No of available NPIDS</th>
     <% end %>
     <th style="width: 130px;"></th>
   </tr>
@@ -19,6 +19,8 @@
       <td><%= site.annotations %></td>
       <% if Site.master? %>
         <td><%= site.assigned_npids.count %></td>
+        <td><%= site.available_npids.count %></td>
+      <% else %>
         <td><%= site.available_npids.count %></td>
       <% end %>
       <td>
