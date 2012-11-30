@@ -13,5 +13,5 @@ gem 'bcrypt-ruby', :require => 'bcrypt'
 gem 'web-app-theme'
 
 gem 'composite_primary_keys', '3.1.0'
-gem 'national_patient_id'
+gem 'national_patient_id', :git => 'https://github.com/BaobabHealthTrust/national_patient_id.git'
 gem 'will_paginate', '~> 3.0'
