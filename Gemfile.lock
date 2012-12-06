@@ -1,3 +1,9 @@
+GIT
+  remote: https://github.com/BaobabHealthTrust/national_patient_id.git
+  revision: 58714ddf738d2693a6e60af2ecef7a2675a01f98
+  specs:
+    national_patient_id (0.1.1)
+
 GEM
   remote: http://rubygems.org/
   specs:
@@ -47,7 +53,6 @@ GEM
       treetop (~> 1.4.8)
     mime-types (1.16)
     mysql2 (0.2.7)
-    national_patient_id (0.1.1)
     polyglot (0.3.2)
     rack (1.2.4)
     rack-mount (0.6.14)
@@ -92,7 +97,7 @@ DEPENDENCIES
   fastercsv
   guid
   mysql2 (= 0.2.7)
-  national_patient_id
+  national_patient_id!
   rails (= 3.0.9)
   redirectr
   rest-client
