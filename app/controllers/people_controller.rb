@@ -38,7 +38,7 @@ class PeopleController < ApplicationController
   def find
     if not params[:value].blank?
       @people = Person.joins(:national_patient_identifier).where(params.slice(:given_name,
-      :family_name, :family_name2,:city_village,                                  
+      :family_name, :family_name2,:city_village,
       :gender).merge("national_patient_identifiers.value" => params[:value])).select("people.*,value")
 
       if @people.blank?
@@ -48,7 +48,7 @@ class PeopleController < ApplicationController
 
         (@people || []).each do |person|
           person.assign_npid if person.national_patient_identifier.blank?
-        end 
+        end
       end
 
     else
@@ -63,14 +63,14 @@ class PeopleController < ApplicationController
       else
 #       find_remote
         respond_to do |format|
-          format.json do |f| 
+          format.json do |f|
             render :text => {}.to_json
           end
         end
       end
     when 1
       respond_to do |format|
-        format.html do |f| 
+        format.html do |f|
           @person = @people.first
           render :action => 'show'
         end
@@ -113,9 +113,9 @@ class PeopleController < ApplicationController
 
     unless passed_national_id.blank?
       national_id = passed_national_id.gsub('-','').strip
-      
+
       @person = Person.where("legacy_national_ids.value = ?",national_id).includes([:legacy_national_ids]).first rescue nil
-      
+
       if @person.blank?
         @person = Person.where("national_patient_identifiers.value = ?",national_id).includes([:national_patient_identifier]).first rescue nil
       end
@@ -130,7 +130,7 @@ class PeopleController < ApplicationController
       return if not @person.blank?
     end
 
-    @person = Person.new(params[:person].merge( 
+    @person = Person.new(params[:person].merge(
                          {:creator_site_id => Site.current_id ,
                          :given_name => params[:person]["data"]["names"]["given_name"] ,
                          :family_name => params[:person]["data"]["names"]["family_name"] ,
@@ -210,7 +210,7 @@ class PeopleController < ApplicationController
   end
 
   # DELETE /people/1
-  # DELETE /people/1.xml 
+  # DELETE /people/1.xml
   def destroy
     @person.destroy
 
@@ -238,11 +238,11 @@ class PeopleController < ApplicationController
       return
     end
 
-    
+
     if @person.blank?
       @person = Person.joins(:national_patient_identifier).where(:'national_patient_identifiers.value' => params[:id]).first
     end
-    
+
     respond_to do |format|
       format.html { render :action => 'show' }
       format.json { render :json => @person.to_json }
@@ -263,44 +263,44 @@ class PeopleController < ApplicationController
         p << person.to_json
       end
 
-      batch_info = {}                                                           
-                                                                                
-      file_info = `cksum #{Rails.root}/demographics/#{filename}`.split(' ')            
-      batch_info[:check_sum] = file_info[0]                                     
-      batch_info[:file_size] = file_info[1]                                     
-      batch_info[:file_name] = filename                                         
+      batch_info = {}
+
+      file_info = `cksum #{Rails.root}/demographics/#{filename}`.split(' ')
+      batch_info[:check_sum] = file_info[0]
+      batch_info[:file_size] = file_info[1]
+      batch_info[:file_name] = filename
 
       people_params = {'people' => p.to_json}
       people_params.merge!('file' => batch_info)
       people_params.merge!('site_code' => Site.current_code)
 
-      
+
       uri = "http://#{dde_master_user}:#{dde_master_password}@#{dde_master_uri}/people/send_demographics_to_master/"
       sync = RestClient.post(uri,people_params)
       render :text => batch_info[:file_name].to_s and return
     else
-      site_code = params['site_code'] 
+      site_code = params['site_code']
       received_file = params['file']
       filename = received_file['file_name']
       patients = JSON.parse(params['people'])
-      
+
       `touch #{Rails.root}/demographics/#{filename}`
       l = Logger.new(Rails.root.join("demographics",filename))
       patients.each do |person|
         l.info "#{person}"
       end
 
-      batch_info = {}                                                           
-                                                                                
-      file_info = `cksum #{Rails.root}/demographics/#{filename}`.split(' ')            
-      batch_info[:check_sum] = file_info[0]                                     
-      batch_info[:file_size] = file_info[1]                                     
+      batch_info = {}
+
+      file_info = `cksum #{Rails.root}/demographics/#{filename}`.split(' ')
+      batch_info[:check_sum] = file_info[0]
+      batch_info[:file_size] = file_info[1]
 
       if batch_info[:check_sum].to_i == received_file['check_sum'].to_i
         create_from_proxy(patients)
         render :text => "done ..." and return
       else
-        raise "NO ....#{patients.length}...... #{batch_info[:file_size].to_s} >>>>>>>>>>>>>>>> #{received_file['file_size'].to_s}" 
+        raise "NO ....#{patients.length}...... #{batch_info[:file_size].to_s} >>>>>>>>>>>>>>>> #{received_file['file_size'].to_s}"
       end
 
     end
@@ -312,10 +312,14 @@ class PeopleController < ApplicationController
     (people).each do |person|
       person_obj = JSON.parse(person)
       p = Person.new()
-      p.family_name = person_obj['person'][:family_name]
-      p.given_name = person_obj['person'][:given_name]
-      p.birthdate = person_obj['person']['birthdate']
-      raise p.to_yaml
+      p.family_name = person_obj['person']['data']['names']['family_name']
+      p.given_name = person_obj['person']['data']['names']['given_name']
+      p.gender = person_obj['person']['data']['gender']
+      p.birthdate = person_obj['person']['data']['birthdate']
+      p.birthdate_estimated = person_obj['person']['data']['birthdate_estimated']
+      p.data =  person_obj['person']['data']
+      p.creator_site_id = person_obj['person']['creator_site_id']
+      p.creator_id = person_obj['person']['creator_id']
       p.save
     end
   end
