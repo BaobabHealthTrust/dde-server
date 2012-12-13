@@ -257,8 +257,10 @@ class PeopleController < ApplicationController
       filename = Site.current_code + Time.now().strftime('%Y%m%d%H%M%S') + '.txt'
       `touch #{Rails.root}/demographics/#{filename}`
       l = Logger.new(Rails.root.join("demographics",filename))
+      p = []
       people.each do |person|
-        l.info "#{person.id}"
+        l.info "#{person.to_json}"
+        p << person.to_json
       end
 
       batch_info = {}                                                           
@@ -268,7 +270,7 @@ class PeopleController < ApplicationController
       batch_info[:file_size] = file_info[1]                                     
       batch_info[:file_name] = filename                                         
 
-      people_params = {'people' => people.to_json}
+      people_params = {'people' => p.to_json}
       people_params.merge!('file' => batch_info)
       people_params.merge!('site_code' => Site.current_code)
 
@@ -285,7 +287,7 @@ class PeopleController < ApplicationController
       `touch #{Rails.root}/demographics/#{filename}`
       l = Logger.new(Rails.root.join("demographics",filename))
       patients.each do |person|
-        l.info "#{person.to_json}"
+        l.info "#{person}"
       end
 
       batch_info = {}                                                           
@@ -297,7 +299,7 @@ class PeopleController < ApplicationController
       if batch_info[:check_sum].to_i == received_file['check_sum'].to_i
         raise "yes .......... #{batch_info[:check_sum]}" 
       else
-        raise "NO .......... #{batch_info[:file_size].to_s} >>>>>>>>>>>>>>>> #{received_file['file_size'].to_s}" 
+        raise "NO ....#{patients.length}...... #{batch_info[:file_size].to_s} >>>>>>>>>>>>>>>> #{received_file['file_size'].to_s}" 
       end
 
     end
