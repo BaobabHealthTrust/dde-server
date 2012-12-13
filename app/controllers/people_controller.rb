@@ -250,6 +250,34 @@ class PeopleController < ApplicationController
     end
   end
 
+  def send_demographics_to_master
+    if Site.proxy?
+      people = Person.find(:all)
+
+      filename = Site.current_code + Time.now().strftime('%Y%m%d%H%M%S') + '.txt'
+      `touch #{Rails.root}/demographics/#{filename}`
+      l = Logger.new(Rails.root.join("demographics",filename))
+      people.each do |person|
+        l.info "#{person.to_json}"
+      end
+
+      people_params = {'people' => people.to_json}
+      people_params.merge!('site_code' => Site.current_code)
+
+      uri = "http://#{dde_master_user}:#{dde_master_password}@#{dde_master_uri}/people/send_demographics_to_master/"
+      sync = RestClient.post(uri,people_params)
+    else
+      filename = params['site_code'] + Time.now().strftime('%Y%m%d%H%M%S') + '.txt'
+      `touch #{Rails.root}/demographics/#{filename}`
+      l = Logger.new(Rails.root.join("demographics",filename))
+      people = JSON.parse(params['people'])
+      people.each do |person|
+        l.info "#{person.to_json}"
+        p = Person.create(person['person'])
+      end
+    end
+    end
+
   protected
 
   def handle_local_conflict(local_person, remote_person)
