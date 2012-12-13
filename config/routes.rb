@@ -22,11 +22,12 @@ DdeServer::Application.routes.draw do
 
   resources :people do
     member do
-      get :remote, :action => :show_remote
+      get :remote, :action => :show_remote 
     end
 
     collection do
-      get :find
+      post :send_demographics_to_master
+      get :find, :send_demographics_to_master
     end
   end
 
