@@ -297,7 +297,8 @@ class PeopleController < ApplicationController
       batch_info[:file_size] = file_info[1]                                     
 
       if batch_info[:check_sum].to_i == received_file['check_sum'].to_i
-        raise "yes .......... #{batch_info[:check_sum]}" 
+        create_from_proxy(patients)
+        render :text => "done ..." and return
       else
         raise "NO ....#{patients.length}...... #{batch_info[:file_size].to_s} >>>>>>>>>>>>>>>> #{received_file['file_size'].to_s}" 
       end
@@ -306,6 +307,18 @@ class PeopleController < ApplicationController
   end
 
   protected
+
+  def create_from_proxy(people)
+    (people).each do |person|
+      person_obj = JSON.parse(person)
+      p = Person.new()
+      p.family_name = person_obj['person'][:family_name]
+      p.given_name = person_obj['person'][:given_name]
+      p.birthdate = person_obj['person']['birthdate']
+      raise p.to_yaml
+      p.save
+    end
+  end
 
   def handle_local_conflict(local_person, remote_person)
     @local_person  = local_person
