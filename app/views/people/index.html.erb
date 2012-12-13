@@ -1,5 +1,5 @@
 <script>
-  var PatientsIDs = "<%=@people.collect{|p|p.id}.join(',')%>".split(',');
+  var PatientsIDs = "<%=Person.find(:all).collect{|p|p.id}.join(',')%>".split(',');
   var PatientsIDsBatch = {};
   var ids = []
   var count = 1;
@@ -19,12 +19,12 @@
 
   function sendDemographicsToMaster() {
     for(key in PatientsIDsBatch) {
-      sendDemographicsFile(PatientsIDsBatch[key].join(','));
+      sendDemographicsFile(key , PatientsIDsBatch[key].join(','));
     }
   }
 
 
-  function sendDemographicsFile(patient_ids) {
+  function sendDemographicsFile(key , patient_ids) {
     if (window.XMLHttpRequest) {// code for IE7+, Firefox, Chrome, Opera, Safari 
       xmlhttp=new XMLHttpRequest();                                              
     }else{// code for IE6, IE5                                                   
@@ -34,6 +34,10 @@
     xmlhttp.onreadystatechange=function() {                                      
       if (xmlhttp.readyState==4 && xmlhttp.status==200) {                        
         var results = xmlhttp.responseText;                                      
+        if(results == "updated master") {
+          delete PatientsIDsBatch[key];
+          sendDemographicsToMaster();
+        }
       }                                                                          
     }                                                                            
                                                                                 

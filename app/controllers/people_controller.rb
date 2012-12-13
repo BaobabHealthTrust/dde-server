@@ -277,7 +277,7 @@ class PeopleController < ApplicationController
 
       uri = "http://#{dde_master_user}:#{dde_master_password}@#{dde_master_uri}/people/send_demographics_to_master/"
       sync = RestClient.post(uri,people_params)
-      render :text => batch_info[:file_name].to_s and return
+      render :text => "updated master" and return
     else
       site_code = params['site_code']
       received_file = params['file']
