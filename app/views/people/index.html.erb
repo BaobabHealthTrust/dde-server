@@ -1,3 +1,50 @@
+<script>
+  var PatientsIDs = "<%=@people.collect{|p|p.id}.join(',')%>".split(',');
+  var PatientsIDsBatch = {};
+  var ids = []
+  var count = 1;
+  PatientsIDsBatch[count] = [];
+  for(var i = 0; i < PatientsIDs.length; i++) {
+    if (PatientsIDsBatch[count].length < 11) {
+      ids.push(PatientsIDs[i]);
+      PatientsIDsBatch[count] = ids;
+    }else{
+      count++;
+      ids = [];
+      ids.push(PatientsIDs[i]);
+      PatientsIDsBatch[count] = ids;
+    }
+  }
+  
+
+  function sendDemographicsToMaster() {
+    for(key in PatientsIDsBatch) {
+      sendDemographicsFile(PatientsIDsBatch[key].join(','));
+    }
+  }
+
+
+  function sendDemographicsFile(patient_ids) {
+    if (window.XMLHttpRequest) {// code for IE7+, Firefox, Chrome, Opera, Safari 
+      xmlhttp=new XMLHttpRequest();                                              
+    }else{// code for IE6, IE5                                                   
+      xmlhttp=new ActiveXObject("Microsoft.XMLHTTP");                            
+    }                                                                            
+                                                                                
+    xmlhttp.onreadystatechange=function() {                                      
+      if (xmlhttp.readyState==4 && xmlhttp.status==200) {                        
+        var results = xmlhttp.responseText;                                      
+      }                                                                          
+    }                                                                            
+                                                                                
+    var params = "patient_ids=" + patient_ids;
+    xmlhttp.open("GET","/people/send_demographics_to_master?" + params , true);              
+    xmlhttp.send();
+
+  }
+</script>
+
+
 <h2>Listing people</h2>
 
 <table class="table">
@@ -36,5 +83,5 @@
 
 <br />                                                                          
                                                                                 
-<%= link_to 'Send to Master', send_demographics_to_master_people_path %>&nbsp;&nbsp;
+<%= link_to 'Send to Master', "javascript:sendDemographicsToMaster();" %>&nbsp;&nbsp;
 <%= link_to 'Synchronize with Master', '/' %>

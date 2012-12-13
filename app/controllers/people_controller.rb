@@ -252,31 +252,56 @@ class PeopleController < ApplicationController
 
   def send_demographics_to_master
     if Site.proxy?
-      people = Person.find(:all)
+      people = Person.find(params[:patient_ids].split(','))
 
       filename = Site.current_code + Time.now().strftime('%Y%m%d%H%M%S') + '.txt'
       `touch #{Rails.root}/demographics/#{filename}`
       l = Logger.new(Rails.root.join("demographics",filename))
       people.each do |person|
-        l.info "#{person.to_json}"
+        l.info "#{person.id}"
       end
+
+      batch_info = {}                                                           
+                                                                                
+      file_info = `cksum #{Rails.root}/demographics/#{filename}`.split(' ')            
+      batch_info[:check_sum] = file_info[0]                                     
+      batch_info[:file_size] = file_info[1]                                     
+      batch_info[:file_name] = filename                                         
 
       people_params = {'people' => people.to_json}
+      people_params.merge!('file' => batch_info)
       people_params.merge!('site_code' => Site.current_code)
 
+      
       uri = "http://#{dde_master_user}:#{dde_master_password}@#{dde_master_uri}/people/send_demographics_to_master/"
       sync = RestClient.post(uri,people_params)
+      render :text => batch_info[:file_name].to_s and return
     else
-      filename = params['site_code'] + Time.now().strftime('%Y%m%d%H%M%S') + '.txt'
+      site_code = params['site_code'] 
+      received_file = params['file']
+      filename = received_file['file_name']
+      patients = JSON.parse(params['people'])
+      
       `touch #{Rails.root}/demographics/#{filename}`
       l = Logger.new(Rails.root.join("demographics",filename))
-      people = JSON.parse(params['people'])
-      people.each do |person|
+      patients.each do |person|
         l.info "#{person.to_json}"
-        p = Person.create(person['person'])
       end
+
+      batch_info = {}                                                           
+                                                                                
+      file_info = `cksum #{Rails.root}/demographics/#{filename}`.split(' ')            
+      batch_info[:check_sum] = file_info[0]                                     
+      batch_info[:file_size] = file_info[1]                                     
+
+      if batch_info[:check_sum].to_i == received_file['check_sum'].to_i
+        raise "yes .......... #{batch_info[:check_sum]}" 
+      else
+        raise "NO .......... #{batch_info[:file_size].to_s} >>>>>>>>>>>>>>>> #{received_file['file_size'].to_s}" 
+      end
+
     end
-    end
+  end
 
   protected
 
