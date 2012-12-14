@@ -348,6 +348,9 @@ class PeopleController < ApplicationController
 
   def create_from_proxy(people)
     (people).each do |person|
+      params = JSON.parse(person)
+      params = params.merge!("site" => {"id" => 2})
+=begin
       person_obj = JSON.parse(person)
       p = Person.new()
       p.family_name = person_obj['person']['data']['names']['family_name']
@@ -360,6 +363,9 @@ class PeopleController < ApplicationController
       p.creator_id = person_obj['person']['creator_id']
       p.version_number = person_obj['person']['version_number'] ||= 0
       p.save
+=end
+      @person = Person.find_or_initialize_from_attributes(params.slice(:person, :npid, :site))
+      success = @person.save
     end
   end
 
