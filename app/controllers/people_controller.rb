@@ -345,7 +345,7 @@ class PeopleController < ApplicationController
       p.data =  person_obj['person']['data']
       p.creator_site_id = person_obj['person']['creator_site_id']
       p.creator_id = person_obj['person']['creator_id']
-      p.version_number = person_obj['person']['version_number']
+      p.version_number = person_obj['person']['version_number'] ||= 0
       p.save
     end
   end
