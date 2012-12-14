@@ -17,7 +17,7 @@
   }
   
 
-  function sendDemographicsToMaster() {
+  function syncWithMaster() {
     for(key in PatientsIDsBatch) {
       sendDemographicsFile(key , PatientsIDsBatch[key].join(','));
     }
@@ -36,13 +36,13 @@
         var results = xmlhttp.responseText;                                      
         if(results == "updated master") {
           delete PatientsIDsBatch[key];
-          sendDemographicsToMaster();
+          syncWithMaster();
         }
       }                                                                          
     }                                                                            
                                                                                 
     var params = "patient_ids=" + patient_ids;
-    xmlhttp.open("GET","/people/send_demographics_to_master?" + params , true);              
+    xmlhttp.open("GET","/people/sync_demographics_with_master?" + params , true);              
     xmlhttp.send();
 
   }
@@ -86,6 +86,7 @@
 </p>
 
 <br />                                                                          
-                                                                                
-<%= link_to 'Send to Master', "javascript:sendDemographicsToMaster();" %>&nbsp;&nbsp;
-<%= link_to 'Synchronize with Master', '/' %>
+
+<%if Site.proxy? %>                                                                                
+  <%= link_to 'Sync With Master', "javascript:syncWithMaster();" %>
+<%end%>
