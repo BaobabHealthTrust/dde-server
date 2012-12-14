@@ -309,6 +309,14 @@ class PeopleController < ApplicationController
     end
   end
 
+  def people_to_sync
+    last_updated_date = Sync.last_updated_date(Site.current_code) 
+    if last_updated_date
+      Person.
+    else
+    end
+  end
+
   protected
 
   def update_sync_trasaction(site_code,people)
@@ -329,7 +337,7 @@ class PeopleController < ApplicationController
     sync = Sync.new()
     sync.sync_site_id = site_code
     sync.created_date = last_created_time
-    sync.update_date = last_updated_time
+    sync.updated_date = last_updated_time
     sync.save
   end
 
