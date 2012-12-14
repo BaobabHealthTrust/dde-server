@@ -311,15 +311,18 @@ class PeopleController < ApplicationController
 
   def people_to_sync
     last_updated_date = Sync.last_updated_date(Site.current_code)
-    people_ids = {}
     if last_updated_date
-      people_ids = Person.find(:all,:condition => ["updated_at > ?",last_updated_date]).collect {|p|p.id}
+      people_ids = Person.find(:all,:conditions => ["updated_at > ?",last_updated_date]).collect {|p|p.id}
     else
       people_ids = Person.find(:all).collect{|p|p.id}
     end
+=begin
     respond_to do |format|
-         format.json { render :json   => people_ids.to_json }
-      end 
+      format.json { render :json => people_ids.to_json }
+      return
+    end
+=end 
+    render :text => people_ids.to_json 
   end
 
   protected
@@ -329,14 +332,11 @@ class PeopleController < ApplicationController
     last_created_time = nil
 
     people.each do |person|
-      create_at = person.created_at
-      update_at = person.updated_at
+      last_updated_time = person.updated_at if last_updated_time.blank?
+      last_created_time = person.created_at if last_created_time.blank?
 
-      last_updated_time = update_at if last_updated_time.blank?
-      last_created_time = create_at if last_created_time.blank?
-
-      last_updated_time = update_at if update_at > last_updated_time
-      last_created_time = create_at if create_at > last_created_time
+      last_updated_time = person.updated_at if person.updated_at > last_updated_time
+      last_created_time = person.created_at if person.created_at > last_created_time
     end
   
     sync = Sync.new()
@@ -348,10 +348,8 @@ class PeopleController < ApplicationController
 
   def create_from_proxy(people)
     (people).each do |person|
-      params = JSON.parse(person)
-      params = params.merge!("site" => {"id" => 2})
-=begin
       person_obj = JSON.parse(person)
+=begin
       p = Person.new()
       p.family_name = person_obj['person']['data']['names']['family_name']
       p.given_name = person_obj['person']['data']['names']['given_name']
@@ -364,7 +362,7 @@ class PeopleController < ApplicationController
       p.version_number = person_obj['person']['version_number'] ||= 0
       p.save
 =end
-      @person = Person.find_or_initialize_from_attributes(params.slice(:person, :npid, :site))
+      @person = Person.find_or_initialize_from_attributes(person_obj.slice(:person, :npid, :site))
       success = @person.save
     end
   end
