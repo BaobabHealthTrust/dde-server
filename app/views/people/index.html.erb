@@ -32,9 +32,9 @@
                                                                                 
     xmlhttp.onreadystatechange=function() {                                      
       if (xmlhttp.readyState==4 && xmlhttp.status==200) {                        
-        var results = xmlhttp.responseText;                                      
+        var results = eval(xmlhttp.responseText);                                      
         if(results) {
-           PatientsIDs = results.split;
+           PatientsIDs = results;
            getListOfPatientIDs();
         }
       }                                                                          
