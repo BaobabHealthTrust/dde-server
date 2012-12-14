@@ -250,7 +250,7 @@ class PeopleController < ApplicationController
     end
   end
 
-  def send_demographics_to_master
+  def sync_demographics_with_master
     if Site.proxy?
       people = Person.find(params[:patient_ids].split(','))
 
@@ -275,8 +275,11 @@ class PeopleController < ApplicationController
       people_params.merge!('site_code' => Site.current_code)
 
 
-      uri = "http://#{dde_master_user}:#{dde_master_password}@#{dde_master_uri}/people/send_demographics_to_master/"
+      uri = "http://#{dde_master_user}:#{dde_master_password}@#{dde_master_uri}/people/sync_demographics_with_master/"
       sync = RestClient.post(uri,people_params)
+
+      update_sync_trasaction(Site.current_code,people)
+
       render :text => "updated master" and return
     else
       site_code = params['site_code']
@@ -308,6 +311,28 @@ class PeopleController < ApplicationController
 
   protected
 
+  def update_sync_trasaction(site_code,people)
+    last_updated_time = nil
+    last_created_time = nil
+
+    people.each do |person|
+      create_at = person.create_at
+      update_at = person.update_at
+
+      last_updated_time = update_at if last_updated_time.blank?
+      last_created_time = create_at if last_created_time.blank?
+
+      last_updated_time = update_at if update_at > last_updated_time
+      last_created_time = create_at if create_at > last_created_time
+    end
+  
+    sync = Sync.new()
+    sync.sync_site_id = site_code
+    sync.created_date = last_created_time
+    sync.update_date = last_updated_time
+    sync.save
+  end
+
   def create_from_proxy(people)
     (people).each do |person|
       person_obj = JSON.parse(person)
@@ -320,6 +345,7 @@ class PeopleController < ApplicationController
       p.data =  person_obj['person']['data']
       p.creator_site_id = person_obj['person']['creator_site_id']
       p.creator_id = person_obj['person']['creator_id']
+      p.version_number = person_obj['person']['version_number']
       p.save
     end
   end

@@ -26,8 +26,8 @@ DdeServer::Application.routes.draw do
     end
 
     collection do
-      post :send_demographics_to_master
-      get :find, :send_demographics_to_master
+      post :sync_demographics_with_master
+      get :find, :sync_demographics_with_master
     end
   end
 
