@@ -1,21 +1,50 @@
 <script>
-  var PatientsIDs = "<%=Person.find(:all).collect{|p|p.id}.join(',')%>".split(',');
+  
+  var PatientsIDs = "";
   var PatientsIDsBatch = {};
   var ids = []
-  var count = 1;
-  PatientsIDsBatch[count] = [];
-  for(var i = 0; i < PatientsIDs.length; i++) {
-    if (PatientsIDsBatch[count].length < 11) {
-      ids.push(PatientsIDs[i]);
-      PatientsIDsBatch[count] = ids;
-    }else{
-      count++;
-      ids = [];
-      ids.push(PatientsIDs[i]);
-      PatientsIDsBatch[count] = ids;
+  var count = 0;
+
+  function getListOfPatientIDs() {
+    PatientsIDsBatch = {};
+    count = 1;
+    PatientsIDsBatch[count] = [];
+    for(var i = 0; i < PatientsIDs.length; i++) {
+      if (PatientsIDsBatch[count].length < 11) {
+        ids.push(PatientsIDs[i]);
+        PatientsIDsBatch[count] = ids;
+      }else{
+        count++;
+        ids = [];
+        ids.push(PatientsIDs[i]);
+        PatientsIDsBatch[count] = ids;
+      }
     }
+    syncWithMaster();
   }
-  
+ 
+ function availableIDS() {
+    if (window.XMLHttpRequest) {// code for IE7+, Firefox, Chrome, Opera, Safari 
+      xmlhttp=new XMLHttpRequest();                                              
+    }else{// code for IE6, IE5                                                   
+      xmlhttp=new ActiveXObject("Microsoft.XMLHTTP");                            
+    }                                                                            
+                                                                                
+    xmlhttp.onreadystatechange=function() {                                      
+      if (xmlhttp.readyState==4 && xmlhttp.status==200) {                        
+        var results = xmlhttp.responseText;                                      
+        if(results) {
+           PatientsIDs = results.split;
+           getListOfPatientIDs();
+        }
+      }                                                                          
+    }                                                                            
+                                                                                
+    xmlhttp.open("GET","/people/people_to_sync" , true);              
+      
+    xmlhttp.send();
+
+ } 
 
   function syncWithMaster() {
     for(key in PatientsIDsBatch) {
@@ -88,5 +117,5 @@
 <br />                                                                          
 
 <%if Site.proxy? %>                                                                                
-  <%= link_to 'Sync With Master', "javascript:syncWithMaster();" %>
+  <%= link_to 'Sync With Master', "javascript:availableIDS();" %>
 <%end%>
