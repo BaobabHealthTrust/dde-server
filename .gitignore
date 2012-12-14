@@ -1,13 +1,13 @@
 .bundle
 db/*.sqlite3
 log/*.log
-npids/*.txt
 tmp/
 config/site_config.yml
 config/database.yml
 .DS_Store
 *.swp
 *.swo
+*.txt
 notes
 doc
 development.sql
