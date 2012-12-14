@@ -310,11 +310,16 @@ class PeopleController < ApplicationController
   end
 
   def people_to_sync
-    last_updated_date = Sync.last_updated_date(Site.current_code) 
+    last_updated_date = Sync.last_updated_date(Site.current_code)
+    people_ids = {}
     if last_updated_date
-      Person.
+      people_ids = Person.find(:all,:condition => ["updated_at > ?",last_updated_date]).collect {|p|p.id}
     else
+      people_ids = Person.find(:all).collect{|p|p.id}
     end
+    respond_to do |format|
+         format.json { render :json   => people_ids.to_json }
+      end 
   end
 
   protected
