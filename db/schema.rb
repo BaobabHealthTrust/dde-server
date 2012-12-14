@@ -10,7 +10,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20120911072459) do
+ActiveRecord::Schema.define(:version => 20121214092922) do
 
   create_table "identifiers_to_be_assigned", :force => true do |t|
     t.string   "file"
@@ -75,6 +75,14 @@ ActiveRecord::Schema.define(:version => 20120911072459) do
     t.datetime "created_at"
     t.datetime "updated_at"
     t.string   "code",        :default => ""
+  end
+
+  create_table "syncs", :force => true do |t|
+    t.string   "sync_site_id", :null => false
+    t.datetime "created_date", :null => false
+    t.datetime "updated_date", :null => false
+    t.datetime "created_at"
+    t.datetime "updated_at"
   end
 
   create_table "users", :force => true do |t|
