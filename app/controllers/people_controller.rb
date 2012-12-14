@@ -316,8 +316,8 @@ class PeopleController < ApplicationController
     last_created_time = nil
 
     people.each do |person|
-      create_at = person.create_at
-      update_at = person.update_at
+      create_at = person.created_at
+      update_at = person.updated_at
 
       last_updated_time = update_at if last_updated_time.blank?
       last_created_time = create_at if last_created_time.blank?
