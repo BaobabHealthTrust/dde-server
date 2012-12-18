@@ -315,13 +315,7 @@ class PeopleController < ApplicationController
       people_ids = Person.find(:all,:conditions => ["updated_at > ?",last_updated_date]).collect {|p|p.id}
     else
       people_ids = Person.find(:all).collect{|p|p.id}
-    end
-=begin
-    respond_to do |format|
-      format.json { render :json => people_ids.to_json }
-      return
-    end
-=end 
+    end 
     render :text => people_ids.to_json 
   end
 
@@ -336,7 +330,7 @@ class PeopleController < ApplicationController
       last_created_time = person.created_at if last_created_time.blank?
 
       last_updated_time = person.updated_at if person.updated_at > last_updated_time
-      last_created_time = person.created_at if person.created_at > last_created_time
+      last_created_time  = person.created_at if person.created_at > last_created_time
     end
   
     sync = Sync.new()
@@ -349,21 +343,28 @@ class PeopleController < ApplicationController
   def create_from_proxy(people)
     (people).each do |person|
       person_obj = JSON.parse(person)
-=begin
-      p = Person.new()
-      p.family_name = person_obj['person']['data']['names']['family_name']
-      p.given_name = person_obj['person']['data']['names']['given_name']
-      p.gender = person_obj['person']['data']['gender']
-      p.birthdate = person_obj['person']['data']['birthdate']
-      p.birthdate_estimated = person_obj['person']['data']['birthdate_estimated']
-      p.data =  person_obj['person']['data']
-      p.creator_site_id = person_obj['person']['creator_site_id']
-      p.creator_id = person_obj['person']['creator_id']
-      p.version_number = person_obj['person']['version_number'] ||= 0
-      p.save
-=end
-      @person = Person.find_or_initialize_from_attributes(person_obj.slice(:person, :npid, :site))
-      success = @person.save
+      person_hash = {'person' => {"family_name" => person_obj['person']['data']['names']['family_name'],
+                                  "given_name" => person_obj['person']['data']['names']['given_name'],
+                                  "gender" => person_obj['person']['data']['gender'],
+                                  "birthdate" => person_obj['person']['data']['birthdate'],
+                                  "birthdate_estimated" => person_obj['person']['data']['birthdate_estimated'],
+                                  "data" => person_obj['person']['data'],
+                                  "creator_site_id" => person_obj['person']['creator_site_id'],
+                                  "creator_id" => person_obj['person']['creator_id'],
+                                  "version_number" => person_obj['person']['version_number'] ||= 0 }}
+
+      npid_hash = {'npid' => {"value" => person_obj['npid']['value'],
+                              "assigner_site_id" => person_obj['person']['creator_site_id'],
+                              "assigned_at" => person_obj['npid']["assigned_at"] }}
+                    
+      site_hash = {'site' => {"id" => person_obj['person']['creator_site_id'] }}
+
+      person_hash.merge!npid_hash
+
+      person_hash.merge!site_hash
+
+      @person = Person.find_or_initialize_from_attributes(person_hash.slice('person', 'npid', 'site'))
+      success = @person.save      
     end
   end
 
