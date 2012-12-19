@@ -16,6 +16,7 @@ class Person < ActiveRecord::Base
     person.creator_id = User.current_user.id
   end
   
+  before_save :set_remote_version_number
   after_save :save_npid
 
   validates_presence_of :national_patient_identifier, :data
@@ -255,6 +256,10 @@ class Person < ActiveRecord::Base
 
   def set_version_number
     self.version_number = Guid.new.to_s
+  end
+
+  def set_remote_version_number
+    self.remote_version_number ||= Guid.new.to_s
   end
 
   def set_npid(npid = nil)
