@@ -167,7 +167,14 @@ class PeopleController < ApplicationController
       @person = Person.find_or_initialize_from_attributes(params.slice(:person, :npid, :site))
       success = @person.save
     else
-      success = @person.update_attributes(params[:person]) do # this block is only called on conflict
+      person = (params[:person])
+      person_data_hash = YAML::load(person['data_as_yaml'])
+      person.merge!("given_name" => person_data_hash['names']['given_name'])
+      person.merge!("family_name" => person_data_hash['names']['family_name'])
+      person.merge!("gender" => person_data_hash['gender'])
+      person.merge!("birthdate" => person_data_hash['birthdate'])
+      person.merge!("birthdate_estimated" => person_data_hash['birthdate_estimated'])
+      success = @person.update_attributes(person) do # this block is only called on conflict
         flash[:error] = "Conflicting versions: new (#{params[:person][:version_number].last(12)}) vs. old (#{@person.version_number.last(12)}). NO changes have been saved!"
         handle_local_conflict(@person, @person.dup.reload) and return
       end
