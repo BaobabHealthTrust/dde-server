@@ -182,7 +182,8 @@ class PeopleController < ApplicationController
         flash[:error] = "Conflicting versions: new (#{params[:person][:version_number].last(12)}) vs. old (#{@person.version_number.last(12)}). NO changes have been saved!"
         handle_local_conflict(@person, @person.dup.reload) and return
       end
-
+=begin
+      #redundant as is handled by syncing
       if success and Site.proxy?
         @person.push_to_remote do |response, request, result| # this block is only called on error
           case result
@@ -201,6 +202,7 @@ class PeopleController < ApplicationController
           end
         end
       end
+=end
     end
 
     respond_to do |format|
