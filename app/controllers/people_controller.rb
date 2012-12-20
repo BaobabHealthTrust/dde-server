@@ -360,17 +360,15 @@ class PeopleController < ApplicationController
  
       update_sync_trasaction(site_code,people)
 
-      render :text => p.to_json
+      render :text => people_params.to_json
     else
       site_id = Site.current_id
       uri = "http://#{dde_master_user}:#{dde_master_password}@#{dde_master_uri}/people/sync_demographics_with_proxy/"
-      sync = RestClient.post(uri,site_id)
-      raise sync.to_yaml
-=begin
-      received_file = params['file']
+      sync = RestClient.post(uri,{"site_id" => site_id})
+      people_params = JSON.parse(sync)
+      received_file = people_params['file']
       filename = received_file['file_name']
-      patients = JSON.parse(params['people'])
-
+      patients = JSON.parse(people_params['people'])
       `touch #{Rails.root}/demographics/#{filename}`
       l = Logger.new(Rails.root.join("demographics",filename))
       patients.each do |person|
@@ -389,7 +387,6 @@ class PeopleController < ApplicationController
       else
         raise "NO ....#{patients.length}...... #{batch_info[:file_size].to_s} >>>>>>>>>>>>>>>> #{received_file['file_size'].to_s}"
       end
-=end
     end
 
   end
