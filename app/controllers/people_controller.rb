@@ -337,7 +337,7 @@ class PeopleController < ApplicationController
       site_code = Site.find_by_id(site_id).code
       patient_ids = demographics_to_sync(site_id)
       return {}.to_json if patient_ids.blank?
-      people = Person.find(patient_ids.split(','))
+      people = Person.find(patient_ids.split(","))
       filename = site_code + Time.now().strftime('%Y%m%d%H%M%S') + 'M.txt'
       `touch #{Rails.root}/demographics/#{filename}`
       l = Logger.new(Rails.root.join("demographics",filename))
@@ -357,7 +357,7 @@ class PeopleController < ApplicationController
       people_params = {'people' => p.to_json}
       people_params.merge!('file' => batch_info)
       people_params.merge!('site_code' => site_code)
- 
+
       update_sync_trasaction(site_code,people)
 
       render :text => people_params.to_json
@@ -394,12 +394,13 @@ class PeopleController < ApplicationController
   def demographics_to_sync(site_id)
     site_code = Site.find_by_id(site_id).code
     last_updated_date = Sync.last_updated_date(site_code)
-    if last_updated_date
-      people_ids = Person.find(:all,:conditions => ["creator_site_id != ? and updated_at > ?",site_id,last_updated_date]).collect {|p|p.id}
-    else
+    #if last_updated_date
+      #people_ids = Person.find(:all,:conditions => ["creator_site_id != ? and updated_at > ?",site_id,last_updated_date]).collect {|p|p.id}
+    #else
       people_ids = Person.find(:all).collect{|p|p.id}
-    end
-    render :text => people_ids.to_json
+    #end
+    #render :text => people_ids.to_json
+    people_ids
   end
   
   protected
