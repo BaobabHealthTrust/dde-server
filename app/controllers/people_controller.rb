@@ -364,8 +364,29 @@ class PeopleController < ApplicationController
     else
       site_id = Site.current_id
       uri = "http://#{dde_master_user}:#{dde_master_password}@#{dde_master_uri}/people/sync_demographics_with_proxy/"
-      sync = RestClient.post(uri,site_id)
-      pp = JSON.parse(sync)
+      sync = RestClient.post(uri,{"site_id" => site_id})
+      people_params = JSON.parse(sync)
+      received_file = people_params['file']
+      filename = received_file['file_name']
+      patients = JSON.parse(people_params['people'])
+      `touch #{Rails.root}/demographics/#{filename}`
+      l = Logger.new(Rails.root.join("demographics",filename))
+      patients.each do |person|
+        l.info "#{person}"
+      end
+
+      batch_info = {}
+
+      file_info = `cksum #{Rails.root}/demographics/#{filename}`.split(' ')
+      batch_info[:check_sum] = file_info[0]
+      batch_info[:file_size] = file_info[1]
+
+      if batch_info[:check_sum].to_i == received_file['check_sum'].to_i
+        create_from_proxy(patients)
+        render :text => "done ..." and return
+      else
+        raise "NO ....#{patients.length}...... #{batch_info[:file_size].to_s} >>>>>>>>>>>>>>>> #{received_file['file_size'].to_s}"
+      end
     end
 
   end
