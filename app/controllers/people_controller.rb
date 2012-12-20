@@ -266,7 +266,6 @@ class PeopleController < ApplicationController
   def sync_demographics_with_master
     if Site.proxy?
       people = Person.find(params[:patient_ids].split(','))
-
       filename = Site.current_code + Time.now().strftime('%Y%m%d%H%M%S') + '.txt'
       `touch #{Rails.root}/demographics/#{filename}`
       l = Logger.new(Rails.root.join("demographics",filename))
@@ -332,6 +331,80 @@ class PeopleController < ApplicationController
     render :text => people_ids.to_json 
   end
 
+  def sync_demographics_with_proxy
+    if Site.master?
+      site_id = params['site_id']
+      site_code = Site.find_by_id(site_id).code
+      patient_ids = demographics_to_sync(site_id)
+      return {}.to_json if patient_ids.blank?
+      people = Person.find(patient_ids.split(','))
+      filename = site_code + Time.now().strftime('%Y%m%d%H%M%S') + 'M.txt'
+      `touch #{Rails.root}/demographics/#{filename}`
+      l = Logger.new(Rails.root.join("demographics",filename))
+      p = []
+      people.each do |person|
+        l.info "#{person.to_json}"
+        p << person.to_json
+      end
+
+      batch_info = {}
+
+      file_info = `cksum #{Rails.root}/demographics/#{filename}`.split(' ')
+      batch_info[:check_sum] = file_info[0]
+      batch_info[:file_size] = file_info[1]
+      batch_info[:file_name] = filename
+
+      people_params = {'people' => p.to_json}
+      people_params.merge!('file' => batch_info)
+      people_params.merge!('site_code' => site_code)
+ 
+      update_sync_trasaction(site_code,people)
+
+      render :text => p.to_json
+    else
+      site_id = Site.current_id
+      uri = "http://#{dde_master_user}:#{dde_master_password}@#{dde_master_uri}/people/sync_demographics_with_proxy/"
+      sync = RestClient.post(uri,site_id)
+      raise sync.to_yaml
+=begin
+      received_file = params['file']
+      filename = received_file['file_name']
+      patients = JSON.parse(params['people'])
+
+      `touch #{Rails.root}/demographics/#{filename}`
+      l = Logger.new(Rails.root.join("demographics",filename))
+      patients.each do |person|
+        l.info "#{person}"
+      end
+
+      batch_info = {}
+
+      file_info = `cksum #{Rails.root}/demographics/#{filename}`.split(' ')
+      batch_info[:check_sum] = file_info[0]
+      batch_info[:file_size] = file_info[1]
+
+      if batch_info[:check_sum].to_i == received_file['check_sum'].to_i
+        create_from_proxy(patients)
+        render :text => "done ..." and return
+      else
+        raise "NO ....#{patients.length}...... #{batch_info[:file_size].to_s} >>>>>>>>>>>>>>>> #{received_file['file_size'].to_s}"
+      end
+
+    end
+=end
+  end
+
+  def demographics_to_sync(site_id)
+    site_code = Site.find_by_id(site_id).code
+    last_updated_date = Sync.last_updated_date(site_code)
+    if last_updated_date
+      people_ids = Person.find(:all,:conditions => ["creator_site_id != ? and updated_at > ?",site_id,last_updated_date]).collect {|p|p.id}
+    else
+      people_ids = Person.find(:all).collect{|p|p.id}
+    end
+    render :text => people_ids.to_json
+  end
+  
   protected
 
   def update_sync_trasaction(site_code,people)
