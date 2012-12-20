@@ -168,7 +168,11 @@ class PeopleController < ApplicationController
       success = @person.save
     else
       person = (params[:person])
-      person_data_hash = YAML::load(person['data_as_yaml'])
+      if Site.master?
+        person_data_hash = (person['data'])
+      else
+        person_data_hash = YAML::load(person['data_as_yaml'])
+      end
       person.merge!("given_name" => person_data_hash['names']['given_name'])
       person.merge!("family_name" => person_data_hash['names']['family_name'])
       person.merge!("gender" => person_data_hash['gender'])
