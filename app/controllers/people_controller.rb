@@ -389,9 +389,9 @@ class PeopleController < ApplicationController
       else
         raise "NO ....#{patients.length}...... #{batch_info[:file_size].to_s} >>>>>>>>>>>>>>>> #{received_file['file_size'].to_s}"
       end
-
-    end
 =end
+    end
+
   end
 
   def demographics_to_sync(site_id)
