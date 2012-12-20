@@ -117,5 +117,6 @@
 <br />                                                                          
 
 <%if Site.proxy? %>                                                                                
-  <%= link_to 'Sync With Master', "javascript:availableIDS();" %>
+  <%#= link_to 'Sync With Master', "javascript:availableIDS();" %>
+  <%= link_to 'Sync With Master', sync_demographics_with_proxy_people_path %>
 <%end%>
