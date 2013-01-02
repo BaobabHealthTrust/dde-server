@@ -394,13 +394,12 @@ class PeopleController < ApplicationController
   def demographics_to_sync(site_id)
     site_code = Site.find_by_id(site_id).code
     last_updated_date = Sync.last_updated_date(site_code)
-    #if last_updated_date
-      #people_ids = Person.find(:all,:conditions => ["creator_site_id != ? and updated_at > ?",site_id,last_updated_date]).collect {|p|p.id}
-    #else
+    unless last_updated_date.blank?
+      people_ids = Person.find(:all,:conditions => ["creator_site_id != ? and updated_at > ?",site_id,last_updated_date]).collect {|p|p.id}
+    else
       people_ids = Person.find(:all).collect{|p|p.id}
-    #end
-    #render :text => people_ids.to_json
-    people_ids
+    end
+     people_ids
   end
   
   protected
