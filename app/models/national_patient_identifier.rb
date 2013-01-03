@@ -45,7 +45,7 @@ class NationalPatientIdentifier < ActiveRecord::Base
   def remote_attributes
     { 'npid' => {
         'value'            => self.value,
-        'assigner_site_id' => self.assigned_at,
+        'assigner_site_id' => self.assigner_site_id,
         'assigned_at'      => self.assigned_at
       }
     }
