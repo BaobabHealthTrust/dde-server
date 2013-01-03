@@ -382,7 +382,7 @@ class PeopleController < ApplicationController
       batch_info[:file_size] = file_info[1]
 
       if batch_info[:check_sum].to_i == received_file['check_sum'].to_i
-        create_from_proxy(patients)
+        create_from_master(patients)
         render :text => "done ..." and return
       else
         raise "NO ....#{patients.length}...... #{batch_info[:file_size].to_s} >>>>>>>>>>>>>>>> #{received_file['file_size'].to_s}"
@@ -441,7 +441,7 @@ class PeopleController < ApplicationController
                               "assigned_at" => person_obj['npid']["assigned_at"] }}
                     
       site_hash = {'site' => {"id" => person_obj['person']['creator_site_id'] }}
-
+      
       person_hash.merge!npid_hash
 
       person_hash.merge!site_hash
@@ -450,6 +450,35 @@ class PeopleController < ApplicationController
       success = @person.save      
     end
   end
+
+  def create_from_master(people)
+    (people).each do |person|
+      person_obj = JSON.parse(person)
+      person_hash = {'person' => {"family_name" => person_obj['person']['data']['names']['family_name'],
+                                  "given_name" => person_obj['person']['data']['names']['given_name'],
+                                  "gender" => person_obj['person']['data']['gender'],
+                                  "birthdate" => person_obj['person']['data']['birthdate'],
+                                  "birthdate_estimated" => person_obj['person']['data']['birthdate_estimated'],
+                                  "data" => person_obj['person']['data'],
+                                  "creator_site_id" => person_obj['npid']['assigner_site_id'],
+                                  "creator_id" => person_obj['person']['creator_id'],
+                                  "version_number" => person_obj['person']['version_number'] ||= 0 }}
+
+      npid_hash = {'npid' => {"value" => person_obj['npid']['value'],
+                              "assigner_site_id" => person_obj['npid']['assigner_site_id'],
+                              "assigned_at" => person_obj['npid']["assigned_at"] }}
+
+      site_hash = {'site' => {"id" => person_obj['npid']['assigner_site_id'] }}
+      
+      person_hash.merge!npid_hash
+
+      person_hash.merge!site_hash
+     
+      @person = Person.find_or_initialize_from_attributes(person_hash.slice('person', 'npid', 'site'))
+      success = @person.save
+    end
+  end
+
 
   def handle_local_conflict(local_person, remote_person)
     @local_person  = local_person
