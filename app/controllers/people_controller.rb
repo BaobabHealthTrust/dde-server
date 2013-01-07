@@ -290,7 +290,7 @@ class PeopleController < ApplicationController
       uri = "http://#{dde_master_user}:#{dde_master_password}@#{dde_master_uri}/people/sync_demographics_with_master/"
       sync = RestClient.post(uri,people_params)
 
-      update_sync_trasaction(Site.current_code,people)
+      update_sync_transaction(Site.current_code,people)
 
       render :text => "updated master" and return
     else
@@ -333,11 +333,8 @@ class PeopleController < ApplicationController
 
   def sync_demographics_with_proxy
     if Site.master?
-      site_id = params['site_id']
-      site_code = Site.find_by_id(site_id).code
-      patient_ids = demographics_to_sync(site_id)
-      return {}.to_json if patient_ids.blank?
-      people = Person.find(patient_ids.split(","))
+      people = Person.find(params[:patient_ids].split(','))
+      site_code = params[:site_code]
       filename = site_code + Time.now().strftime('%Y%m%d%H%M%S') + 'M.txt'
       `touch #{Rails.root}/demographics/#{filename}`
       l = Logger.new(Rails.root.join("demographics",filename))
@@ -358,13 +355,13 @@ class PeopleController < ApplicationController
       people_params.merge!('file' => batch_info)
       people_params.merge!('site_code' => site_code)
 
-      update_sync_trasaction(site_code,people)
+      update_sync_transaction(site_code,people)
 
       render :text => people_params.to_json
     else
-      site_id = Site.current_id
       uri = "http://#{dde_master_user}:#{dde_master_password}@#{dde_master_uri}/people/sync_demographics_with_proxy/"
-      sync = RestClient.post(uri,{"site_id" => site_id})
+      params.merge!("site_code" => Site.current_code)
+      sync = RestClient.post(uri,params)
       people_params = JSON.parse(sync)
       received_file = people_params['file']
       filename = received_file['file_name']
@@ -383,28 +380,52 @@ class PeopleController < ApplicationController
 
       if batch_info[:check_sum].to_i == received_file['check_sum'].to_i
         create_from_master(patients)
-        render :text => "done ..." and return
+        render :text => "updated proxy" and return
       else
         raise "NO ....#{patients.length}...... #{batch_info[:file_size].to_s} >>>>>>>>>>>>>>>> #{received_file['file_size'].to_s}"
       end
     end
-
   end
 
-  def demographics_to_sync(site_id)
-    site_code = Site.find_by_id(site_id).code
-    last_updated_date = Sync.last_updated_date(site_code)
-    unless last_updated_date.blank?
-      people_ids = Person.find(:all,:conditions => ["creator_site_id != ? and updated_at > ?",site_id,last_updated_date]).collect {|p|p.id}
+  def demographics_to_sync
+    if Site.proxy?
+      uri = "http://#{dde_master_user}:#{dde_master_password}@#{dde_master_uri}/people/demographics_to_sync/"
+      ids = RestClient.post(uri,{"site_id" => Site.current_id})
+      people_ids = JSON.parse(ids)
     else
-      people_ids = Person.find(:all).collect{|p|p.id}
+      site_id = params[:site_id]
+      site_code = Site.find_by_id(site_id).code
+      last_updated_date = Sync.last_updated_date(site_code)
+      unless last_updated_date.blank?
+        people_ids = Person.find(:all,:conditions => ["creator_site_id != ? and updated_at > ?",site_id,last_updated_date]).collect {|p|p.id}
+      else
+        people_ids = Person.find(:all).collect{|p|p.id}
+      end
+      render :text => people_ids.to_json
+    end 
+  end
+  
+  def getPeopleIdsCount
+    if Site.proxy?
+      uri = "http://#{dde_master_user}:#{dde_master_password}@#{dde_master_uri}/people/getPeopleIdsCount/"
+      ids = RestClient.post(uri,{"site_id" => Site.current_id})
+      render :text =>  ids.to_json
+    else
+      site_id = params[:site_id]
+      site_code = Site.find_by_id(site_id).code
+      last_updated_date = Sync.last_updated_date(site_code)
+      unless last_updated_date.blank?
+        people_ids = Person.find(:all,:conditions => ["creator_site_id != ? and updated_at > ?",site_id,last_updated_date]).collect{|p| p.id}
+      else
+        people_ids = Person.find(:all,:conditions => ["creator_site_id != ?",site_id]).collect{|p| p.id}
+      end
+      render :text => people_ids.to_json
     end
-     people_ids
   end
   
   protected
 
-  def update_sync_trasaction(site_code,people)
+  def update_sync_transaction(site_code,people)
     last_updated_time = nil
     last_created_time = nil
 
@@ -478,7 +499,6 @@ class PeopleController < ApplicationController
       success = @person.save
     end
   end
-
 
   def handle_local_conflict(local_person, remote_person)
     @local_person  = local_person
