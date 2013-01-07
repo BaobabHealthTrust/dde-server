@@ -5,6 +5,8 @@
   var ids = []
   var count = 0;
 
+  var PatientIDsFromMaster = {};
+
   function getListOfPatientIDs() {
     PatientsIDsBatch = {};
     count = 1;
@@ -50,8 +52,17 @@
     for(key in PatientsIDsBatch) {
       sendDemographicsFile(key , PatientsIDsBatch[key].join(','));
     }
+    availableMasterIDS();
   }
 
+
+
+ function syncWithProxy(){
+     for(key in PatientIDsFromMaster) {
+      getDemographicsFile(key , PatientIDsFromMaster[key].join(','));
+    }
+ }
+ 
 
   function sendDemographicsFile(key , patient_ids) {
     if (window.XMLHttpRequest) {// code for IE7+, Firefox, Chrome, Opera, Safari 
@@ -75,6 +86,70 @@
     xmlhttp.send();
 
   }
+
+
+  function availableMasterIDS() {
+    if (window.XMLHttpRequest) {// code for IE7+, Firefox, Chrome, Opera, Safari
+      xmlhttp=new XMLHttpRequest();
+    }else{// code for IE6, IE5
+      xmlhttp=new ActiveXObject("Microsoft.XMLHTTP");
+    }
+
+  xmlhttp.onreadystatechange=function() {
+      if (xmlhttp.readyState==4 && xmlhttp.status==200) {
+        var results = eval(xmlhttp.responseText);
+        if(results) {
+          alert('xxxxxxxxxx')
+          a = JSON.parse(results);
+          ids2 = [];
+          count = 1;
+          PatientIDsFromMaster[count] = [];
+          for(var i = 0; i < a.length; i++) {
+            if (PatientIDsFromMaster[count].length < 11) {
+              ids2.push(a[i]);
+              PatientIDsFromMaster[count] = ids2;
+            }else{
+              count++;
+              ids2 = [];
+              ids2.push(a[i]);
+              PatientIDsFromMaster[count] = ids2;
+            }
+          }
+          syncWithProxy();
+           
+        }
+      }
+    }        
+
+  xmlhttp.open("GET","/people/getPeopleIdsCount" , true);
+
+  xmlhttp.send();
+
+ }
+
+  function getDemographicsFile(key , patient_ids) {
+    if (window.XMLHttpRequest) {// code for IE7+, Firefox, Chrome, Opera, Safari
+      xmlhttp=new XMLHttpRequest();
+    }else{// code for IE6, IE5
+      xmlhttp=new ActiveXObject("Microsoft.XMLHTTP");
+    }
+
+    xmlhttp.onreadystatechange=function() {
+      if (xmlhttp.readyState==4 && xmlhttp.status==200) {
+        var results = xmlhttp.responseText;
+        if(results == "updated proxy") {
+          delete PatientIDsFromMaster[key];
+          syncWithProxy();
+        }
+      }
+    }
+
+    var params = "patient_ids=" + patient_ids;
+    xmlhttp.open("GET","/people/sync_demographics_with_proxy?" + params , true);
+    xmlhttp.send();
+
+  }
+
 </script>
 
 
@@ -116,7 +191,8 @@
 
 <br />                                                                          
 
-<%if Site.proxy? %>                                                                                
-  <%#= link_to 'Sync With Master', "javascript:availableIDS();" %>
-  <%= link_to 'Sync With Master', sync_demographics_with_proxy_people_path %>
+<%if Site.proxy? %>
+  <%= link_to 'Sync With Master', "javascript:availableIDS();" %>
+  <%#= link_to 'Sync With Master', "javascript:availableMasterIDS();" %>
+  <%#= link_to 'Sync With Master', sync_demographics_with_proxy_people_path %>
 <%end%>
