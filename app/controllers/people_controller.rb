@@ -453,7 +453,7 @@ class PeopleController < ApplicationController
                                   "birthdate" => person_obj['person']['data']['birthdate'],
                                   "birthdate_estimated" => person_obj['person']['data']['birthdate_estimated'],
                                   "data" => person_obj['person']['data'],
-                                  "creator_site_id" => person_obj['person']['creator_site_id'],
+                                  "creator_site_id" => person_obj['npid']['assigner_site_id'],
                                   "creator_id" => person_obj['person']['creator_id'],
                                   "version_number" => person_obj['person']['version_number'] ||= 0 }}
 
