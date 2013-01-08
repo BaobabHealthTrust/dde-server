@@ -2,6 +2,7 @@ class SyncService
 
   def self.get_available_ids
     results = RestClient.get('http://admin:admin@localhost:3001/people/people_to_sync')
+    raise results.to_s
     current_ids = JSON.parse(results)
 
     patients_ids_batch = self.compile_ids(current_ids)
@@ -13,7 +14,7 @@ class SyncService
 
   def self.get_demographics_from_master
     results = RestClient.get("http://admin:admin@localhost:3001/people/getPeopleIdsCount")
-    current_ids = JSON.parse(results)
+    current_ids = JSON.parse(results) 
 
     (self.compile_ids(current_ids) || {}).each do |key,ids|
       param = "patient_ids=#{ids.join(',')}"
