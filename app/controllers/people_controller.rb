@@ -419,7 +419,7 @@ class PeopleController < ApplicationController
       else
         people_ids = Person.find(:all,:conditions => ["creator_site_id != ?",site_id]).collect{|p| p.id}
       end
-      render :text => people_ids and return
+      render :text => people_ids.to_json and return
     end
   end
   
