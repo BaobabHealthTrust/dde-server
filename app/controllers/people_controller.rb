@@ -409,7 +409,7 @@ class PeopleController < ApplicationController
     if Site.proxy?
       uri = "http://#{dde_master_user}:#{dde_master_password}@#{dde_master_uri}/people/getPeopleIdsCount/"
       ids = RestClient.post(uri,{"site_id" => Site.current_id})
-      render :text =>  ids and return
+      render :text =>  ids.to_json and return
     else
       site_id = params[:site_id]
       site_code = Site.find_by_id(site_id).code
