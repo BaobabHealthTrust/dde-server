@@ -2,7 +2,6 @@ class SyncService
 
   def self.get_available_ids
     results = RestClient.get('http://admin:admin@localhost:3001/people/people_to_sync')
-    raise results.to_s
     current_ids = JSON.parse(results)
 
     patients_ids_batch = self.compile_ids(current_ids)
