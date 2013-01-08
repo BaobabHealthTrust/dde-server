@@ -34,5 +34,8 @@
 
 <br />
 
-<%= link_to 'New Site', new_site_path if can? :create, Site %>
+<%if Site.master?%> 
+  <%= link_to 'New Site', new_site_path if can? :create, Site %>
+<%else%>
 <%= link_to 'Synchronize with Master', index_remote_sites_path %>
+<%end%>
