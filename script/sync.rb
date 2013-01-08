@@ -1,3 +1,8 @@
+require 'rubygems'
+require 'rest-client'
+require 'json'
+require 'rails'
+
 class SyncService
 
   def self.get_available_ids
@@ -13,7 +18,7 @@ class SyncService
 
   def self.get_demographics_from_master
     results = RestClient.get("http://admin:admin@localhost:3001/people/getPeopleIdsCount")
-    current_ids = JSON.parse(results) 
+    current_ids = JSON.parse(results) rescue JSON.parse(results.gsub('"',''))
 
     (self.compile_ids(current_ids) || {}).each do |key,ids|
       param = "patient_ids=#{ids.join(',')}"
