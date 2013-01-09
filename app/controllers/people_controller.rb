@@ -1,5 +1,5 @@
 class PeopleController < ApplicationController
-
+  
   before_filter :load_person,
       :only => [:show, :edit, :update, :destroy, :conflict]
 
@@ -447,6 +447,13 @@ class PeopleController < ApplicationController
   def create_from_proxy(people)
     (people).each do |person|
       person_obj = JSON.parse(person)
+      if person_obj['npid'].blank?
+        logger = Logger.new(Rails.root.join("log",'syncing_error.txt'))
+        logger.error "#{person_obj['person']['data']['names']['family_name']},
+                      #{person_obj['person']['data']['names']['given_name']},
+                      #{person_obj['person']['data']['gender']}"
+        next
+      end
       person_hash = {'person' => {"family_name" => person_obj['person']['data']['names']['family_name'],
                                   "given_name" => person_obj['person']['data']['names']['given_name'],
                                   "gender" => person_obj['person']['data']['gender'],
