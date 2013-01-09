@@ -46,7 +46,7 @@ class SyncService
     patients_ids_batch[count] = []
     ids = []
 
-    (current_ids || []).each do |person_id|
+    (current_ids.sort || []).each do |person_id|
       if (patients_ids_batch[count].length < 11) 
         ids << person_id                                             
         patients_ids_batch[count] = ids                                         
