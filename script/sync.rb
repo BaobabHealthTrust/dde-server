@@ -25,8 +25,8 @@ class SyncService
     (self.compile_ids(current_ids) || {}).each do |key,ids|
       param = "patient_ids=#{ids.join(',')}"
       RestClient.get("http://admin:admin@localhost:3001/people/sync_demographics_with_proxy?#{param}")
-      puts "Got from master successfuly .... #{ids.join(',')}"
-      LogErr.info("Got from master successfuly .... #{ids.join(',')}")
+      puts "Got from master successfully .... #{ids.join(',')}"
+      LogErr.info("Got from master successfully .... #{ids.join(',')}")
     end
   end
 
@@ -34,8 +34,8 @@ class SyncService
     (file || {}).each do |key,ids|
       param = "patient_ids=#{ids.join(',')}"
       RestClient.get("http://admin:admin@localhost:3001/people/sync_demographics_with_master?#{param}")
-      puts "Send to master successfuly .... #{ids.join(',')}"
-      LogErr.info("Send to master successfuly .... #{ids.join(',')}")
+      puts "Send to master successfully .... #{ids.join(',')}"
+      LogErr.info("Send to master successfully .... #{ids.join(',')}")
     end
   end
 
