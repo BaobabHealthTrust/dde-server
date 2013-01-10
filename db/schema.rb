@@ -10,7 +10,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20130110094002) do
+ActiveRecord::Schema.define(:version => 20130110141633) do
 
   create_table "identifiers_to_be_assigned", :force => true do |t|
     t.string   "file"
@@ -23,6 +23,13 @@ ActiveRecord::Schema.define(:version => 20130110094002) do
   create_table "legacy_national_ids", :force => true do |t|
     t.string   "value"
     t.string   "person_id"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  create_table "national_id_sites", :force => true do |t|
+    t.string   "national_id"
+    t.integer  "site_id"
     t.datetime "created_at"
     t.datetime "updated_at"
   end
