@@ -422,6 +422,34 @@ class PeopleController < ApplicationController
       render :text => people_ids.to_json and return
     end
   end
+
+  def national_ids_to_sync
+    if params[:patient_ids]
+      ids = params[:patient_ids]
+      logger = Logger.new(Rails.root.join("log",'ids_from_proxy.txt'))
+      
+      ids.each do|patient_id|
+        ids = patient_id.split(",")
+        ids.each do |id|
+          logger.info id.to_s
+        end
+      end
+    end
+    render :text => true and return
+  end
+
+  def sync_demographics_with_client
+    national_ids = []
+    national_ids_file = File.open(Rails.root.join("log",'ids_from_proxy.txt'))
+    national_ids_file.each_line do|line|
+      national_ids << line.strip
+    end
+    people = Person.joins(:national_patient_identifier).where("national_patient_identifiers.value not in (?)",national_ids).select("people.*")
+    logger = Logger.new(Rails.root.join("log",'people_from_proxy.txt'))
+    people.each do|person|
+       logger.info person.to_json
+    end
+  end
   
   protected
 
