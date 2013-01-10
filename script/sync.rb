@@ -3,6 +3,8 @@ require 'rest-client'
 require 'json'
 require 'rails'
 
+LogErr = Logger.new(Rails.root.join("log","sync.txt"))
+
 class SyncService
 
   def self.get_available_ids
@@ -23,6 +25,8 @@ class SyncService
     (self.compile_ids(current_ids) || {}).each do |key,ids|
       param = "patient_ids=#{ids.join(',')}"
       RestClient.get("http://admin:admin@localhost:3001/people/sync_demographics_with_proxy?#{param}")
+      puts "Got from master successfully .... #{ids.join(',')}"
+      LogErr.info("Got from master successfully .... #{ids.join(',')}")
     end
   end
 
@@ -30,6 +34,8 @@ class SyncService
     (file || {}).each do |key,ids|
       param = "patient_ids=#{ids.join(',')}"
       RestClient.get("http://admin:admin@localhost:3001/people/sync_demographics_with_master?#{param}")
+      puts "Send to master successfully .... #{ids.join(',')}"
+      LogErr.info("Send to master successfully .... #{ids.join(',')}")
     end
   end
 
@@ -40,7 +46,7 @@ class SyncService
     patients_ids_batch[count] = []
     ids = []
 
-    (current_ids || []).each do |person_id|
+    (current_ids.sort || []).each do |person_id|
       if (patients_ids_batch[count].length < 11) 
         ids << person_id                                             
         patients_ids_batch[count] = ids                                         
