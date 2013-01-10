@@ -427,7 +427,6 @@ class PeopleController < ApplicationController
     if params[:patient_ids]
       ids = params[:patient_ids]
       logger = Logger.new(Rails.root.join("log",'ids_from_proxy.txt'))
-      
       ids.each do|patient_id|
         ids = patient_id.split(",")
         ids.each do |id|
@@ -438,17 +437,30 @@ class PeopleController < ApplicationController
     render :text => true and return
   end
 
-  def sync_demographics_with_client
+  def send_person_ids_to_client
     national_ids = []
     national_ids_file = File.open(Rails.root.join("log",'ids_from_proxy.txt'))
     national_ids_file.each_line do|line|
       national_ids << line.strip
     end
-    people = Person.joins(:national_patient_identifier).where("national_patient_identifiers.value not in (?)",national_ids).select("people.*")
-    logger = Logger.new(Rails.root.join("log",'people_from_proxy.txt'))
+    people = Person.joins(:national_patient_identifier).where("national_patient_identifiers.value not in (?)",national_ids).select("people.id")
+    people_ids = []
     people.each do|person|
-       logger.info person.to_json
+       people_ids << person.id
     end
+    render :text => people_ids.to_json rescue 0 and return
+  end
+
+  def sync_demographics_with_client
+    person_demographics = []
+    if params[:person_ids]
+      person_ids = params[:person_ids].split(",")
+      people = Person.find(person_ids)
+      people.each do |person|
+        person_demographics << person.to_json + "|"
+      end
+    end
+    render :text => person_demographics and return
   end
   
   protected
@@ -467,6 +479,7 @@ class PeopleController < ApplicationController
   
     sync = Sync.new()
     sync.sync_site_id = site_code
+    sync.last_person_id = people.last.id rescue 0
     sync.created_date = last_created_time
     sync.updated_date = last_updated_time
     sync.save
