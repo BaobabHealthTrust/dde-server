@@ -13,7 +13,7 @@ class PersonNameCode < ActiveRecord::Base
     people = Person.find(:all)
     people.each {|person|
       PersonNameCode.create(
-        :person_id => person.person_name_id,
+        :person_id => person.id,
         :given_name_code => (person.given_name || '').soundex,
         :family_name_code => (person.family_name || '').soundex
       )

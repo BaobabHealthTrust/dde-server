@@ -255,40 +255,12 @@ class Person < ActiveRecord::Base
   end
 
   def self.person_search(params)
-    people = []
-    people = search_by_identifier(params[:identifier]) if params[:identifier]
-    return people.first.id unless people.blank? || people.size > 1
-
     gender = params[:gender]
-    given_name = params[:given_name].squish unless params[:given_name].blank?
-    family_name = params[:family_name].squish unless params[:family_name].blank?
+    given_name_code = params[:given_name].squish.soundex unless params[:given_name].blank?
+    family_name_code = params[:family_name].squish.soundex unless params[:family_name].blank?
 
-    people = Person.find(:all, :include => [{:names => [:person_name_code]}, :patient], :conditions => [
-        "gender = ? AND \
-     person_name.given_name = ? AND \
-     person_name.family_name = ?",
-        gender,
-        given_name,
-        family_name
-      ]) if people.blank?
-
-    if people.length < 15
-      matching_people = people.collect{| person |
-                              person.person_id
-                          }
-                          # raise matching_people.to_yaml
-      people_like = Person.find(:all, :limit => 15, :include => [{:names => [:person_name_code]}, :patient], :conditions => [
-        "gender = ? AND \
-     person_name_code.given_name_code LIKE ? AND \
-     person_name_code.family_name_code LIKE ? AND person.person_id NOT IN (?)",
-        gender,
-        (given_name || '').soundex,
-        (family_name || '').soundex,
-        matching_people
-      ], :order => "person_name.given_name ASC, person_name_code.family_name_code ASC")
-      people = people + people_like
-    end
-   return people
+    Person.joins(:person_name_codes).where("given_name_code LIKE '%#{given_name_code}%' 
+      AND family_name_code LIKE '%#{family_name_code}%' AND gender = ?", gender)
   end
 
   protected
