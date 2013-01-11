@@ -10,7 +10,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20130110141633) do
+ActiveRecord::Schema.define(:version => 20130111100927) do
 
   create_table "identifiers_to_be_assigned", :force => true do |t|
     t.string   "file"
@@ -74,6 +74,14 @@ ActiveRecord::Schema.define(:version => 20130110141633) do
     t.string   "gender"
     t.date     "birthdate"
     t.boolean  "birthdate_estimated",                    :null => false
+  end
+
+  create_table "person_name_codes", :force => true do |t|
+    t.integer  "person_id"
+    t.string   "given_name_code"
+    t.string   "family_name_code"
+    t.datetime "created_at"
+    t.datetime "updated_at"
   end
 
   create_table "sites", :force => true do |t|
