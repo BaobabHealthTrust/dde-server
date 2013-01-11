@@ -4,7 +4,9 @@ class Person < ActiveRecord::Base
 
   has_one :national_patient_identifier
   has_many :legacy_national_ids,:class_name => 'LegacyNationalIds', 
-           :foreign_key => 'person_id' 
+           :foreign_key => 'person_id'
+  has_many :person_name_codes,:class_name => 'PersonNameCode',
+           :foreign_key => 'person_id'
 
   belongs_to :creator,
       :class_name => 'User'
@@ -252,6 +254,43 @@ class Person < ActiveRecord::Base
     self.set_npid
   end
 
+  def self.person_search(params)
+    people = []
+    people = search_by_identifier(params[:identifier]) if params[:identifier]
+    return people.first.id unless people.blank? || people.size > 1
+
+    gender = params[:gender]
+    given_name = params[:given_name].squish unless params[:given_name].blank?
+    family_name = params[:family_name].squish unless params[:family_name].blank?
+
+    people = Person.find(:all, :include => [{:names => [:person_name_code]}, :patient], :conditions => [
+        "gender = ? AND \
+     person_name.given_name = ? AND \
+     person_name.family_name = ?",
+        gender,
+        given_name,
+        family_name
+      ]) if people.blank?
+
+    if people.length < 15
+      matching_people = people.collect{| person |
+                              person.person_id
+                          }
+                          # raise matching_people.to_yaml
+      people_like = Person.find(:all, :limit => 15, :include => [{:names => [:person_name_code]}, :patient], :conditions => [
+        "gender = ? AND \
+     person_name_code.given_name_code LIKE ? AND \
+     person_name_code.family_name_code LIKE ? AND person.person_id NOT IN (?)",
+        gender,
+        (given_name || '').soundex,
+        (family_name || '').soundex,
+        matching_people
+      ], :order => "person_name.given_name ASC, person_name_code.family_name_code ASC")
+      people = people + people_like
+    end
+   return people
+  end
+
   protected
 
   def set_version_number
@@ -295,6 +334,10 @@ class Person < ActiveRecord::Base
     unless hash[key]
       raise ArgumentError, "Argument Hash is expected to contain the '#{key}' key. Present keys include: #{hash.keys.join(', ')}"
     end
+  end
+
+  def after_save
+    PersonNameCode.create_name_code(self)
   end
 
 end
