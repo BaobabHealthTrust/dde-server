@@ -260,7 +260,10 @@ class Person < ActiveRecord::Base
     family_name_code = params[:family_name].squish.soundex unless params[:family_name].blank?
 
     Person.joins(:person_name_codes).where("given_name_code LIKE '%#{given_name_code}%' 
-      AND family_name_code LIKE '%#{family_name_code}%' AND gender = ?", gender)
+      AND family_name_code LIKE '%#{family_name_code}%' AND gender = ?", 
+      gender).map do |person|
+        JSON.parse(person.to_json)
+    end
   end
 
   protected

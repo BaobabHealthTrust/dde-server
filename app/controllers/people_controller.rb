@@ -80,7 +80,7 @@ class PeopleController < ApplicationController
       respond_to do |format|
         format.html { render :action => 'index',         :status => :multiple_choices }
         format.xml  { render :xml    => @people,         :status => :multiple_choices }
-        format.json { render :json   => @people.to_json, :status => :multiple_choices }
+        format.json { render :json   => @people.to_json } #, :status => :multiple_choices }
       end
     end
   end

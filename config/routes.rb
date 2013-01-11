@@ -26,7 +26,7 @@ DdeServer::Application.routes.draw do
     end
 
     collection do
-      post :sync_demographics_with_master, :sync_demographics_with_proxy,:sync_demographics_with_client,
+      post :sync_demographics_with_master, :sync_demographics_with_proxy,:sync_demographics_with_client,:find,
            :people_to_sync, :demographics_to_sync, :getPeopleIdsCount, :national_ids_to_sync, :send_person_ids_to_client
       get :find, :sync_demographics_with_master, :sync_demographics_with_proxy,:sync_demographics_with_client,
           :people_to_sync, :demographics_to_sync, :getPeopleIdsCount, :national_ids_to_sync, :send_person_ids_to_client
