@@ -324,11 +324,11 @@ class PeopleController < ApplicationController
   def people_to_sync
     last_updated_date = Sync.last_updated_date(Site.current_code)
     if last_updated_date
-      people_ids = Person.find(:all,:conditions => ["updated_at > ?",last_updated_date]).collect {|p|p.id}
+      people_ids = Person.find(:all,:conditions => ["updated_at > ?",last_updated_date],:order => "id").collect {|p|p.id}
     else
-      people_ids = Person.find(:all).collect{|p|p.id}
+      people_ids = Person.find(:all,:order => "id").collect{|p|p.id}
     end 
-    render :text => people_ids.to_json 
+    render :text => people_ids.sort.to_json
   end
 
   def sync_demographics_with_proxy
@@ -397,12 +397,12 @@ class PeopleController < ApplicationController
       site_code = Site.find_by_id(site_id).code
       last_updated_date = Sync.last_updated_date(site_code)
       unless last_updated_date.blank?
-        people_ids = Person.find(:all,:conditions => ["creator_site_id != ? and updated_at > ?",site_id,last_updated_date]).collect {|p|p.id}
+        people_ids = Person.find(:all,:conditions => ["creator_site_id != ? and updated_at > ?",site_id,last_updated_date],:order => "id").collect {|p|p.id}
       else
-        people_ids = Person.find(:all,:conditions => ["creator_site_id != ?",site_id]).collect{|p|p.id}
+        people_ids = Person.find(:all,:conditions => ["creator_site_id != ?",site_id],:order => "id").collect{|p|p.id}
       end
     end 
-    render :text => people_ids.to_json
+    render :text => people_ids.sort.to_json
   end
   
   def getPeopleIdsCount
@@ -415,11 +415,11 @@ class PeopleController < ApplicationController
       site_code = Site.find_by_id(site_id).code
       last_updated_date = Sync.last_updated_date(site_code)
       unless last_updated_date.blank?
-        people_ids = Person.find(:all,:conditions => ["creator_site_id != ? and updated_at > ?",site_id,last_updated_date]).collect{|p| p.id}
+        people_ids = Person.find(:all,:conditions => ["creator_site_id != ? and updated_at > ?",site_id,last_updated_date],:order => "id").collect{|p| p.id}
       else
-        people_ids = Person.find(:all,:conditions => ["creator_site_id != ?",site_id]).collect{|p| p.id}
+        people_ids = Person.find(:all,:conditions => ["creator_site_id != ?",site_id],:order => "id").collect{|p| p.id}
       end
-      render :text => people_ids.to_json and return
+      render :text => people_ids.sort.to_json and return
     end
   end
 
@@ -448,7 +448,7 @@ class PeopleController < ApplicationController
     people.each do|person|
        people_ids << person.id
     end
-    render :text => people_ids.to_json rescue 0 and return
+    render :text => people_ids.to_json rescue {} and return
   end
 
   def sync_demographics_with_client
@@ -479,7 +479,7 @@ class PeopleController < ApplicationController
   
     sync = Sync.new()
     sync.sync_site_id = site_code
-    sync.last_person_id = people.last.id rescue 0
+    sync.last_person_id = people.last.id
     sync.created_date = last_created_time
     sync.updated_date = last_updated_time
     sync.save
