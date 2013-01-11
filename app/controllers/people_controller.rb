@@ -324,9 +324,11 @@ class PeopleController < ApplicationController
   def people_to_sync
     last_updated_date = Sync.last_updated_date(Site.current_code)
     if last_updated_date
-      people_ids = Person.find(:all,:conditions => ["updated_at > ?",last_updated_date],:order => "id").collect {|p|p.id}
+      last_person_id = Sync.last_updated_person_id(Site.current_code)
+      people_ids = Person.where("id > ?",last_person_id).select(:id).map(&:id)
+      people_ids +=  Person.where("id <= ? and updated_at > ?",last_person_id,last_updated_date).select(:id).map(&:id)
     else
-      people_ids = Person.find(:all,:order => "id").collect{|p|p.id}
+      people_ids = Person.order(:id).map(&:id)
     end 
     render :text => people_ids.sort.to_json
   end
