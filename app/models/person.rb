@@ -254,7 +254,7 @@ class Person < ActiveRecord::Base
     self.set_npid
   end
 
-  def self.person_search(params)
+  def self.search(params)
     gender = params[:gender]
     given_name_code = params[:given_name].squish.soundex unless params[:given_name].blank?
     family_name_code = params[:family_name].squish.soundex unless params[:family_name].blank?

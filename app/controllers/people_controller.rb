@@ -52,8 +52,7 @@ class PeopleController < ApplicationController
       end
 
     else
-      @people = Person.where(params.slice(:given_name,:family_name, :family_name2,
-      :city_village, :gender)).joins(:national_patient_identifier).select("people.*,value")
+      @people = Person.search(params)
     end
 
     case @people.size
