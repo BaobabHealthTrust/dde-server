@@ -518,7 +518,10 @@ class PeopleController < ApplicationController
       person_hash.merge!site_hash
 
       @person = Person.find_or_initialize_from_attributes(person_hash.slice('person', 'npid', 'site'))
-      success = @person.save      
+      if @person.save
+        NationalIdSite.create({:national_id => person_obj['npid']['value'],
+                               :site_id => person_obj['person']['creator_site_id']})
+      end
     end
   end
 
