@@ -11,6 +11,8 @@
     PatientsIDsBatch = {};
     count = 1;
     PatientsIDsBatch[count] = [];
+    PatientsIDs = PatientsIDs.sort(function(a,b){return a - b});
+
     for(var i = 0; i < PatientsIDs.length; i++) {
       if (PatientsIDsBatch[count].length < 11) {
         ids.push(PatientsIDs[i]);
@@ -104,6 +106,7 @@
         var results = eval(xmlhttp.responseText);
         if(results) {
           a = JSON.parse(results);
+          a.sort(function(x,y){return x - y})
           ids2 = [];
           count = 1;
           PatientIDsFromMaster[count] = [];
