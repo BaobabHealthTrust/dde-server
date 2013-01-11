@@ -57,9 +57,10 @@ class SyncService
         patients_ids_batch[count] = ids
       end
     end
-    patients_ids_batch
+    patients_ids_batch.sort{|a,b| a <=> b }
   end
   
   get_available_ids
+  
 end
 
