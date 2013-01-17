@@ -129,13 +129,16 @@ class PeopleController < ApplicationController
       return if not @person.blank?
     end
 
+    version = Guid.new.to_s
     @person = Person.new(params[:person].merge(
                          {:creator_site_id => Site.current_id ,
                          :given_name => params[:person]["data"]["names"]["given_name"] ,
                          :family_name => params[:person]["data"]["names"]["family_name"] ,
                          :gender => params[:person]["data"]["gender"] ,
                          :birthdate => params[:person]["data"]["birthdate"] ,
-                         :birthdate_estimated => params[:person]["data"]["birthdate_estimated"]}
+                         :birthdate_estimated => params[:person]["data"]["birthdate_estimated"],
+                         :version_number => version,
+                         :remote_version_number => version }
                         ))
 
     respond_to do |format|
@@ -504,7 +507,8 @@ class PeopleController < ApplicationController
                                   "data" => person_obj['person']['data'],
                                   "creator_site_id" => person_obj['npid']['assigner_site_id'],
                                   "creator_id" => person_obj['person']['creator_id'],
-                                  "version_number" => person_obj['person']['version_number'] ||= 0 }}
+                                  "version_number" => person_obj['person']['version_number'],
+                                  "remote_version_number" => person_obj['person']['remote_version_number']}}
 
       npid_hash = {'npid' => {"value" => person_obj['npid']['value'],
                               "assigner_site_id" => person_obj['person']['creator_site_id'],
@@ -535,7 +539,8 @@ class PeopleController < ApplicationController
                                   "data" => person_obj['person']['data'],
                                   "creator_site_id" => person_obj['npid']['assigner_site_id'],
                                   "creator_id" => person_obj['person']['creator_id'],
-                                  "version_number" => person_obj['person']['version_number'] ||= 0 }}
+                                  "version_number" => person_obj['person']['version_number'],
+                                  "remote_version_number" => person_obj['person']['remote_version_number']}}
 
       npid_hash = {'npid' => {"value" => person_obj['npid']['value'],
                               "assigner_site_id" => person_obj['npid']['assigner_site_id'],
