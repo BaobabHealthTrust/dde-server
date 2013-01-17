@@ -8,7 +8,7 @@ default: &default
     timeout:      10  # data timout - increase for connections known to be slow, decrease to allow faster feedback on broken lines
     open_timeout: 10  # open_timout, same as above
 
-development:
+production:
   <<: *default
   mode: proxy
   site_id: 2
@@ -19,7 +19,7 @@ development:
     timeout:      600
     open_timeout: 600
 
-production:
+development:
   <<: *default
   mode: proxy
   site_id: 2
