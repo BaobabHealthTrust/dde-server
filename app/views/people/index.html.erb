@@ -179,7 +179,7 @@
       <td><%= person.created_at %></td>
       <td><%= person.creator_id || ' - unknown - ' %></td>
       <td><%= Site.find_by_id(person.creator_site_id).name rescue ' - unknown - ' %></td>
-      <td><%= person.version_number.last(12) %></td>
+      <td><%= person.version_number.last(12) rescue 0 %></td>
       <td>
         <%= link_to 'Show', person if can? :show, person %> |
         <%= link_to 'Edit', edit_person_path(person) if can? :edit, person %> |
