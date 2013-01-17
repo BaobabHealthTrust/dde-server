@@ -19,6 +19,17 @@ development:
     timeout:      600
     open_timeout: 600
 
+production:
+  <<: *default
+  mode: proxy
+  site_id: 2
+  master_uri: http://localhost:3002
+  remote_http_options:
+    user:         admin
+    password:     admin
+    timeout:      600
+    open_timeout: 600
+
 integration:
   mode: master
   site_id: 0
