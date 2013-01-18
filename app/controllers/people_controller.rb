@@ -559,7 +559,9 @@ class PeopleController < ApplicationController
       person_hash.merge!site_hash
      
       @person = Person.find_or_initialize_from_attributes(person_hash.slice('person', 'npid', 'site'))
-      saved_people << @person.save
+      if @people.save
+        saved_people << @person
+      end
     end
     return saved_people
   end
