@@ -329,7 +329,8 @@ class PeopleController < ApplicationController
     if last_updated_date
       last_person_id = Sync.last_updated_person_id(Site.current_code)
       people_ids = Person.where("id > ?",last_person_id).select(:id).map(&:id)
-      people_ids +=  Person.where("id <= ? and updated_at > ?",last_person_id,last_updated_date).select(:id).map(&:id)
+      people_ids +=  Person.where("id <= ? and updated_at > ?",last_person_id,
+        last_updated_date.strftime("%Y-%m-%d %H:%M:%S")).select(:id).map(&:id)
     else
       people_ids = Person.order(:id).map(&:id)
     end 
@@ -403,9 +404,12 @@ class PeopleController < ApplicationController
       site_code = Site.find_by_id(site_id).code
       last_updated_date = Sync.last_updated_date(site_code)
       unless last_updated_date.blank?
-        people_ids = Person.find(:all,:conditions => ["creator_site_id != ? and updated_at > ?",site_id,last_updated_date],:order => "id").collect {|p|p.id}
+        people_ids = Person.find(:all,:conditions => ["creator_site_id != ? 
+          AND updated_at > ?",site_id,last_updated_date.strftime("%Y-%m-%d %H:%M:%S")],
+          :order => "id").collect {|p|p.id}
       else
-        people_ids = Person.find(:all,:conditions => ["creator_site_id != ?",site_id],:order => "id").collect{|p|p.id}
+        people_ids = Person.find(:all,:conditions => ["creator_site_id != ?",site_id],
+          :order => "id").collect{|p|p.id}
       end
     end 
     render :text => people_ids.sort.to_json
@@ -421,9 +425,12 @@ class PeopleController < ApplicationController
       site_code = Site.find_by_id(site_id).code
       last_updated_date = Sync.last_updated_date(site_code)
       unless last_updated_date.blank?
-        people_ids = Person.find(:all,:conditions => ["creator_site_id != ? and updated_at > ?",site_id,last_updated_date],:order => "id").collect{|p| p.id}
+        people_ids = Person.find(:all,:conditions => ["creator_site_id != ? AND updated_at > ?",
+          site_id,last_updated_date.strftime("%Y-%m-%d %H:%M:%S")],
+          :order => "id").collect{|p| p.id}
       else
-        people_ids = Person.find(:all,:conditions => ["creator_site_id != ?",site_id],:order => "id").collect{|p| p.id}
+        people_ids = Person.find(:all,:conditions => ["creator_site_id != ?",
+          site_id],:order => "id").collect{|p| p.id}
       end
       render :text => people_ids.sort.to_json and return
     end
