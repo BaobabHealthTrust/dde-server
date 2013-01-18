@@ -292,7 +292,7 @@ class PeopleController < ApplicationController
       uri = "http://#{dde_master_user}:#{dde_master_password}@#{dde_master_uri}/people/sync_demographics_with_master/"
       sync = RestClient.post(uri,people_params)
 
-      update_sync_transaction(Site.current_code,people)
+      #update_sync_transaction(Site.current_code,people)
 
       render :text => "updated master" and return
     else
@@ -315,7 +315,7 @@ class PeopleController < ApplicationController
 
       if batch_info[:check_sum].to_i == received_file['check_sum'].to_i
         people = create_from_proxy(patients)
-        #update_sync_transaction(site_code,people)
+        update_sync_transaction(site_code,people)
         render :text => "done ..." and return
       else
         raise "NO ....#{patients.length}...... #{batch_info[:file_size].to_s} >>>>>>>>>>>>>>>> #{received_file['file_size'].to_s}"
@@ -361,7 +361,7 @@ class PeopleController < ApplicationController
       people_params.merge!('file' => batch_info)
       people_params.merge!('site_code' => site_code)
 
-      update_sync_transaction(site_code,people)
+      #update_sync_transaction(site_code,people)
 
       render :text => people_params.to_json
     else
@@ -386,7 +386,7 @@ class PeopleController < ApplicationController
 
       if batch_info[:check_sum].to_i == received_file['check_sum'].to_i
         people = create_from_master(patients)
-        #update_sync_transaction(Site.current_code, people)
+        update_sync_transaction(Site.current_code, people)
         render :text => "updated proxy" and return
       else
         raise "NO ....#{patients.length}...... #{batch_info[:file_size].to_s} >>>>>>>>>>>>>>>> #{received_file['file_size'].to_s}"
