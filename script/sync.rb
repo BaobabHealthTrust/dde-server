@@ -3,9 +3,7 @@ require 'rest-client'
 require 'json'
 require 'rails'
 
-Modulepath = File.expand_path($PROGRAM_NAME)
-AppPath = Modulepath.gsub($PROGRAM_NAME,"")
-LogErr = Logger.new("#{AppPath}log/sync.txt")
+LogErr = Logger.new(ENV['PWD'].sub('script','log/sync.txt'))
 
 class SyncService
 
