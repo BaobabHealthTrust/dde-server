@@ -5,12 +5,11 @@ class Sync < ActiveRecord::Base
       self.where(:'sync_site_id' => site_code).maximum(:updated_date)
     else
       dates = []
-      sites = Site.all
+      sites = Site.where('code <> (?)',site_code)
       sites.each do |site|
-        next if site.code == site_code
-        dates << self.where(:'sync_site_id' => site.code).maximum(:updated_date)
+        dates << Sync.where(:'sync_site_id' => site.code).maximum(:updated_date)
       end
-      dates.sort.first
+      dates.compact.sort.first rescue nil
     end
   end
 
