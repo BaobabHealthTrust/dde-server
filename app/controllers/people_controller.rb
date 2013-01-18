@@ -360,7 +360,7 @@ class PeopleController < ApplicationController
       people_params.merge!('file' => batch_info)
       people_params.merge!('site_code' => site_code)
 
-      #update_sync_transaction(site_code,people)
+      update_sync_transaction(site_code,people)
 
       render :text => people_params.to_json
     else
