@@ -292,7 +292,7 @@ class PeopleController < ApplicationController
       uri = "http://#{dde_master_user}:#{dde_master_password}@#{dde_master_uri}/people/sync_demographics_with_master/"
       sync = RestClient.post(uri,people_params)
 
-      #update_sync_transaction(Site.current_code,people)
+      update_sync_transaction(Site.current_code,people)
 
       render :text => "updated master" and return
     else
