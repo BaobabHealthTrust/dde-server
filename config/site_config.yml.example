@@ -8,6 +8,17 @@ default: &default
     timeout:      10  # data timout - increase for connections known to be slow, decrease to allow faster feedback on broken lines
     open_timeout: 10  # open_timout, same as above
 
+production:
+  <<: *default
+  mode: proxy
+  site_id: 2
+  master_uri: http://localhost:3002
+  remote_http_options:
+    user:         admin
+    password:     admin
+    timeout:      600
+    open_timeout: 600
+
 development:
   <<: *default
   mode: proxy

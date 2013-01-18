@@ -154,7 +154,11 @@ class NpidRequestsController < ApplicationController
       ActiveRecord::Base.transaction do
         File.open("#{Rails.root}/npids/#{params[:file]}", "r").each_line do |line|
           id = line.sub("\n",'')
-          NationalPatientIdentifier.create!(:value => id,:assigner_site_id => Site.current.id)
+          success = NationalPatientIdentifier.create!(:value => id,:assigner_site_id => Site.current.id) rescue nil
+          if success.blank?
+            logger = Logger.new(Rails.root.join("log","requested_duplicate_ids.log"))
+            logger.info id.to_s
+          end
         end
         resp = IdentifiersToBeAssigned.where(:file => params[:file],:assigned => 0).update_all(:assigned => 1) != 0
       end

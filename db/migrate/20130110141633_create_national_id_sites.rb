@@ -1,8 +1,8 @@
 class CreateNationalIdSites < ActiveRecord::Migration
   def self.up
     create_table :national_id_sites do |t|
-      t.string :national_id
-      t.integer :site_id
+      t.string :national_id, :null => false
+      t.integer :site_id, :null => false
 
       t.timestamps
     end
