@@ -3,7 +3,7 @@ require 'rest-client'
 require 'json'
 require 'rails'
 
-LogErr = Logger.new("/var/www/dde-server/log/sync.txt")
+LogErr = Logger.new(Rails.root.join("log","sync.txt"))
 
 class SyncService
 
