@@ -292,7 +292,7 @@ class PeopleController < ApplicationController
       uri = "http://#{dde_master_user}:#{dde_master_password}@#{dde_master_uri}/people/sync_demographics_with_master/"
       sync = RestClient.post(uri,people_params)
 
-      update_sync_transaction(Site.current_code,people)
+      #update_sync_transaction(Site.current_code,people)
 
       render :text => "updated master" and return
     else
@@ -314,7 +314,8 @@ class PeopleController < ApplicationController
       batch_info[:file_size] = file_info[1]
 
       if batch_info[:check_sum].to_i == received_file['check_sum'].to_i
-        create_from_proxy(patients)
+        people = create_from_proxy(patients)
+        update_sync_transaction(site_code,people)
         render :text => "done ..." and return
       else
         raise "NO ....#{patients.length}...... #{batch_info[:file_size].to_s} >>>>>>>>>>>>>>>> #{received_file['file_size'].to_s}"
@@ -359,7 +360,7 @@ class PeopleController < ApplicationController
       people_params.merge!('file' => batch_info)
       people_params.merge!('site_code' => site_code)
 
-      update_sync_transaction(site_code,people)
+      #update_sync_transaction(site_code,people)
 
       render :text => people_params.to_json
     else
@@ -383,7 +384,8 @@ class PeopleController < ApplicationController
       batch_info[:file_size] = file_info[1]
 
       if batch_info[:check_sum].to_i == received_file['check_sum'].to_i
-        create_from_master(patients)
+        people = create_from_master(patients)
+        update_sync_transaction(Site.current_code, people)
         render :text => "updated proxy" and return
       else
         raise "NO ....#{patients.length}...... #{batch_info[:file_size].to_s} >>>>>>>>>>>>>>>> #{received_file['file_size'].to_s}"
@@ -472,11 +474,11 @@ class PeopleController < ApplicationController
   def update_sync_transaction(site_code,people)
     last_updated_time = nil
     last_created_time = nil
-
+    
     people.each do |person|
       last_updated_time = person.updated_at if last_updated_time.blank?
       last_created_time = person.created_at if last_created_time.blank?
-
+      
       last_updated_time = person.updated_at if person.updated_at > last_updated_time
       last_created_time  = person.created_at if person.created_at > last_created_time
     end
@@ -490,6 +492,7 @@ class PeopleController < ApplicationController
   end
 
   def create_from_proxy(people)
+    created_people = []
     (people).each do |person|
       person_obj = JSON.parse(person)
       if person_obj['npid'].blank?
@@ -524,11 +527,14 @@ class PeopleController < ApplicationController
       if @person.save
         NationalIdSite.create({:national_id => person_obj['npid']['value'],
                                :site_id => person_obj['person']['creator_site_id']})
+         created_people << @person
       end
     end
+    return created_people
   end
 
   def create_from_master(people)
+    saved_people = []
     (people).each do |person|
       person_obj = JSON.parse(person)
       person_hash = {'person' => {"family_name" => person_obj['person']['data']['names']['family_name'],
@@ -553,8 +559,9 @@ class PeopleController < ApplicationController
       person_hash.merge!site_hash
      
       @person = Person.find_or_initialize_from_attributes(person_hash.slice('person', 'npid', 'site'))
-      success = @person.save
+      saved_people << @person.save
     end
+    return saved_people
   end
 
   def handle_local_conflict(local_person, remote_person)
