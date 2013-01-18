@@ -315,7 +315,7 @@ class PeopleController < ApplicationController
 
       if batch_info[:check_sum].to_i == received_file['check_sum'].to_i
         people = create_from_proxy(patients)
-        update_sync_transaction(site_code,people)
+        #update_sync_transaction(site_code,people)
         render :text => "done ..." and return
       else
         raise "NO ....#{patients.length}...... #{batch_info[:file_size].to_s} >>>>>>>>>>>>>>>> #{received_file['file_size'].to_s}"
@@ -386,7 +386,7 @@ class PeopleController < ApplicationController
 
       if batch_info[:check_sum].to_i == received_file['check_sum'].to_i
         people = create_from_master(patients)
-        update_sync_transaction(Site.current_code, people)
+        #update_sync_transaction(Site.current_code, people)
         render :text => "updated proxy" and return
       else
         raise "NO ....#{patients.length}...... #{batch_info[:file_size].to_s} >>>>>>>>>>>>>>>> #{received_file['file_size'].to_s}"
