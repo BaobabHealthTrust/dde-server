@@ -27,12 +27,6 @@ ActiveRecord::Schema.define(:version => 20130121180418) do
     t.datetime "updated_at"
   end
 
-  create_table "master_sync_details", :force => true do |t|
-    t.integer  "master_sync_id", :null => false
-    t.datetime "start_date",     :null => false
-    t.datetime "end_date"
-  end
-
   create_table "master_syncs", :force => true do |t|
     t.string   "site_code",  :null => false
     t.datetime "created_at"
