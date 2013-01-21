@@ -1,7 +1,16 @@
 class Sync < ActiveRecord::Base
 
   def self.last_updated_date(site_code)
-    self.where(:'sync_site_id' => site_code).maximum(:updated_date)
+    if Site.proxy?
+      self.where(:'sync_site_id' => site_code).maximum(:updated_date)
+    else
+      dates = []
+      sites = Site.where('code <> (?)',site_code)
+      sites.each do |site|
+        dates << Sync.where(:'sync_site_id' => site.code).maximum(:updated_date)
+      end
+      dates.compact.sort.first rescue nil
+    end
   end
 
   def self.last_updated_person_id(site_code)
