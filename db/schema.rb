@@ -40,8 +40,8 @@ ActiveRecord::Schema.define(:version => 20130121180418) do
   end
 
   create_table "national_id_sites", :force => true do |t|
-    t.string   "national_id"
-    t.integer  "site_id"
+    t.string   "national_id", :null => false
+    t.integer  "site_id",     :null => false
     t.datetime "created_at"
     t.datetime "updated_at"
   end
@@ -89,9 +89,9 @@ ActiveRecord::Schema.define(:version => 20130121180418) do
   end
 
   create_table "person_name_codes", :force => true do |t|
-    t.integer  "person_id"
-    t.string   "given_name_code"
-    t.string   "family_name_code"
+    t.integer  "person_id",        :null => false
+    t.string   "given_name_code",  :null => false
+    t.string   "family_name_code", :null => false
     t.datetime "created_at"
     t.datetime "updated_at"
   end

@@ -1,4 +1,4 @@
-class Sync < ActiveRecord::Base
+class ProxySync < ActiveRecord::Base
 
   def self.last_updated_date(site_code)
     if Site.proxy?
@@ -7,7 +7,7 @@ class Sync < ActiveRecord::Base
       dates = []
       sites = Site.where('code <> (?)',site_code)
       sites.each do |site|
-        dates << Sync.where(:'sync_site_id' => site.code).maximum(:updated_date)
+        dates << ProxySync.where(:'sync_site_id' => site.code).maximum(:updated_date)
       end
       dates.compact.sort.first rescue nil
     end
