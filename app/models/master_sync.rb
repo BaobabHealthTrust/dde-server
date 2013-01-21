@@ -1,6 +1,6 @@
 class MasterSync < ActiveRecord::Base
   def self.last_updated_date(site_code)             
-    self.where("site_code <> ? created_date IS NOT NULL 
+    self.where("site_code <> ? AND created_date IS NOT NULL 
       AND updated_date IS NOT NULL",site_code).minmum(:updated_date).try(:updated_date)
   end                                                                           
                                                                                 
