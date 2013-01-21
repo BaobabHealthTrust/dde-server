@@ -324,7 +324,7 @@ class PeopleController < ApplicationController
   def people_to_sync
     last_updated_date = ProxySync.last_updated_date
     if last_updated_date
-      people_ids =  Person.where("updated_at >= ?",
+      people_ids =  Person.where("updated_at > ?",
         last_updated_date.strftime("%Y-%m-%d %H:%M:%S")).select(:id).map(&:id)
     else
       people_ids = Person.order(:id).map(&:id)

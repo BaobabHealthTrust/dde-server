@@ -4,7 +4,7 @@ class ProxySync < ActiveRecord::Base
     date = self.where("start_date IS NOT NULL AND end_date IS NULL")
     return date.first.start_date unless date.blank?
     self.where("start_date IS NOT NULL 
-      AND end_date IS NOT NULL").maximum(:end_date).try(:end_date)
+      AND end_date IS NOT NULL").maximum(:end_date)
   end
 
   def self.check_for_valid_start_date
