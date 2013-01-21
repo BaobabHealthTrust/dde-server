@@ -39,6 +39,8 @@ class SyncService
       puts "Send to master successfully .... #{ids.join(',')}"
       LogErr.info("Send to master successfully .... #{ids.join(',')}")
     end
+
+    RestClient.get("http://admin:admin@localhost:3001/people/record_successful_sync")
   end
 
   def self.compile_ids(current_ids)

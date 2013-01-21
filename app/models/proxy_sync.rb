@@ -1,20 +1,16 @@
 class ProxySync < ActiveRecord::Base
 
-  def self.last_updated_date(site_code)
-    if Site.proxy?
-      self.where(:'sync_site_id' => site_code).maximum(:updated_date)
-    else
-      dates = []
-      sites = Site.where('code <> (?)',site_code)
-      sites.each do |site|
-        dates << ProxySync.where(:'sync_site_id' => site.code).maximum(:updated_date)
-      end
-      dates.compact.sort.first rescue nil
-    end
+  def self.last_updated_date
+    date = self.where("start_date IS NOT NULL AND end_date IS NULL")
+    return date.first.start_date unless date.blank?
+    self.where("start_date IS NOT NULL 
+      AND end_date IS NOT NULL").maximum(:end_date).try(:end_date)
   end
 
-  def self.last_updated_person_id(site_code)
-    self.where(:'sync_site_id' => site_code).maximum(:last_person_id)
+  def self.check_for_valid_start_date
+    if(self.where("start_date IS NOT NULL AND end_date IS NULL")).blank?
+      self.create(:start_date => DateTime.now())
+    end
   end
 
 end

@@ -292,8 +292,6 @@ class PeopleController < ApplicationController
       uri = "http://#{dde_master_user}:#{dde_master_password}@#{dde_master_uri}/people/sync_demographics_with_master/"
       sync = RestClient.post(uri,people_params)
 
-      #update_sync_transaction(Site.current_code,people)
-
       render :text => "updated master" and return
     else
       site_code = params['site_code']
@@ -315,7 +313,6 @@ class PeopleController < ApplicationController
 
       if batch_info[:check_sum].to_i == received_file['check_sum'].to_i
         people = create_from_proxy(patients)
-        update_sync_transaction(site_code,people)
         render :text => "done ..." and return
       else
         raise "NO ....#{patients.length}...... #{batch_info[:file_size].to_s} >>>>>>>>>>>>>>>> #{received_file['file_size'].to_s}"
@@ -325,15 +322,14 @@ class PeopleController < ApplicationController
   end
 
   def people_to_sync
-    last_updated_date = ProxySync.last_updated_date(Site.current_code)
+    last_updated_date = ProxySync.last_updated_date
     if last_updated_date
-      last_person_id = ProxySync.last_updated_person_id(Site.current_code)
-      people_ids = Person.where("id > ?",last_person_id).select(:id).map(&:id)
-      people_ids +=  Person.where("id <= ? and updated_at > ?",last_person_id,
+      people_ids =  Person.where("updated_at > ?",
         last_updated_date.strftime("%Y-%m-%d %H:%M:%S")).select(:id).map(&:id)
     else
       people_ids = Person.order(:id).map(&:id)
-    end 
+    end
+    ProxySync.check_for_valid_start_date 
     render :text => people_ids.sort.to_json
   end
 
@@ -361,8 +357,6 @@ class PeopleController < ApplicationController
       people_params.merge!('file' => batch_info)
       people_params.merge!('site_code' => site_code)
 
-      #update_sync_transaction(site_code,people)
-
       render :text => people_params.to_json
     else
       uri = "http://#{dde_master_user}:#{dde_master_password}@#{dde_master_uri}/people/sync_demographics_with_proxy/"
@@ -386,7 +380,6 @@ class PeopleController < ApplicationController
 
       if batch_info[:check_sum].to_i == received_file['check_sum'].to_i
         people = create_from_master(patients)
-        update_sync_transaction(Site.current_code, people)
         render :text => "updated proxy" and return
       else
         raise "NO ....#{patients.length}...... #{batch_info[:file_size].to_s} >>>>>>>>>>>>>>>> #{received_file['file_size'].to_s}"
@@ -423,7 +416,7 @@ class PeopleController < ApplicationController
     else
       site_id = params[:site_id]
       site_code = Site.find_by_id(site_id).code
-      last_updated_date = ProxySync.last_updated_date(site_code)
+      last_updated_date = MasterSync.last_updated_date(site_code)
       unless last_updated_date.blank?
         people_ids = Person.find(:all,:conditions => ["creator_site_id != ? AND updated_at > ?",
           site_id,last_updated_date.strftime("%Y-%m-%d %H:%M:%S")],
@@ -475,25 +468,20 @@ class PeopleController < ApplicationController
     end
     render :text => person_demographics and return
   end
-  
+ 
+  def record_successful_sync
+    if Site.proxy?
+      sync = ProxySync.where("start_date IS NOT NULL AND end_date IS NULL").first
+      sync.end_date = DateTime.now()
+      sync.save
+    else
+    end
+  end
+ 
   protected
 
-  def update_sync_transaction(site_code,people)
-    last_updated_time = nil
-    last_created_time = nil
-    
-    people.each do |person|
-      last_updated_time = person.updated_at if last_updated_time.blank?
-      last_created_time = person.created_at if last_created_time.blank?
-      if Site.master?
-        last_updated_time = person.updated_at if person.updated_at < last_updated_time
-        last_created_time = person.created_at if person.created_at < last_created_time
-      else
-        last_updated_time = person.updated_at if person.updated_at > last_updated_time
-        last_created_time = person.created_at if person.created_at > last_created_time
-      end
-    end
-  
+  def update_sync_transaction
+      
     sync = ProxySync.new()
     sync.sync_site_id = site_code
     sync.last_person_id = people.last.id
