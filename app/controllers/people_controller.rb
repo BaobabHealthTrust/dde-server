@@ -324,7 +324,7 @@ class PeopleController < ApplicationController
   def people_to_sync
     last_updated_date = ProxySync.last_updated_date
     if last_updated_date
-      people_ids =  Person.where("updated_at > ?",
+      people_ids =  Person.where("updated_at >= ?",
         last_updated_date.strftime("%Y-%m-%d %H:%M:%S")).select(:id).map(&:id)
     else
       people_ids = Person.order(:id).map(&:id)
@@ -477,7 +477,7 @@ class PeopleController < ApplicationController
       sync.save
     elsif not Site.proxy?
       sync = MasterSync.where("created_date IS NOT NULL 
-        AND end_date IS NULL AND site_code = ?",params[:site_code]).first
+        AND updated_date IS NULL AND site_code = ?",params[:site_code]).first
       sync.updated_date = DateTime.now()
       sync.save
     else
