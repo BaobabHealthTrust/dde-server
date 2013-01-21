@@ -1,0 +1,11 @@
+# Read about fixtures at http://ar.rubyonrails.org/classes/Fixtures.html
+
+one:
+  master_sync_id: 
+  start_date: 
+  end_date: 
+
+two:
+  master_sync_id: 
+  start_date: 
+  end_date: 
