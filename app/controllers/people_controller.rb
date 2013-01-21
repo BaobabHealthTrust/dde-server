@@ -403,7 +403,7 @@ class PeopleController < ApplicationController
       site_code = Site.find_by_id(site_id).code
       last_updated_date = Sync.last_updated_date(site_code)
       unless last_updated_date.blank?
-        people_ids = Person.find(:all,:conditions => ["creator_site_id != ? and updated_at > ?",site_id,last_updated_date],:order => "id").collect {|p|p.id}
+        people_ids = Person.find(:all,:conditions => ["creator_site_id != ? AND updated_at > ?",site_id,last_updated_date],:order => "id").collect {|p|p.id}
       else
         people_ids = Person.find(:all,:conditions => ["creator_site_id != ?",site_id],:order => "id").collect{|p|p.id}
       end
@@ -421,7 +421,7 @@ class PeopleController < ApplicationController
       site_code = Site.find_by_id(site_id).code
       last_updated_date = Sync.last_updated_date(site_code)
       unless last_updated_date.blank?
-        people_ids = Person.find(:all,:conditions => ["creator_site_id != ? AND updated_at >= ?",
+        people_ids = Person.find(:all,:conditions => ["creator_site_id != ? AND updated_at > ?",
           site_id,last_updated_date.strftime("%Y-%m-%d %H:%M:%S")],
           :order => "id").collect{|p| p.id}
       else

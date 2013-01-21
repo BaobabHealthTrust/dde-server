@@ -10,7 +10,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20130111100927) do
+ActiveRecord::Schema.define(:version => 20130121180418) do
 
   create_table "identifiers_to_be_assigned", :force => true do |t|
     t.string   "file"
@@ -23,6 +23,18 @@ ActiveRecord::Schema.define(:version => 20130111100927) do
   create_table "legacy_national_ids", :force => true do |t|
     t.string   "value"
     t.string   "person_id"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  create_table "master_sync_details", :force => true do |t|
+    t.integer  "master_sync_id", :null => false
+    t.datetime "start_date",     :null => false
+    t.datetime "end_date"
+  end
+
+  create_table "master_syncs", :force => true do |t|
+    t.string   "site_code",  :null => false
     t.datetime "created_at"
     t.datetime "updated_at"
   end
@@ -84,21 +96,21 @@ ActiveRecord::Schema.define(:version => 20130111100927) do
     t.datetime "updated_at"
   end
 
+  create_table "proxy_syncs", :force => true do |t|
+    t.string   "sync_site_id",   :null => false
+    t.integer  "last_person_id", :null => false
+    t.datetime "start_date",     :null => false
+    t.datetime "end_date",       :null => false
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
   create_table "sites", :force => true do |t|
     t.string   "name"
     t.string   "annotations"
     t.datetime "created_at"
     t.datetime "updated_at"
     t.string   "code",        :default => ""
-  end
-
-  create_table "syncs", :force => true do |t|
-    t.string   "sync_site_id",   :null => false
-    t.integer  "last_person_id", :null => false
-    t.datetime "created_date",   :null => false
-    t.datetime "updated_date",   :null => false
-    t.datetime "created_at"
-    t.datetime "updated_at"
   end
 
   create_table "users", :force => true do |t|
