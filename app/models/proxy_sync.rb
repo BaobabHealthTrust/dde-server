@@ -20,6 +20,12 @@ class ProxySync < ActiveRecord::Base
       else
         self.create(:start_date => (Person.where('id > 0').maximum(:updated_at)))
       end
+    else
+      if(Person.count < 1)
+        self.create(:start_date => DateTime.now())
+      else
+        self.create(:start_date => (Person.where('id > 0').minimum('created_at') - 1.minute))
+      end
     end
   end
 
