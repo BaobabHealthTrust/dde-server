@@ -480,7 +480,8 @@ class PeopleController < ApplicationController
         sync.save
       elsif not params[:update_master].blank?
         uri = "http://#{dde_master_user}:#{dde_master_password}@#{dde_master_uri}/people/record_successful_sync/"
-        ids = RestClient.post(uri,{"site_code" => Site.current_code})
+        id = RestClient.post(uri,{"site_code" => Site.current_code})
+        update_proxy_sync if id.match(/done/i)
       end
     elsif Site.master?
       sync = MasterSync.where("created_date IS NOT NULL 
@@ -492,6 +493,13 @@ class PeopleController < ApplicationController
   end
  
   protected
+
+  def update_proxy_sync
+    last_updated_date = ProxySync.last_updated_date
+    max_person_updated_date = Person.maximum(:created_at)
+    ProxySync.create(:start_date => last_updated_date, 
+      :end_date => max_person_updated_date)
+  end
 
   def update_sync_transaction
       
