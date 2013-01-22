@@ -500,10 +500,11 @@ class PeopleController < ApplicationController
   protected
 
   def check_if_site_has_sync_before(site_code)
-    people = MasterSync.where(:'site_code' => site_code)
-    if people.blank?
+    sync = MasterSync.where(:'site_code' => site_code)
+    if sync.blank?
       creator_site_id = Site.where(:'code' => site_code).first.id
-      return Person.where('creator_site_id <> ?',creator_site_id).select(:id).map(&:id)
+      return Person.where('creator_site_id <> ?', 
+        creator_site_id).select(:id).map(&:id)
     end
     return []
   end
