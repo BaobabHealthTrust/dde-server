@@ -473,7 +473,7 @@ class PeopleController < ApplicationController
  
   def record_successful_sync
     if Site.proxy?
-      unless params[:update_master].blank?
+      if params[:update_master].blank?
         sync = ProxySync.where("start_date IS NOT NULL AND end_date IS NULL").first
         sync.end_date = DateTime.now()
         sync.save
