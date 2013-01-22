@@ -5,7 +5,7 @@ class MasterSync < ActiveRecord::Base
     return date unless date.blank?  
       
     self.where("site_code = ? AND created_date IS NOT NULL 
-      AND updated_date IS NOT NULL",site_code).maximum(:updated_date)
+      AND updated_date IS NOT NULL",site_code).minimum(:created_date)
   end                                                                           
                                                                                 
   def self.check_for_valid_start_date(site_code)                                      
