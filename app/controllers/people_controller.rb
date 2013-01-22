@@ -422,6 +422,11 @@ class PeopleController < ApplicationController
         people_ids = Person.find(:all,:conditions => ["creator_site_id != ? AND updated_at > ?",
           site_id,last_updated_date.strftime("%Y-%m-%d %H:%M:%S")],
           :order => "id").collect{|p| p.id}
+
+        if people_ids.blank?
+          people_ids = check_if_site_has_sync_before(site_code)
+        end
+          
         MasterSync.check_for_valid_start_date(site_code) unless people_ids.blank?
       else
         people_ids = Person.find(:all,:conditions => ["creator_site_id != ?",
@@ -493,6 +498,15 @@ class PeopleController < ApplicationController
   end
  
   protected
+
+  def check_if_site_has_sync_before(site_code)
+    people = MasterSync.where(:'site_code' => site_code)
+    if people.blank?
+      creator_site_id = Site.where(:'code' => site_code).first.id
+      return Person.where('id <> ?',creator_site_id).select(:id).map(&:id)
+    end
+    return []
+  end
 
   def update_proxy_sync
     last_updated_date = ProxySync.last_updated_date
