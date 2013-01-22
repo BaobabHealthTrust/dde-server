@@ -422,6 +422,7 @@ class PeopleController < ApplicationController
         people_ids = Person.find(:all,:conditions => ["creator_site_id != ? AND updated_at > ?",
           site_id,last_updated_date.strftime("%Y-%m-%d %H:%M:%S")],
           :order => "id").collect{|p| p.id}
+        MasterSync.check_for_valid_start_date(site_code) unless people_ids.blank?
       else
         people_ids = Person.find(:all,:conditions => ["creator_site_id != ?",
           site_id],:order => "id").collect{|p| p.id}
