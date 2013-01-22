@@ -475,7 +475,7 @@ class PeopleController < ApplicationController
       sync = ProxySync.where("start_date IS NOT NULL AND end_date IS NULL").first
       sync.end_date = DateTime.now()
       sync.save
-    elsif not Site.proxy?
+    elsif Site.master?
       sync = MasterSync.where("created_date IS NOT NULL 
         AND updated_date IS NULL AND site_code = ?",params[:site_code]).first
       sync.updated_date = DateTime.now()
