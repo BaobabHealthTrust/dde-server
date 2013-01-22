@@ -30,8 +30,10 @@ class SyncService
       puts "Got from master successfully .... #{ids.join(',')}"
       LogErr.info("Got from master successfully .... #{ids.join(',')}")
     end
-
-    RestClient.get("http://admin:admin@localhost:3001/people/record_successful_sync?update_master=true")
+    
+    unless current_ids.blank?
+      RestClient.get("http://admin:admin@localhost:3001/people/record_successful_sync?update_master=true")
+    end
   end
 
   def self.send_demographics_file(file)
