@@ -93,9 +93,7 @@ ActiveRecord::Schema.define(:version => 20130122071307) do
   end
 
   create_table "proxy_syncs", :force => true do |t|
-    t.string   "sync_site_id",   :null => false
-    t.integer  "last_person_id", :null => false
-    t.datetime "start_date",     :null => false
+    t.datetime "start_date", :null => false
     t.datetime "end_date"
     t.datetime "created_at"
     t.datetime "updated_at"
