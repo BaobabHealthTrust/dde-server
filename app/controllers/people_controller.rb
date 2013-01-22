@@ -503,7 +503,7 @@ class PeopleController < ApplicationController
     people = MasterSync.where(:'site_code' => site_code)
     if people.blank?
       creator_site_id = Site.where(:'code' => site_code).first.id
-      return Person.where('id <> ?',creator_site_id).select(:id).map(&:id)
+      return Person.where('creator_site_id <> ?',creator_site_id).select(:id).map(&:id)
     end
     return []
   end
