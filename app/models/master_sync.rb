@@ -1,8 +1,8 @@
 class MasterSync < ActiveRecord::Base
   def self.last_updated_date(site_code)             
     date = self.where("site_code <> ? AND created_date IS NOT NULL 
-      AND updated_date IS NOT NULL",site_code).minimum(:updated_date)
-    return date unless date.blank?  
+      AND updated_date IS NOT NULL",site_code).minimum(:created_date)
+    return (date - 1.minute) unless date.blank?  
       
     self.where("site_code = ? AND created_date IS NOT NULL 
       AND updated_date IS NOT NULL",site_code).maximum(:created_date)
