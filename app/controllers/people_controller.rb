@@ -326,6 +326,7 @@ class PeopleController < ApplicationController
     if last_updated_date
       people_ids =  Person.where("updated_at > ?",
         last_updated_date.strftime("%Y-%m-%d %H:%M:%S")).select(:id).map(&:id)
+      ProxySync.check_for_valid_start_date unless people_ids.blank?
     else
       people_ids = Person.order(:id).map(&:id)
       ProxySync.check_for_valid_start_date 

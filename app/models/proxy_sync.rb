@@ -8,11 +8,17 @@ class ProxySync < ActiveRecord::Base
   end
 
   def self.check_for_valid_start_date
-    if(self.where("start_date IS NOT NULL AND end_date IS NULL")).blank?
+    if not(self.where("start_date IS NOT NULL AND end_date IS NULL")).blank?
       if(Person.count < 1)
         self.create(:start_date => DateTime.now())
       else
         self.create(:start_date => (Person.where('id > 0').minimum('created_at') - 1.minute))
+      end
+    elsif not(self.where("start_date IS NOT NULL AND end_date IS NOT NULL").last).blank?
+      if(Person.count < 1)
+        self.create(:start_date => DateTime.now())
+      else
+        self.create(:start_date => (Person.where('id > 0').maximum(:updated_at)))
       end
     end
   end
