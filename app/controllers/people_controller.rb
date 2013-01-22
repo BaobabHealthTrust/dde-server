@@ -329,7 +329,7 @@ class PeopleController < ApplicationController
       ProxySync.check_for_valid_start_date unless people_ids.blank?
     else
       people_ids = Person.order(:id).map(&:id)
-      ProxySync.check_for_valid_start_date 
+      ProxySync.check_for_valid_start_date unless people_ids.blank? 
     end
     render :text => people_ids.sort.to_json
   end
@@ -416,7 +416,7 @@ class PeopleController < ApplicationController
       render :text =>  ids.to_json and return
     else
       site_id = params[:site_id]
-      site_code = Site.find_by_id(site_id).code
+      site_code = Site.find(site_id).code
       last_updated_date = MasterSync.last_updated_date(site_code)
       unless last_updated_date.blank?
         people_ids = Person.find(:all,:conditions => ["creator_site_id != ? AND updated_at > ?",
