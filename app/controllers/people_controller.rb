@@ -425,7 +425,7 @@ class PeopleController < ApplicationController
       else
         people_ids = Person.find(:all,:conditions => ["creator_site_id != ?",
           site_id],:order => "id").collect{|p| p.id}
-        MasterSync.check_for_valid_start_date(site_code)
+        MasterSync.check_for_valid_start_date(site_code) unless people_ids.blank?
       end
       render :text => people_ids.sort.to_json and return
     end
@@ -472,7 +472,7 @@ class PeopleController < ApplicationController
   end
  
   def record_successful_sync
-    if params[:update_master].blank? and Site.proxy?
+    if Site.proxy?
       sync = ProxySync.where("start_date IS NOT NULL AND end_date IS NULL").first
       sync.end_date = DateTime.now()
       sync.save
@@ -481,9 +481,6 @@ class PeopleController < ApplicationController
         AND updated_date IS NULL AND site_code = ?",params[:site_code]).first
       sync.updated_date = DateTime.now()
       sync.save
-    else
-      uri = "http://#{dde_master_user}:#{dde_master_password}@#{dde_master_uri}/people/record_successful_sync/"
-      RestClient.post(uri,{"site_code" => Site.current_code})
     end
     render :text => 'done ...' and return
   end
