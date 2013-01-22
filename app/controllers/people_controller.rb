@@ -473,9 +473,14 @@ class PeopleController < ApplicationController
  
   def record_successful_sync
     if Site.proxy?
-      sync = ProxySync.where("start_date IS NOT NULL AND end_date IS NULL").first
-      sync.end_date = DateTime.now()
-      sync.save
+      unless params[:update_master].blank?
+        sync = ProxySync.where("start_date IS NOT NULL AND end_date IS NULL").first
+        sync.end_date = DateTime.now()
+        sync.save
+      elsif not params[:update_master].blank?
+        uri = "http://#{dde_master_user}:#{dde_master_password}@#{dde_master_uri}/people/record_successful_sync/"
+        ids = RestClient.post(uri,{"site_code" => Site.current_code})
+      end
     elsif Site.master?
       sync = MasterSync.where("created_date IS NOT NULL 
         AND updated_date IS NULL AND site_code = ?",params[:site_code]).first
