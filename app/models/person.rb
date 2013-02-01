@@ -46,11 +46,11 @@ class Person < ActiveRecord::Base
   def to_json(options={})
     includes = (options[:includes] || []).inject({}){|mem, assoc| mem[assoc.to_s] = self.send assoc }
     person_attributes = self.remote_attributes.merge(includes)
-    #unless self.lnids.blank?
-    # return (person_attributes.merge(self.lnids)).to_json
-    #else
+    unless self.lnids.blank?
+     return (person_attributes.merge(self.lnids)).to_json
+    else
      return person_attributes.to_json
-    #end
+    end
   end
 
   def self.base_resource
@@ -154,20 +154,16 @@ class Person < ActiveRecord::Base
 #     end
 #   end
 #   alias_method_chain :update_attributes, :pushing_to_master
-=begin
+
   def lnids
     legacy_ids_hash = {}
-    legacy_ids = {}
+    legacy_ids = []
     self.legacy_national_ids.each do |legacy_id|
-      legacy_ids[legacy_id.value]= legacy_id.person_id
+      legacy_ids << legacy_id.value
     end
-    return legacy_ids_hash["legacy_ids"] = {"legacy_id" => legacy_ids}
+    return legacy_ids_hash["legacy_ids"] = {"legacy_ids" => legacy_ids}
   end
-
-  def lnids=(obj)
-    #TO DO
-  end
-=end
+  
   def npid
     self.national_patient_identifier
   end
@@ -211,11 +207,9 @@ class Person < ActiveRecord::Base
   def initialize_associations_from_attributes(attrs)
     ensure_key_present(attrs, 'site')
     ensure_key_present(attrs, 'npid')
-    #ensure_key_present(attrs, 'lnids')
 
     self.npid         = NationalPatientIdentifier.find_or_create_from_attributes(attrs['npid'], :update => true)
     self.creator_site = Site.find_or_create_from_attributes(attrs['site'], :update => true)
-    #self.lnids        = LegacyNationalIds.find_or_create_from_attributes(attrs['lnids'], :update => true)
     self
   end
 
