@@ -325,14 +325,14 @@ class PeopleController < ApplicationController
     end
   end
 
-  def people_to_sync
+  def proxy_people_to_sync
     last_updated_date = ProxySync.last_updated_date
     if last_updated_date
-      people_ids =  Person.where("updated_at > ?",
-        last_updated_date.strftime("%Y-%m-%d %H:%M:%S")).select(:id).map(&:id)
+      people_ids =  Person.joins(:national_patient_identifier).where("people.updated_at > ?",
+        last_updated_date.strftime("%Y-%m-%d %H:%M:%S")).select("people.id").order(:id).map(&:id)
       ProxySync.check_for_valid_start_date unless people_ids.blank?
     else
-      people_ids = Person.order(:id).map(&:id)
+      people_ids = Person.joins(:national_patient_identifier).select("people.id").order(:id).map(&:id)
       ProxySync.check_for_valid_start_date unless people_ids.blank? 
     end
     render :text => people_ids.sort.to_json
@@ -413,9 +413,9 @@ class PeopleController < ApplicationController
     render :text => people_ids.sort.to_json
   end
   
-  def getPeopleIdsCount
+  def master_people_to_sync
     if Site.proxy?
-      uri = "http://#{dde_master_user}:#{dde_master_password}@#{dde_master_uri}/people/getPeopleIdsCount/"
+      uri = "http://#{dde_master_user}:#{dde_master_password}@#{dde_master_uri}/people/master_people_to_sync/"
       ids = RestClient.post(uri,{"site_id" => Site.current_id})
       render :text =>  ids.to_json and return
     else
@@ -423,18 +423,15 @@ class PeopleController < ApplicationController
       site_code = Site.find(site_id).code
       last_updated_date = MasterSync.last_updated_date(site_code)
       unless last_updated_date.blank?
-        people_ids = Person.find(:all,:conditions => ["creator_site_id != ? AND updated_at > ?",
-          site_id,last_updated_date.strftime("%Y-%m-%d %H:%M:%S")],
-          :order => "id").collect{|p| p.id}
-
+        people_ids = Person.where("creator_site_id != ? AND updated_at > ?",
+          site_id,last_updated_date.strftime("%Y-%m-%d %H:%M:%S")).select(:id).order(:id).map(&:id)
         if people_ids.blank?
           people_ids = check_if_site_has_sync_before(site_code)
         end
           
         MasterSync.check_for_valid_start_date(site_code) unless people_ids.blank?
       else
-        people_ids = Person.find(:all,:conditions => ["creator_site_id != ?",
-          site_id],:order => "id").collect{|p| p.id}
+        people_ids = Person.where("creator_site_id != ?",site_id).select(:id).order(:id).map(&:id)
         MasterSync.check_for_valid_start_date(site_code) unless people_ids.blank?
       end
       render :text => people_ids.sort.to_json and return
@@ -558,9 +555,13 @@ class PeopleController < ApplicationController
                     
       site_hash = {'site' => {"id" => person_obj['person']['creator_site_id'] }}
       
+      #legacy_id_hash = {'lnids' => person_obj['legacy_ids'] || " "}
+
       person_hash.merge!npid_hash
 
       person_hash.merge!site_hash
+
+      #person_hash.merge!legacy_id_hash
 
       @person = Person.find_or_initialize_from_attributes(person_hash.slice('person', 'npid', 'site'))
       if @person.save
@@ -592,10 +593,14 @@ class PeopleController < ApplicationController
                               "assigned_at" => person_obj['npid']["assigned_at"] }}
 
       site_hash = {'site' => {"id" => person_obj['npid']['assigner_site_id'] }}
+
+      #legacy_id_hash = {'lnids' => person_obj['legacy_ids'] || " "}
       
       person_hash.merge!npid_hash
 
       person_hash.merge!site_hash
+
+      #person_hash.merge!legacy_id_hash
      
       @person = Person.find_or_initialize_from_attributes(person_hash.slice('person', 'npid', 'site'))
       if @person.save
