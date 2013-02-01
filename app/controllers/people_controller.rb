@@ -333,7 +333,7 @@ class PeopleController < ApplicationController
       ProxySync.check_for_valid_start_date unless people_ids.blank?
     else
       people_ids = Person.joins(:national_patient_identifier).select("people.id").order(:id).map(&:id)
-      ProxySync.check_for_valid_start_date unless people_ids.blank? 
+      ProxySync.check_for_valid_start_date unless people_ids.blank?
     end
     render :text => people_ids.sort.to_json
   end
@@ -438,46 +438,6 @@ class PeopleController < ApplicationController
     end
   end
 
-  def national_ids_to_sync
-    if params[:patient_ids]
-      ids = params[:patient_ids]
-      logger = Logger.new(Rails.root.join("log",'ids_from_proxy.txt'))
-      ids.each do|patient_id|
-        ids = patient_id.split(",")
-        ids.each do |id|
-          logger.info id.to_s
-        end
-      end
-    end
-    render :text => true and return
-  end
-
-  def send_person_ids_to_client
-    national_ids = []
-    national_ids_file = File.open(Rails.root.join("log",'ids_from_proxy.txt'))
-    national_ids_file.each_line do|line|
-      national_ids << line.strip
-    end
-    people = Person.joins(:national_patient_identifier).where("national_patient_identifiers.value not in (?)",national_ids).select("people.id")
-    people_ids = []
-    people.each do|person|
-       people_ids << person.id
-    end
-    render :text => people_ids.to_json rescue {} and return
-  end
-
-  def sync_demographics_with_client
-    person_demographics = []
-    if params[:person_ids]
-      person_ids = params[:person_ids].split(",")
-      people = Person.find(person_ids)
-      people.each do |person|
-        person_demographics << person.to_json + "|"
-      end
-    end
-    render :text => person_demographics and return
-  end
- 
   def record_successful_sync
     if Site.proxy?
       if params[:update_master].blank?
@@ -518,7 +478,6 @@ class PeopleController < ApplicationController
   end
 
   def update_sync_transaction
-      
     sync = ProxySync.new()
     sync.sync_site_id = site_code
     sync.last_person_id = people.last.id
@@ -554,19 +513,21 @@ class PeopleController < ApplicationController
                               "assigned_at" => person_obj['npid']["assigned_at"] }}
                     
       site_hash = {'site' => {"id" => person_obj['person']['creator_site_id'] }}
-      
-      #legacy_id_hash = {'lnids' => person_obj['legacy_ids'] || " "}
+
+      legacy_ids =  person_obj['legacy_ids'] rescue nil
 
       person_hash.merge!npid_hash
 
       person_hash.merge!site_hash
 
-      #person_hash.merge!legacy_id_hash
-
       @person = Person.find_or_initialize_from_attributes(person_hash.slice('person', 'npid', 'site'))
       if @person.save
-        NationalIdSite.create({:national_id => person_obj['npid']['value'],
-                               :site_id => person_obj['person']['creator_site_id']})
+       (legacy_ids || []).each  do |legacy_id|
+         LegacyNationalIds.find_or_create_by_value_and_person_id(:value => legacy_id,:person_id => @person.id)
+       end
+
+        NationalIdSite.find_or_create_by_national_id_and_site_id(:national_id => person_obj['npid']['value'],
+                               :site_id => person_obj['person']['creator_site_id'])
          created_people << @person
       end
     end
@@ -594,16 +555,17 @@ class PeopleController < ApplicationController
 
       site_hash = {'site' => {"id" => person_obj['npid']['assigner_site_id'] }}
 
-      #legacy_id_hash = {'lnids' => person_obj['legacy_ids'] || " "}
+      legacy_ids = person_obj['legacy_ids'] rescue nil
       
       person_hash.merge!npid_hash
 
       person_hash.merge!site_hash
 
-      #person_hash.merge!legacy_id_hash
-     
       @person = Person.find_or_initialize_from_attributes(person_hash.slice('person', 'npid', 'site'))
       if @person.save
+        (legacy_ids || []).each  do |legacy_id|
+         LegacyNationalIds.find_or_create_by_value_and_person_id(:value => legacy_id,:person_id => @person.id)
+       end
         saved_people << @person
       end
     end
