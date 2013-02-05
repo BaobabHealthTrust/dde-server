@@ -27,9 +27,11 @@ DdeServer::Application.routes.draw do
 
     collection do
       post :sync_demographics_with_master, :sync_demographics_with_proxy, :sync_demographics_with_client,:find,
-           :proxy_people_to_sync, :demographics_to_sync, :master_people_to_sync, :record_successful_sync
+           :proxy_people_to_sync, :demographics_to_sync, :master_people_to_sync, :record_successful_sync,
+           :replace_national_id
       get :find, :sync_demographics_with_master, :sync_demographics_with_proxy, :sync_demographics_with_client,
-          :proxy_people_to_sync, :demographics_to_sync, :master_people_to_sync, :record_successful_sync
+          :proxy_people_to_sync, :demographics_to_sync, :master_people_to_sync, :record_successful_sync,
+          :replace_national_id
     end
   end
 

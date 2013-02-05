@@ -457,7 +457,27 @@ class PeopleController < ApplicationController
     end
     render :text => 'done ...' and return
   end
- 
+
+  def replace_national_id
+    national_id = params[:identifier]
+    given_name = params[:given_name]
+    family_name = params[:family_name]
+    gender = params[:gender]
+    person_id = Person.joins(:national_patient_identifier).
+             where("national_patient_identifiers.value" => national_id,
+                   "given_name" => given_name,"family_name" => family_name,
+                   "gender" => gender).select("people.id")
+    render :text => {}.to_json if person_id.blank? and return
+    
+    national_id = NationalPatientIdentifier.find_by_person_id(person_id)
+    national_id.person_id = nil
+    national_id.save
+    person = Person.find_by_id(person_id)
+    national_id = person.assign_npid
+    person.save
+    render :text => national_id.value.to_json and return
+   end
+
   protected
 
   def check_if_site_has_sync_before(site_code)
