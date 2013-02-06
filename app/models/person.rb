@@ -2,7 +2,7 @@ class Person < ActiveRecord::Base
   # dummy accessors
   attr_accessor :status, :status_message
 
-  has_one :national_patient_identifier
+  has_one :national_patient_identifier,:conditions => {:voided => 0}
   has_many :legacy_national_ids,:class_name => 'LegacyNationalIds', 
            :foreign_key => 'person_id'
   has_many :person_name_codes,:class_name => 'PersonNameCode',
