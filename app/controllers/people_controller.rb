@@ -465,6 +465,7 @@ class PeopleController < ApplicationController
     gender = params[:gender]
     person_id = Person.joins(:national_patient_identifier).
              where("national_patient_identifiers.value" => national_id,
+                   "national_patient_identifiers.voided" => 0,
                    "given_name" => given_name,"family_name" => family_name,
                    "gender" => gender).select("people.id")
     render :text => {}.to_json if person_id.blank? and return
