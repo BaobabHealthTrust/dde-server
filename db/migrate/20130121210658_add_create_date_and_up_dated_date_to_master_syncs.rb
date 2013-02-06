@@ -5,7 +5,7 @@ class AddCreateDateAndUpDatedDateToMasterSyncs < ActiveRecord::Migration
   end
 
   def self.down
-   add_column :master_syncs,:created_date
-   add_column :master_syncs,:updated_date
+   remove_column :master_syncs,:created_date
+   remove_column :master_syncs,:updated_date
   end
 end

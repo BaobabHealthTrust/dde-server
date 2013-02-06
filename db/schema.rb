@@ -10,7 +10,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20130122071307) do
+ActiveRecord::Schema.define(:version => 20130206105323) do
 
   create_table "identifiers_to_be_assigned", :force => true do |t|
     t.string   "file"
@@ -25,6 +25,9 @@ ActiveRecord::Schema.define(:version => 20130122071307) do
     t.string   "person_id"
     t.datetime "created_at"
     t.datetime "updated_at"
+    t.integer  "voided",      :default => 0
+    t.string   "void_reason"
+    t.datetime "voided_date"
   end
 
   create_table "master_syncs", :force => true do |t|
@@ -52,6 +55,9 @@ ActiveRecord::Schema.define(:version => 20130122071307) do
     t.integer  "assigner_site_id"
     t.datetime "created_at"
     t.datetime "updated_at"
+    t.integer  "voided",           :default => 0, :null => false
+    t.string   "void_reason"
+    t.datetime "voided_date"
   end
 
   add_index "national_patient_identifiers", ["decimal_num"], :name => "index_national_patient_identifiers_on_decimal_num", :unique => true
