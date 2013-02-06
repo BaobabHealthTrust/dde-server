@@ -44,7 +44,7 @@
       }                                                                          
     }                                                                            
                                                                                 
-    xmlhttp.open("GET","/people/people_to_sync" , true);              
+    xmlhttp.open("GET","/people/proxy_people_to_sync" , true);
       
     xmlhttp.send();
 
@@ -128,7 +128,7 @@
       }
     }        
 
-  xmlhttp.open("GET","/people/getPeopleIdsCount" , true);
+  xmlhttp.open("GET","/people/master_people_to_sync" , true);
 
   xmlhttp.send();
 

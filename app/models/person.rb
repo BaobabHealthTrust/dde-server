@@ -45,7 +45,12 @@ class Person < ActiveRecord::Base
 
   def to_json(options={})
     includes = (options[:includes] || []).inject({}){|mem, assoc| mem[assoc.to_s] = self.send assoc }
-    self.remote_attributes.merge(includes).to_json
+    person_attributes = self.remote_attributes.merge(includes)
+    unless self.lnids.blank?
+     return (person_attributes.merge(self.lnids)).to_json
+    else
+     return person_attributes.to_json
+    end
   end
 
   def self.base_resource
@@ -150,6 +155,15 @@ class Person < ActiveRecord::Base
 #   end
 #   alias_method_chain :update_attributes, :pushing_to_master
 
+  def lnids
+    legacy_ids_hash = {}
+    legacy_ids = []
+    self.legacy_national_ids.each do |legacy_id|
+      legacy_ids << legacy_id.value
+    end
+    return legacy_ids_hash["legacy_ids"] = {"legacy_ids" => legacy_ids}
+  end
+  
   def npid
     self.national_patient_identifier
   end

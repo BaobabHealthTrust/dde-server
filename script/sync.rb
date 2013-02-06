@@ -10,7 +10,7 @@ LogErr = Logger.new(File.join(AppPath,'log/sync.txt'))
 class SyncService
 
   def self.get_available_ids
-    results = RestClient.get('http://admin:admin@localhost:3001/people/people_to_sync')
+    results = RestClient.get('http://admin:admin@localhost:3001/people/proxy_people_to_sync')
     current_ids = JSON.parse(results)
 
     patients_ids_batch = self.compile_ids(current_ids)
@@ -21,7 +21,7 @@ class SyncService
   end
 
   def self.get_demographics_from_master
-    results = RestClient.get("http://admin:admin@localhost:3001/people/getPeopleIdsCount")
+    results = RestClient.get("http://admin:admin@localhost:3001/people/master_people_to_sync")
     current_ids = JSON.parse(results) rescue JSON.parse(results.gsub('"',''))
 
     (self.compile_ids(current_ids) || {}).each do |key,ids|
