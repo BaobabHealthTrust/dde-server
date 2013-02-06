@@ -470,8 +470,9 @@ class PeopleController < ApplicationController
     render :text => {}.to_json if person_id.blank? and return
     
     national_id = NationalPatientIdentifier.find_by_person_id(person_id)
-    national_id.person_id = nil
-    national_id.save
+    national_id.voided = 1
+    national_id.void_reason = "Assigned new National Identifier"
+    national_id.voided_date = Date.now()
     person = Person.find_by_id(person_id)
     national_id = person.assign_npid
     person.save
