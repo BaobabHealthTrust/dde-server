@@ -57,9 +57,12 @@ class PeopleController < ApplicationController
         # end
       end
     else
-      @people = Person.search(params)
+      @people = []
+      (Person.search(params) || []).each do |person|
+          @people << JSON.parse(person.to_json)
+      end
     end
-
+   
     case @people.size
     when 0
       if Site.master?
