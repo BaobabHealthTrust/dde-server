@@ -1,8 +1,8 @@
 class Person < ActiveRecord::Base
   # dummy accessors
   attr_accessor :status, :status_message
-
-  has_one :national_patient_identifier,:conditions => {:voided => 0}
+  
+  has_one :national_patient_identifier#,:conditions => {:voided => 0}
   has_many :legacy_national_ids,:class_name => 'LegacyNationalIds', 
            :foreign_key => 'person_id'
   has_many :person_name_codes,:class_name => 'PersonNameCode',
@@ -269,15 +269,22 @@ class Person < ActiveRecord::Base
   end
 
   def self.search(params)
-    gender = params[:gender]
-    given_name_code = params[:given_name].squish.soundex unless params[:given_name].blank?
-    family_name_code = params[:family_name].squish.soundex unless params[:family_name].blank?
+    unless params[:person_id].blank?
+      person = Person.find_by_id(params[:person_id])
+      person.assign_npid
+      person.save
+      JSON.parse(person.to_json)
+    else
+      gender = params[:gender]
+      given_name_code = params[:given_name].squish.soundex unless params[:given_name].blank?
+      family_name_code = params[:family_name].squish.soundex unless params[:family_name].blank?
 
-    Person.joins(:person_name_codes).where("given_name_code LIKE '%#{given_name_code}%' 
-      AND family_name_code LIKE '%#{family_name_code}%' AND gender = ?", 
-      gender).map do |person|
+      Person.joins(:person_name_codes).where("given_name_code LIKE '%#{given_name_code}%'
+        AND family_name_code LIKE '%#{family_name_code}%' AND gender = ?",
+        gender).map do |person|
         JSON.parse(person.to_json)
     end
+   end
   end
 
   protected

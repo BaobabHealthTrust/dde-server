@@ -46,15 +46,16 @@ class PeopleController < ApplicationController
         @people = Person.joins([:national_patient_identifier,
           :legacy_national_ids]).where('legacy_national_ids.value' => national_id).select("people.*,national_patient_identifiers.value")
 
-        @people += Person.joins(:legacy_national_ids).where('legacy_national_ids.value' => national_id).select("people.*,value")
+        people = @people && Person.joins(:legacy_national_ids).where('legacy_national_ids.value' => national_id).select("people.*,value")
+        @people = []
+        people.each do |person|
+          @people << JSON.parse(person.to_json)
+        end
 
-        # (@people || []).each do |person|
+        # (@ppeeople || []).each do |person|
         #  person.assign_npid if person.national_patient_identifier.blank?
         # end
       end
-
-
-
     else
       @people = Person.search(params)
     end
@@ -87,6 +88,11 @@ class PeopleController < ApplicationController
         format.json { render :json   => @people.to_json } #, :status => :multiple_choices }
       end
     end
+  end
+
+  def find_by_id
+    raise params
+    person = Person.find_by_id()
   end
 
   # GET /people/new
@@ -473,11 +479,12 @@ class PeopleController < ApplicationController
     national_id = NationalPatientIdentifier.find_by_person_id(person_id)
     national_id.voided = 1
     national_id.void_reason = "Assigned new National Identifier"
-    national_id.voided_date = Date.now()
+    national_id.voided_date = Time.now()
     person = Person.find_by_id(person_id)
     national_id = person.assign_npid
     person.save
-    render :text => national_id.value.to_json and return
+    render :text => national_id.value.to_json unless national_id.blank? and return
+    render :text => {}.to_json and return
    end
 
   protected
