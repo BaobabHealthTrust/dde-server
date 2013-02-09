@@ -215,6 +215,7 @@ class Person < ActiveRecord::Base
 
   def remote_attributes
     { 'person' => {
+        'id'              => self.id,
         'data'            => self.data,
         'version_number'  => self.remote_version_number,
         'remote_version_number' => self.remote_version_number,
