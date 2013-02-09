@@ -57,10 +57,11 @@ class PeopleController < ApplicationController
         # end
       end
     else
-      @people = []
-      (Person.search(params) || []).each do |person|
-          @people << JSON.parse(person.to_json)
-      end
+      #@people = []
+      #(Person.search(params) || []).each do |person|
+       #   @people << JSON.parse(person.to_json)
+      #end
+      @people = Person.search(params)
     end
    
     case @people.size
