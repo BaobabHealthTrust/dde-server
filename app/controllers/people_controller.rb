@@ -45,13 +45,12 @@ class PeopleController < ApplicationController
         national_id = params[:value].gsub('-','')
         @people = Person.joins([:national_patient_identifier,
           :legacy_national_ids]).where('legacy_national_ids.value' => national_id).select("people.*,national_patient_identifiers.value")
-
-        people = @people && Person.joins(:legacy_national_ids).where('legacy_national_ids.value' => national_id).select("people.*,value")
+        people = @people && Person.joins(:legacy_national_ids).where('legacy_national_ids.value' => national_id).
+          select("people.*,legacy_national_ids.value")
         @people = []
         people.each do |person|
           @people << JSON.parse(person.to_json)
         end
-
         # (@ppeeople || []).each do |person|
         #  person.assign_npid if person.national_patient_identifier.blank?
         # end
@@ -63,7 +62,7 @@ class PeopleController < ApplicationController
       #end
       @people = Person.search(params)
     end
-   
+    
     case @people.size
     when 0
       if Site.master?
