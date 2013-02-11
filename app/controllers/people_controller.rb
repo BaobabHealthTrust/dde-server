@@ -116,6 +116,7 @@ class PeopleController < ApplicationController
   # POST /people
   # POST /people.xml
   def create
+    create_new = params[:create_new]
     # @healthdata_patient = MasterPatientRecord.create_healthdata_patient(params)
     # if @healthdata_patient
     #  params[:person]["data"]["patient"]["identifiers"]["old_identification_number"] = "#{@healthdata_patient.Site_ID.to_s}#{@healthdata_patient.Pat_ID.to_i.to_s}"
@@ -139,9 +140,9 @@ class PeopleController < ApplicationController
             format.json { render :json => @person, :status => :created, :location => @person }
         end
       end
-      return if not @person.blank?
+      return if not @person.blank? and !create_new.blank?
     end
-
+    
     version = Guid.new.to_s
     @person = Person.new(params[:person].merge(
                          {:creator_site_id => Site.current_id ,
