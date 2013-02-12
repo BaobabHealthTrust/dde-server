@@ -10,7 +10,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20130111100927) do
+ActiveRecord::Schema.define(:version => 20130212214801) do
 
   create_table "identifiers_to_be_assigned", :force => true do |t|
     t.string   "file"
@@ -25,11 +25,22 @@ ActiveRecord::Schema.define(:version => 20130111100927) do
     t.string   "person_id"
     t.datetime "created_at"
     t.datetime "updated_at"
+    t.integer  "voided",      :default => 0
+    t.string   "void_reason"
+    t.datetime "voided_date"
+  end
+
+  create_table "master_syncs", :force => true do |t|
+    t.string   "site_code",    :null => false
+    t.date     "created_date"
+    t.date     "updated_date"
+    t.datetime "created_at"
+    t.datetime "updated_at"
   end
 
   create_table "national_id_sites", :force => true do |t|
-    t.string   "national_id"
-    t.integer  "site_id"
+    t.string   "national_id", :null => false
+    t.integer  "site_id",     :null => false
     t.datetime "created_at"
     t.datetime "updated_at"
   end
@@ -44,6 +55,9 @@ ActiveRecord::Schema.define(:version => 20130111100927) do
     t.integer  "assigner_site_id"
     t.datetime "created_at"
     t.datetime "updated_at"
+    t.integer  "voided",           :default => 0, :null => false
+    t.string   "void_reason"
+    t.datetime "voided_date"
   end
 
   add_index "national_patient_identifiers", ["decimal_num"], :name => "index_national_patient_identifiers_on_decimal_num", :unique => true
@@ -77,9 +91,16 @@ ActiveRecord::Schema.define(:version => 20130111100927) do
   end
 
   create_table "person_name_codes", :force => true do |t|
-    t.integer  "person_id"
-    t.string   "given_name_code"
-    t.string   "family_name_code"
+    t.integer  "person_id",        :null => false
+    t.string   "given_name_code",  :null => false
+    t.string   "family_name_code", :null => false
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  create_table "proxy_syncs", :force => true do |t|
+    t.date     "start_date"
+    t.date     "end_date"
     t.datetime "created_at"
     t.datetime "updated_at"
   end
