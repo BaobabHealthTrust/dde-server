@@ -1,4 +1,5 @@
 class LegacyNationalIds < ActiveRecord::Base
-    belongs_to :person
+  default_scope where(:voided => false)
+  belongs_to :person
 
 end

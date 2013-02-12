@@ -33,6 +33,28 @@ class PeopleController < ApplicationController
     end
   end
 
+  def reassign_identication
+    person = Person.find(params[:person_id])
+
+    npid = NationalPatientIdentifier.where(:person_id => person.id).first
+    if npid.blank?
+       npid = NationalPatientIdentifier.get_blank_decimal_num_identifiers(person.id)
+       npid.force_void("Assigned new National Identifier: originally assigned to patient with person_id: #{person.id}")
+    else
+      npid.voided = 1
+      npid.person_id = nil
+      npid.void_reason = "Assigned new National Identifier: originally assigned to patient with person_id: #{params[:person_id]}" 
+      npid.save
+    end
+
+    person.assign_npid
+    npid = person.national_patient_identifier
+    npid.assigned_at = Time.now()
+    npid.assigner_id = User.current_user
+    npid.save
+    render :text => npid.value and return
+  end 
+
   # GET /people/find
   # GET /people/find.xml?given_name=:given_name&family_name=:family_name
   def find

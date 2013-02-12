@@ -278,7 +278,7 @@ class Person < ActiveRecord::Base
 =end
   def set_npid(npid = nil)
     if self.npid_value.blank? and npid.nil?
-      npid ||= NationalPatientIdentifier.where(:assigned_at => nil).first
+      npid ||= NationalPatientIdentifier.order('id ASC').where(:assigned_at => nil).first
       if npid
         self.national_patient_identifier = npid
       else
