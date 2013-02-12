@@ -38,7 +38,7 @@ class PeopleController < ApplicationController
 
     npid = NationalPatientIdentifier.where(:person_id => person.id).first
     if npid.blank?
-       npid = NationalPatientIdentifier.get_blank_decimal_num_identifiers(person.id)
+       npid = NationalPatientIdentifier.get_blank_decimal_num_identifier(person.id)
        npid.force_void("Assigned new National Identifier: originally assigned to patient with person_id: #{person.id}")
     else
       npid.voided = 1

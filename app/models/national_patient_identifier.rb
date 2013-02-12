@@ -60,7 +60,7 @@ class NationalPatientIdentifier < ActiveRecord::Base
     self.order('id ASC').where(:'person_id' => nil).first rescue nil
   end
 
-  def self.get_blank_decimal_num_identifiers(person_id)
+  def self.get_blank_decimal_num_identifier(person_id)
     self.find_by_sql("SELECT * FROM national_patient_identifiers 
     WHERE person_id = #{person_id} AND decimal_num IS NULL").first rescue nil
   end
