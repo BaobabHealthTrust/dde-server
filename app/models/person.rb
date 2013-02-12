@@ -2,7 +2,7 @@ class Person < ActiveRecord::Base
   # dummy accessors
   attr_accessor :status, :status_message
   
-  has_one :national_patient_identifier#,:conditions => {:voided => 0}
+  has_one :national_patient_identifier, :conditions => {:voided => 0}
   has_many :legacy_national_ids,:class_name => 'LegacyNationalIds', 
            :foreign_key => 'person_id'
   has_many :person_name_codes,:class_name => 'PersonNameCode',
@@ -19,7 +19,7 @@ class Person < ActiveRecord::Base
   end
   
   #before_save :set_remote_version_number
-  after_save :save_npid
+  after_save :save_npid , :create_name_codes
 
   validates_presence_of :national_patient_identifier, :data
 
@@ -165,7 +165,8 @@ class Person < ActiveRecord::Base
   end
   
   def npid
-    self.national_patient_identifier
+    #self.national_patient_identifier
+    NationalPatientIdentifier.where(:voided => 0,:person_id => self.id).first rescue nil
   end
 
   def npid=(obj)
@@ -333,7 +334,7 @@ class Person < ActiveRecord::Base
     end
   end
 
-  def after_save
+  def create_name_codes
     PersonNameCode.create_name_code(self)
   end
 

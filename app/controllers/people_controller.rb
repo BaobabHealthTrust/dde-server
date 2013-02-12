@@ -32,6 +32,16 @@ class PeopleController < ApplicationController
       end
     end
   end
+  
+  def reassign_identication
+    national_patient_identifier = NationalPatientIdentifier.where(:person_id => params[:person_id],:voided => 0).first
+    national_patient_identifier.voided = 1
+    national_patient_identifier.void_reason = "Assigned new National Identifier: originally assigned to: #{params[:person_id]}" 
+    national_patient_identifier.save
+
+    person = Person.find(params[:person_id])
+    render :text => person.npid_value=(person.assign_npid.value) and return
+  end
 
   # GET /people/find
   # GET /people/find.xml?given_name=:given_name&family_name=:family_name
@@ -39,14 +49,17 @@ class PeopleController < ApplicationController
     unless params[:value].blank?
       @people = Person.joins(:national_patient_identifier).where(params.slice(:given_name,
       :family_name, :family_name2,:city_village,
-      :gender).merge("national_patient_identifiers.value" => params[:value])).select("people.*,value")
+      :gender).merge("national_patient_identifiers.value" => params[:value]).merge("national_patient_identifiers.voided" => 0)).select("people.*,value")
 
       if @people.blank?
         national_id = params[:value].gsub('-','')
         @people = Person.joins([:national_patient_identifier,
-          :legacy_national_ids]).where('legacy_national_ids.value' => national_id).select("people.*,national_patient_identifiers.value")
-        people = @people && Person.joins(:legacy_national_ids).where('legacy_national_ids.value' => national_id).
-          select("people.*,legacy_national_ids.value")
+          :legacy_national_ids]).where("legacy_national_ids.value =? AND
+          legacy_national_ids.voided = 0",national_id).select("people.*,national_patient_identifiers.value")
+
+        people = @people && Person.joins(:legacy_national_ids).where("legacy_national_ids.value = ?
+          AND legacy_national_ids.voided = 0",national_id).select("people.*,legacy_national_ids.value")
+
         @people = []
         people.each do |person|
           @people << JSON.parse(person.to_json)
