@@ -26,12 +26,10 @@ DdeServer::Application.routes.draw do
     end
 
     collection do
-      post :sync_demographics_with_master, :sync_demographics_with_proxy, :sync_demographics_with_client,:find,
-           :proxy_people_to_sync, :demographics_to_sync, :master_people_to_sync, :record_successful_sync,
-           :replace_national_id, :reassign_identication
-      get :find, :sync_demographics_with_master, :sync_demographics_with_proxy, :sync_demographics_with_client,
-          :proxy_people_to_sync, :demographics_to_sync, :master_people_to_sync, :record_successful_sync,
-          :replace_national_id, :reassign_identication
+      post :sync_demographics_with_master, :sync_demographics_with_proxy,:sync_demographics_with_client,:find,
+           :people_to_sync, :demographics_to_sync, :getPeopleIdsCount, :national_ids_to_sync, :send_person_ids_to_client
+      get :find, :sync_demographics_with_master, :sync_demographics_with_proxy,:sync_demographics_with_client,:reassign_identication,
+          :people_to_sync, :demographics_to_sync, :getPeopleIdsCount, :national_ids_to_sync, :send_person_ids_to_client
     end
   end
 

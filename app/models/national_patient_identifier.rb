@@ -2,6 +2,7 @@
 # v4 Id: base30(Random Number + Check Digit)
 #
 class NationalPatientIdentifier < ActiveRecord::Base
+  default_scope where('voided = 0 AND decimal_num IS NOT NULL')
   belongs_to :person
   belongs_to :assigner,
       :class_name => 'User'
@@ -53,6 +54,25 @@ class NationalPatientIdentifier < ActiveRecord::Base
 
   def to_json
     self.remote_attributes.to_json
+  end
+
+  def self.get_national_patient_identifier
+    self.order('id ASC').where(:'person_id' => nil).first rescue nil
+  end
+
+  def self.get_blank_decimal_num_identifier(person_id)
+    self.find_by_sql("SELECT * FROM national_patient_identifiers 
+    WHERE person_id = #{person_id} AND decimal_num IS NULL").first rescue nil
+  end
+
+  def force_void(message = nil)
+    sql =<<EOF
+    UPDATE national_patient_identifiers SET person_id = NULL,voided = 1,
+    void_reason = "#{message}",voided_date = '#{Time.now().strftime('%Y-%m-%d %H:%M:%S')}'
+    WHERE id = #{self.id}
+EOF
+
+    ActiveRecord::Base.connection().execute(sql)
   end
 
   protected

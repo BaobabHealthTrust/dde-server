@@ -32,50 +32,51 @@ class PeopleController < ApplicationController
       end
     end
   end
-  
-  def reassign_identication
-    national_patient_identifier = NationalPatientIdentifier.where(:person_id => params[:person_id],:voided => 0).first
-    national_patient_identifier.voided = 1
-    national_patient_identifier.void_reason = "Assigned new National Identifier: originally assigned to: #{params[:person_id]}" 
-    national_patient_identifier.save
 
+  def reassign_identication
     person = Person.find(params[:person_id])
-    render :text => person.npid_value=(person.assign_npid.value) and return
-  end
+
+    npid = NationalPatientIdentifier.where(:person_id => person.id).first
+    if npid.blank?
+       npid = NationalPatientIdentifier.get_blank_decimal_num_identifier(person.id)
+       npid.force_void("Assigned new National Identifier: originally assigned to patient with person_id: #{person.id}")
+    else
+      npid.voided = 1
+      npid.person_id = nil
+      npid.void_reason = "Assigned new National Identifier: originally assigned to patient with person_id: #{params[:person_id]}" 
+      npid.save
+    end
+
+    person.assign_npid
+    npid = person.national_patient_identifier
+    npid.assigned_at = Time.now()
+    npid.assigner_id = User.current_user
+    npid.save
+    render :text => npid.value and return
+  end 
 
   # GET /people/find
   # GET /people/find.xml?given_name=:given_name&family_name=:family_name
   def find
-    unless params[:value].blank?
+    if not params[:value].blank?
       @people = Person.joins(:national_patient_identifier).where(params.slice(:given_name,
       :family_name, :family_name2,:city_village,
-      :gender).merge("national_patient_identifiers.value" => params[:value]).merge("national_patient_identifiers.voided" => 0)).select("people.*,value")
+      :gender).merge("national_patient_identifiers.value" => params[:value])).select("people.*,value")
 
       if @people.blank?
         national_id = params[:value].gsub('-','')
         @people = Person.joins([:national_patient_identifier,
-          :legacy_national_ids]).where("legacy_national_ids.value =? AND
-          legacy_national_ids.voided = 0",national_id).select("people.*,national_patient_identifiers.value")
+          :legacy_national_ids]).where('legacy_national_ids.value' => national_id).select("people.*,national_patient_identifiers.value")
 
-        people = @people && Person.joins(:legacy_national_ids).where("legacy_national_ids.value = ?
-          AND legacy_national_ids.voided = 0",national_id).select("people.*,legacy_national_ids.value")
-
-        @people = []
-        people.each do |person|
-          @people << JSON.parse(person.to_json)
+        (@people || []).each do |person|
+          person.assign_npid if person.national_patient_identifier.blank?
         end
-        # (@ppeeople || []).each do |person|
-        #  person.assign_npid if person.national_patient_identifier.blank?
-        # end
       end
+
     else
-      #@people = []
-      #(Person.search(params) || []).each do |person|
-       #   @people << JSON.parse(person.to_json)
-      #end
       @people = Person.search(params)
     end
-    
+
     case @people.size
     when 0
       if Site.master?
@@ -106,11 +107,6 @@ class PeopleController < ApplicationController
     end
   end
 
-  def find_by_id
-    raise params
-    person = Person.find_by_id()
-  end
-
   # GET /people/new
   # GET /people/new.xml
   def new
@@ -129,12 +125,6 @@ class PeopleController < ApplicationController
   # POST /people
   # POST /people.xml
   def create
-    create_new = params[:create_new]
-    # @healthdata_patient = MasterPatientRecord.create_healthdata_patient(params)
-    # if @healthdata_patient
-    #  params[:person]["data"]["patient"]["identifiers"]["old_identification_number"] = "#{@healthdata_patient.Site_ID.to_s}#{@healthdata_patient.Pat_ID.to_i.to_s}"
-    # end
-
     passed_national_id = (params[:person]['data']['patient']['identifiers']['old_identification_number'])
 
     unless passed_national_id.blank?
@@ -153,9 +143,9 @@ class PeopleController < ApplicationController
             format.json { render :json => @person, :status => :created, :location => @person }
         end
       end
-      return if not @person.blank? and !create_new.blank?
+      return if not @person.blank?
     end
-    
+
     version = Guid.new.to_s
     @person = Person.new(params[:person].merge(
                          {:creator_site_id => Site.current_id ,
@@ -319,6 +309,8 @@ class PeopleController < ApplicationController
       uri = "http://#{dde_master_user}:#{dde_master_password}@#{dde_master_uri}/people/sync_demographics_with_master/"
       sync = RestClient.post(uri,people_params)
 
+      #update_sync_transaction(Site.current_code,people)
+
       render :text => "updated master" and return
     else
       site_code = params['site_code']
@@ -340,6 +332,7 @@ class PeopleController < ApplicationController
 
       if batch_info[:check_sum].to_i == received_file['check_sum'].to_i
         people = create_from_proxy(patients)
+        update_sync_transaction(site_code,people)
         render :text => "done ..." and return
       else
         raise "NO ....#{patients.length}...... #{batch_info[:file_size].to_s} >>>>>>>>>>>>>>>> #{received_file['file_size'].to_s}"
@@ -348,16 +341,16 @@ class PeopleController < ApplicationController
     end
   end
 
-  def proxy_people_to_sync
-    last_updated_date = ProxySync.last_updated_date
+  def people_to_sync
+    last_updated_date = Sync.last_updated_date(Site.current_code)
     if last_updated_date
-      people_ids =  Person.joins(:national_patient_identifier).where("people.updated_at > ?",
-        last_updated_date.strftime("%Y-%m-%d %H:%M:%S")).select("people.id").order(:id).map(&:id)
-      ProxySync.check_for_valid_start_date unless people_ids.blank?
+      last_person_id = Sync.last_updated_person_id(Site.current_code)
+      people_ids = Person.where("id > ?",last_person_id).select(:id).map(&:id)
+      people_ids +=  Person.where("id <= ? and updated_at > ?",last_person_id,
+        last_updated_date.strftime("%Y-%m-%d %H:%M:%S")).select(:id).map(&:id)
     else
-      people_ids = Person.joins(:national_patient_identifier).select("people.id").order(:id).map(&:id)
-      ProxySync.check_for_valid_start_date unless people_ids.blank?
-    end
+      people_ids = Person.order(:id).map(&:id)
+    end 
     render :text => people_ids.sort.to_json
   end
 
@@ -385,6 +378,8 @@ class PeopleController < ApplicationController
       people_params.merge!('file' => batch_info)
       people_params.merge!('site_code' => site_code)
 
+      #update_sync_transaction(site_code,people)
+
       render :text => people_params.to_json
     else
       uri = "http://#{dde_master_user}:#{dde_master_password}@#{dde_master_uri}/people/sync_demographics_with_proxy/"
@@ -408,6 +403,7 @@ class PeopleController < ApplicationController
 
       if batch_info[:check_sum].to_i == received_file['check_sum'].to_i
         people = create_from_master(patients)
+        update_sync_transaction(Site.current_code, people)
         render :text => "updated proxy" and return
       else
         raise "NO ....#{patients.length}...... #{batch_info[:file_size].to_s} >>>>>>>>>>>>>>>> #{received_file['file_size'].to_s}"
@@ -423,10 +419,10 @@ class PeopleController < ApplicationController
     else
       site_id = params[:site_id]
       site_code = Site.find_by_id(site_id).code
-      last_updated_date = ProxySync.last_updated_date(site_code)
+      last_updated_date = Sync.last_updated_date(site_code)
       unless last_updated_date.blank?
         people_ids = Person.find(:all,:conditions => ["creator_site_id != ? 
-          AND updated_at > ?",site_id,last_updated_date],
+          AND updated_at > ?",site_id,last_updated_date.strftime("%Y-%m-%d %H:%M:%S")],
           :order => "id").collect {|p|p.id}
       else
         people_ids = Person.find(:all,:conditions => ["creator_site_id != ?",site_id],
@@ -436,95 +432,82 @@ class PeopleController < ApplicationController
     render :text => people_ids.sort.to_json
   end
   
-  def master_people_to_sync
+  def getPeopleIdsCount
     if Site.proxy?
-      uri = "http://#{dde_master_user}:#{dde_master_password}@#{dde_master_uri}/people/master_people_to_sync/"
+      uri = "http://#{dde_master_user}:#{dde_master_password}@#{dde_master_uri}/people/getPeopleIdsCount/"
       ids = RestClient.post(uri,{"site_id" => Site.current_id})
       render :text =>  ids.to_json and return
     else
       site_id = params[:site_id]
-      site_code = Site.find(site_id).code
-      last_updated_date = MasterSync.last_updated_date(site_code)
+      site_code = Site.find_by_id(site_id).code
+      last_updated_date = Sync.last_updated_date(site_code)
       unless last_updated_date.blank?
-        people_ids = Person.where("creator_site_id != ? AND updated_at > ?",
-          site_id,last_updated_date.strftime("%Y-%m-%d %H:%M:%S")).select(:id).order(:id).map(&:id)
-        if people_ids.blank?
-          people_ids = check_if_site_has_sync_before(site_code)
-        end
-          
-        MasterSync.check_for_valid_start_date(site_code) unless people_ids.blank?
+        people_ids = Person.find(:all,:conditions => ["creator_site_id != ? AND updated_at > ?",
+          site_id,last_updated_date.strftime("%Y-%m-%d %H:%M:%S")],
+          :order => "id").collect{|p| p.id}
       else
-        people_ids = Person.where("creator_site_id != ?",site_id).select(:id).order(:id).map(&:id)
-        MasterSync.check_for_valid_start_date(site_code) unless people_ids.blank?
+        people_ids = Person.find(:all,:conditions => ["creator_site_id != ?",
+          site_id],:order => "id").collect{|p| p.id}
       end
       render :text => people_ids.sort.to_json and return
     end
   end
 
-  def record_successful_sync
-    if Site.proxy?
-      if params[:update_master].blank?
-        sync = ProxySync.where("start_date IS NOT NULL AND end_date IS NULL").first
-        sync.end_date = DateTime.now()
-        sync.save
-      elsif not params[:update_master].blank?
-        uri = "http://#{dde_master_user}:#{dde_master_password}@#{dde_master_uri}/people/record_successful_sync/"
-        RestClient.post(uri,{"site_code" => Site.current_code})
-        update_proxy_sync 
+  def national_ids_to_sync
+    if params[:patient_ids]
+      ids = params[:patient_ids]
+      logger = Logger.new(Rails.root.join("log",'ids_from_proxy.txt'))
+      ids.each do|patient_id|
+        ids = patient_id.split(",")
+        ids.each do |id|
+          logger.info id.to_s
+        end
       end
-    elsif Site.master?
-      sync = MasterSync.where("created_date IS NOT NULL 
-        AND updated_date IS NULL AND site_code = ?",params[:site_code]).first
-      sync.updated_date = DateTime.now()
-      sync.save
     end
-    render :text => 'done ...' and return
+    render :text => true and return
   end
 
-  def replace_national_id
-    national_id = params[:identifier]
-    given_name = params[:given_name]
-    family_name = params[:family_name]
-    gender = params[:gender]
-    person_id = Person.joins(:national_patient_identifier).
-             where("national_patient_identifiers.value" => national_id,
-                   "national_patient_identifiers.voided" => 0,
-                   "given_name" => given_name,"family_name" => family_name,
-                   "gender" => gender).select("people.id")
-    render :text => {}.to_json if person_id.blank? and return
-    
-    national_id = NationalPatientIdentifier.find_by_person_id(person_id)
-    national_id.voided = 1
-    national_id.void_reason = "Assigned new National Identifier"
-    national_id.voided_date = Time.now()
-    person = Person.find_by_id(person_id)
-    national_id = person.assign_npid
-    person.save
-    render :text => national_id.value.to_json unless national_id.blank? and return
-    render :text => {}.to_json and return
-   end
+  def send_person_ids_to_client
+    national_ids = []
+    national_ids_file = File.open(Rails.root.join("log",'ids_from_proxy.txt'))
+    national_ids_file.each_line do|line|
+      national_ids << line.strip
+    end
+    people = Person.joins(:national_patient_identifier).where("national_patient_identifiers.value not in (?)",national_ids).select("people.id")
+    people_ids = []
+    people.each do|person|
+       people_ids << person.id
+    end
+    render :text => people_ids.to_json rescue {} and return
+  end
 
+  def sync_demographics_with_client
+    person_demographics = []
+    if params[:person_ids]
+      person_ids = params[:person_ids].split(",")
+      people = Person.find(person_ids)
+      people.each do |person|
+        person_demographics << person.to_json + "|"
+      end
+    end
+    render :text => person_demographics and return
+  end
+  
   protected
 
-  def check_if_site_has_sync_before(site_code)
-    sync = MasterSync.where(:'site_code' => site_code)
-    if sync.blank?
-      creator_site_id = Site.where(:'code' => site_code).first.id
-      return Person.where('creator_site_id <> ?', 
-        creator_site_id).select(:id).map(&:id)
+  def update_sync_transaction(site_code,people)
+    last_updated_time = nil
+    last_created_time = nil
+    
+    people.each do |person|
+      last_updated_time = person.updated_at if last_updated_time.blank?
+      last_created_time = person.created_at if last_created_time.blank?
+      
+      last_updated_time = person.updated_at if person.updated_at > last_updated_time
+      last_created_time  = person.created_at if person.created_at > last_created_time
     end
-    return []
-  end
-
-  def update_proxy_sync
-    last_updated_date = ProxySync.last_updated_date
-    max_person_updated_date = Person.maximum(:created_at)
-    ProxySync.create(:start_date => last_updated_date, 
-      :end_date => max_person_updated_date)
-  end
-
-  def update_sync_transaction
-    sync = ProxySync.new()
+  
+    sync = Sync.new()
     sync.sync_site_id = site_code
     sync.last_person_id = people.last.id
     sync.created_date = last_created_time
@@ -559,21 +542,15 @@ class PeopleController < ApplicationController
                               "assigned_at" => person_obj['npid']["assigned_at"] }}
                     
       site_hash = {'site' => {"id" => person_obj['person']['creator_site_id'] }}
-
-      legacy_ids =  person_obj['legacy_ids'] rescue nil
-
+      
       person_hash.merge!npid_hash
 
       person_hash.merge!site_hash
 
       @person = Person.find_or_initialize_from_attributes(person_hash.slice('person', 'npid', 'site'))
       if @person.save
-       (legacy_ids || []).each  do |legacy_id|
-         LegacyNationalIds.find_or_create_by_value_and_person_id(:value => legacy_id,:person_id => @person.id)
-       end
-
-        NationalIdSite.find_or_create_by_national_id_and_site_id(:national_id => person_obj['npid']['value'],
-                               :site_id => person_obj['person']['creator_site_id'])
+        NationalIdSite.create({:national_id => person_obj['npid']['value'],
+                               :site_id => person_obj['person']['creator_site_id']})
          created_people << @person
       end
     end
@@ -600,18 +577,13 @@ class PeopleController < ApplicationController
                               "assigned_at" => person_obj['npid']["assigned_at"] }}
 
       site_hash = {'site' => {"id" => person_obj['npid']['assigner_site_id'] }}
-
-      legacy_ids = person_obj['legacy_ids'] rescue nil
       
       person_hash.merge!npid_hash
 
       person_hash.merge!site_hash
-
+     
       @person = Person.find_or_initialize_from_attributes(person_hash.slice('person', 'npid', 'site'))
       if @person.save
-        (legacy_ids || []).each  do |legacy_id|
-         LegacyNationalIds.find_or_create_by_value_and_person_id(:value => legacy_id,:person_id => @person.id)
-       end
         saved_people << @person
       end
     end
