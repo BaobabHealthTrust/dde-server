@@ -528,13 +528,13 @@ class PeopleController < ApplicationController
 
       @person = Person.find_or_initialize_from_attributes(person_hash.slice('person', 'npid', 'site'))
       if @person.save
-       (legacy_ids || []).each  do |legacy_id|
-         LegacyNationalIds.find_or_create_by_value_and_person_id(:value => legacy_id,:person_id => @person.id)
-       end
+        (legacy_ids || []).each  do |legacy_id|
+          LegacyNationalIds.find_or_create_by_value_and_person_id(:value => legacy_id,:person_id => @person.id)
+        end
 
         NationalIdSite.find_or_create_by_national_id_and_site_id(:national_id => person_obj['npid']['value'],
                                :site_id => person_obj['person']['creator_site_id'])
-         created_people << @person
+        created_people << @person
       end
     end
     return created_people
