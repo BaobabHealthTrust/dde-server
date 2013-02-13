@@ -10,7 +10,7 @@ LogErr = Logger.new(File.join(AppPath,'log/sync.txt'))
 class SyncService
 
   def self.get_available_ids
-    results = RestClient.get('http://admin:admin@localhost:3001/people/people_to_sync')
+    results = RestClient.get('http://admin:admin@localhost:3001/people/proxy_people_to_sync')
     current_ids = JSON.parse(results)
 
     patients_ids_batch = self.compile_ids(current_ids)
@@ -21,7 +21,7 @@ class SyncService
   end
 
   def self.get_demographics_from_master
-    results = RestClient.get("http://admin:admin@localhost:3001/people/getPeopleIdsCount")
+    results = RestClient.get("http://admin:admin@localhost:3001/people/master_people_to_sync")
     current_ids = JSON.parse(results) rescue JSON.parse(results.gsub('"',''))
 
     (self.compile_ids(current_ids) || {}).each do |key,ids|
@@ -29,6 +29,10 @@ class SyncService
       RestClient.get("http://admin:admin@localhost:3001/people/sync_demographics_with_proxy?#{param}")
       puts "Got from master successfully .... #{ids.join(',')}"
       LogErr.info("Got from master successfully .... #{ids.join(',')}")
+    end
+    
+    unless current_ids.blank?
+      RestClient.get("http://admin:admin@localhost:3001/people/record_successful_sync?update_master=true")
     end
   end
 
@@ -39,6 +43,8 @@ class SyncService
       puts "Send to master successfully .... #{ids.join(',')}"
       LogErr.info("Send to master successfully .... #{ids.join(',')}")
     end
+
+    RestClient.get("http://admin:admin@localhost:3001/people/record_successful_sync")
   end
 
   def self.compile_ids(current_ids)
