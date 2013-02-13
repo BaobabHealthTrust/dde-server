@@ -309,8 +309,6 @@ class PeopleController < ApplicationController
       uri = "http://#{dde_master_user}:#{dde_master_password}@#{dde_master_uri}/people/sync_demographics_with_master/"
       sync = RestClient.post(uri,people_params)
 
-      #update_sync_transaction(Site.current_code,people)
-
       render :text => "updated master" and return
     else
       site_code = params['site_code']
@@ -332,7 +330,6 @@ class PeopleController < ApplicationController
 
       if batch_info[:check_sum].to_i == received_file['check_sum'].to_i
         people = create_from_proxy(patients)
-        update_sync_transaction(site_code,people)
         render :text => "done ..." and return
       else
         raise "NO ....#{patients.length}...... #{batch_info[:file_size].to_s} >>>>>>>>>>>>>>>> #{received_file['file_size'].to_s}"
@@ -416,7 +413,7 @@ class PeopleController < ApplicationController
     else
       site_id = params[:site_id]
       site_code = Site.find_by_id(site_id).code
-      last_updated_date = ProxySync.last_updated_date(site_code)
+      last_updated_date = ProxySyncs.last_updated_date(site_code)
       unless last_updated_date.blank?
         people_ids = Person.find(:all,:conditions => ["creator_site_id != ? 
           AND updated_at > ?",site_id,last_updated_date],
@@ -457,7 +454,7 @@ class PeopleController < ApplicationController
   def record_successful_sync
     if Site.proxy?
       if params[:update_master].blank?
-        sync = ProxySync.where("start_date IS NOT NULL AND end_date IS NULL").first
+        sync = ProxySyncs.where("start_date IS NOT NULL AND end_date IS NULL").first
         sync.end_date = DateTime.now()
         sync.save
       elsif not params[:update_master].blank?
@@ -489,19 +486,10 @@ class PeopleController < ApplicationController
   end
 
   def update_proxy_sync
-    last_updated_date = ProxySync.last_updated_date
+    last_updated_date = ProxySyncs.last_updated_date
     max_person_updated_date = Person.maximum(:created_at)
-    ProxySync.create(:start_date => last_updated_date, 
+    ProxySyncs.create(:start_date => last_updated_date, 
       :end_date => max_person_updated_date)
-  end
-
-  def update_sync_transaction
-    sync = ProxySync.new()
-    sync.sync_site_id = site_code
-    sync.last_person_id = people.last.id
-    sync.created_date = last_created_time
-    sync.updated_date = last_updated_time
-    sync.save
   end
 
   def create_from_proxy(people)
