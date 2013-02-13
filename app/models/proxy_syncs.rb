@@ -1,10 +1,10 @@
 class ProxySyncs < ActiveRecord::Base
 
   def self.last_updated_date
-    date = self.where("start_date IS NOT NULL AND end_date IS NULL")
-    return date.first.start_date unless date.blank?
+    date = self.where("created_at IS NOT NULL AND end_date IS NULL")
+    return date.first.created_at unless date.blank?
     self.where("start_date IS NOT NULL 
-      AND end_date IS NOT NULL").maximum(:end_date)
+      AND end_date IS NOT NULL").maximum(:updated_at)
   end
 
   def self.check_for_valid_start_date
