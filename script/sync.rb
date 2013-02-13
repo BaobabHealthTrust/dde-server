@@ -39,7 +39,9 @@ class SyncService
   def self.send_demographics_file(file)
     (file || {}).each do |key,ids|
       param = "patient_ids=#{ids.join(',')}"
-      RestClient.get("http://admin:admin@localhost:3001/people/sync_demographics_with_master?#{param}")
+      uri = "http://admin:admin@localhost:3001/people/sync_demographics_with_master?#{param}"
+      puts "url #{uri}"
+      RestClient.get(uri)
       puts "Send to master successfully .... #{ids.join(',')}"
       LogErr.info("Send to master successfully .... #{ids.join(',')}")
     end
