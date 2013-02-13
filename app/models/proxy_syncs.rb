@@ -1,4 +1,4 @@
-class ProxySync < ActiveRecord::Base
+class ProxySyncs < ActiveRecord::Base
 
   def self.last_updated_date
     date = self.where("start_date IS NOT NULL AND end_date IS NULL")
