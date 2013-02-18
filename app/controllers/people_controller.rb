@@ -34,26 +34,14 @@ class PeopleController < ApplicationController
   end
 
   def reassign_identication
-    person = Person.find(params[:person_id])
+    person = reassign_national_identification(params[:person_id])
+    render :text => person.national_patient_identifier.value and return
+  end
 
-    npid = NationalPatientIdentifier.where(:person_id => person.id).first
-    if npid.blank?
-       npid = NationalPatientIdentifier.get_blank_decimal_num_identifier(person.id)
-       npid.force_void("Assigned new National Identifier: originally assigned to patient with person_id: #{person.id}")
-    else
-      npid.voided = 1
-      npid.person_id = nil
-      npid.void_reason = "Assigned new National Identifier: originally assigned to patient with person_id: #{params[:person_id]}" 
-      npid.save
-    end
-
-    person.assign_npid
-    npid = person.national_patient_identifier
-    npid.assigned_at = Time.now()
-    npid.assigner_id = User.current_user
-    npid.save
-    render :text => npid.value and return
-  end 
+  def post_back_person
+    person = reassign_national_identification(params[:person_id])
+    render :text => person.to_json and return
+  end
 
   # GET /people/find
   # GET /people/find.xml?given_name=:given_name&family_name=:family_name
@@ -68,19 +56,17 @@ class PeopleController < ApplicationController
         @people = Person.joins([:national_patient_identifier,
           :legacy_national_ids]).where('legacy_national_ids.value' => national_id).select("people.*,national_patient_identifiers.value")
         if @people.blank?
-          @people = Person.joins(:legacy_national_ids).where(:'legacy_national_ids.value' => national_id).select("people.*,legacy_national_ids.value")
+          @people = Person.joins(:legacy_national_ids).where('legacy_national_ids.value' => national_id).select("people.*,value")
         end
-=begin
-        (@people || []).each do |person|
-          person.assign_npid if person.national_patient_identifier.blank?
-        end
-=end
+        #(@people || []).each do |person|
+        #  person.assign_npid if person.national_patient_identifier.blank?
+        #end
       end
 
     else
       @people = Person.search(params)
     end
-
+    
     case @people.size
     when 0
       if Site.master?
@@ -612,6 +598,33 @@ class PeopleController < ApplicationController
     @person ||= Person.find(params[:id]) if Site.proxy?
   rescue ActiveRecord::RecordNotFound
     # noop
+  end
+
+  private
+
+  def reassign_national_identification(person_id)
+    person = Person.find(person_id)
+
+    npid = NationalPatientIdentifier.where(:person_id => person.id).first
+    if npid.blank?
+       npid = NationalPatientIdentifier.get_blank_decimal_num_identifier(person.id)
+       unless npid.blank?
+          npid.force_void("Assigned new National Identifier: originally assigned to patient with person_id: #{person.id}")
+       end
+    else
+      npid.voided = 1
+      npid.person_id = nil
+      npid.void_reason = "Assigned new National Identifier: originally assigned to patient with person_id: #{person_id}"
+      npid.save
+    end
+
+    person.assign_npid
+    npid = person.national_patient_identifier
+    npid.assigned_at = Time.now()
+    npid.assigner_id = User.current_user
+    npid.save
+    return person
+
   end
 
 end
