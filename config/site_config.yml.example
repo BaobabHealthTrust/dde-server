@@ -11,7 +11,7 @@ default: &default
 production:
   <<: *default
   mode: proxy
-  site_id: 2
+  site_id: 1
   master_uri: http://localhost:3002
   remote_http_options:
     user:         admin
@@ -22,7 +22,7 @@ production:
 development:
   <<: *default
   mode: proxy
-  site_id: 2
+  site_id: 1
   master_uri: http://localhost:3002
   remote_http_options:
     user:         admin
