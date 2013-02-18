@@ -47,22 +47,14 @@ class PeopleController < ApplicationController
   # GET /people/find.xml?given_name=:given_name&family_name=:family_name
   def find
     if not params[:value].blank?
-      @people = Person.joins(:national_patient_identifier).where(params.slice(:given_name,
-      :family_name, :family_name2,:city_village,
-      :gender).merge("national_patient_identifiers.value" => params[:value])).select("people.*,value")
-
-      if @people.blank?
-        national_id = params[:value].gsub('-','')
-        @people = Person.joins([:national_patient_identifier,
-          :legacy_national_ids]).where('legacy_national_ids.value' => national_id).select("people.*,national_patient_identifiers.value")
-        if @people.blank?
-          @people = Person.joins(:legacy_national_ids).where('legacy_national_ids.value' => national_id).select("people.*,value")
-        end
-        #(@people || []).each do |person|
-        #  person.assign_npid if person.national_patient_identifier.blank?
-        #end
-      end
-
+      national_id = params[:value].gsub('-','')
+      @people = Person.joins([:national_patient_identifier,
+        :legacy_national_ids]).where('legacy_national_ids.value' => national_id).select("people.*,national_patient_identifiers.value,legacy_national_ids.value AS old_identification_number")
+      people = Person.joins(:legacy_national_ids).where('legacy_national_ids.value' => national_id).select("people.*,value AS old_identification_number")
+      (people || []).each do |person|                                         
+        next if @people.collect{|p|p.id}.include?(person.id)                  
+        @people << person                                                     
+      end 
     else
       @people = Person.search(params)
     end
