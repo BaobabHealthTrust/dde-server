@@ -48,9 +48,18 @@ class PeopleController < ApplicationController
   def find
     if not params[:value].blank?
       national_id = params[:value].gsub('-','')
+      people = Person.joins(:national_patient_identifier).where('national_patient_identifiers.value' => national_id).select("people.*,national_patient_identifiers.value")
+      
       @people = Person.joins([:national_patient_identifier,
         :legacy_national_ids]).where('legacy_national_ids.value' => national_id).select("people.*,national_patient_identifiers.value,legacy_national_ids.value AS old_identification_number")
+
+      (people || []).each do |person|
+        next if @people.collect{|p|p.id}.include?(person.id)
+        @people << person
+      end
+
       people = Person.joins(:legacy_national_ids).where('legacy_national_ids.value' => national_id).select("people.*,value AS old_identification_number")
+
       (people || []).each do |person|                                         
         next if @people.collect{|p|p.id}.include?(person.id)                  
         @people << person                                                     
