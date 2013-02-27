@@ -1,26 +1,59 @@
-<!DOCTYPE html>
-<html>
-<head>
-  <title>The page you were looking for doesn't exist (404)</title>
-  <style type="text/css">
-    body { background-color: #fff; color: #666; text-align: center; font-family: arial, sans-serif; }
-    div.dialog {
-      width: 25em;
-      padding: 0 4em;
-      margin: 4em auto 0 auto;
-      border: 1px solid #ccc;
-      border-right-color: #999;
-      border-bottom-color: #999;
-    }
-    h1 { font-size: 100%; color: #f00; line-height: 1.5em; }
-  </style>
-</head>
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+  	<style type="text/css">
 
-<body>
-  <!-- This file lives in public/404.html -->
-  <div class="dialog">
-    <h1>The page you were looking for doesn't exist.</h1>
-    <p>You may have mistyped the address or the page may have moved.</p>
-  </div>
-</body>
-</html>
+			.button {
+				-moz-box-shadow:inset -7px 22px 3px -41px #bee2f9;
+				-webkit-box-shadow:inset -7px 22px 3px -41px #bee2f9;
+				box-shadow:inset -7px 22px 3px -41px #bee2f9;
+				background:-webkit-gradient( linear, left top, left bottom, color-stop(0.05, #63b8ee), color-stop(1, #468ccf) );
+				background:-moz-linear-gradient( center top, #63b8ee 5%, #468ccf 100% );
+				filter:progid:DXImageTransform.Microsoft.gradient(startColorstr='#63b8ee', endColorstr='#468ccf');
+				background-color:#63b8ee;
+				-moz-border-radius:10px;
+				-webkit-border-radius:10px;
+				border-radius:10px;
+				border:2px solid #3866a3;
+				display:inline-block;
+				color:maroon;
+				font-family:Trebuchet MS;
+				font-size:21px;
+				font-weight:bold;
+				padding:6px 72px;
+				text-decoration:none;
+				text-shadow:1px 1px 0px #7cacde;
+				width: 200px;
+				margin-top:30px;
+			}.button:active {
+				position:relative;
+				top:1px;
+			}
+
+		</style>
+
+  </head>
+  
+ 	<body bgcolor = "white" style= "-moz-user-select: none;margin-left: 40px; margin-top:30px;">
+		<img src = "images/error.jpeg" width = 100px align = left >
+		<font face="helvetica, geneva, sans serif" size=6>
+			Sorry, the page you are trying to accesss has been moved or no longer exists. 
+			Report this to the EMR team to ensure that the issue is resolved. Call : 01 750 604 .	In the meantime :
+		</font>
+
+		<div style = "margin-top: 5px;text-align:center; font:arial; font-size:30;">
+			<br>
+			<a class = "button" href="#" onmousedown="history.back()">Touch here to go to previous page</a>
+		  <br/>
+		  <a class = "button" onmousedown="document.location = this.href" href="/">Touch here to go to menu</a>
+		  <br/>
+		  <a class = "button"href="/user/logout" onmousedown="document.location = this.href">Touch here to logout</a>
+		  <br/>
+		  
+		 </div>
+		
+    <div style="font-size:.8em; margin-top:10%;" id="currentPage"></div>
+    <script>
+      document.getElementById("currentPage").innerHTML = '(' + new Date() + '): ' + document.location
+    </script>
+  </body>
+</html>  
