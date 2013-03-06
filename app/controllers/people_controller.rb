@@ -511,16 +511,16 @@ class PeopleController < ApplicationController
                     
       site_hash = {'site' => {"id" => person_obj['person']['creator_site_id'] }}
 
-      legacy_ids =  person_obj['legacy_ids'] rescue nil
-
       person_hash.merge!npid_hash
 
       person_hash.merge!site_hash
 
+      old_national_id =  person_obj['person']['data']['patient']['identifiers']['old_identification_number'] rescue nil
+
       @person = Person.find_or_initialize_from_attributes(person_hash.slice('person', 'npid', 'site'))
       if @person.save
-        (legacy_ids || []).each  do |legacy_id|
-          LegacyNationalIds.find_or_create_by_value_and_person_id(:value => legacy_id,:person_id => @person.id)
+        unless old_national_id.blank?
+         LegacyNationalIds.find_or_create_by_value_and_person_id(:value => old_national_id, :person_id => @person.id)
         end
 
         NationalIdSite.find_or_create_by_national_id_and_site_id(:national_id => person_obj['npid']['value'],
@@ -551,18 +551,18 @@ class PeopleController < ApplicationController
                               "assigned_at" => person_obj['npid']["assigned_at"] }}
 
       site_hash = {'site' => {"id" => person_obj['npid']['assigner_site_id'] }}
-
-      legacy_ids = person_obj['legacy_ids'] rescue nil
       
       person_hash.merge!npid_hash
 
       person_hash.merge!site_hash
 
+      old_national_id =  person_obj['person']['data']['patient']['identifiers']['old_identification_number'] rescue nil
+
       @person = Person.find_or_initialize_from_attributes(person_hash.slice('person', 'npid', 'site'))
       if @person.save
-        (legacy_ids || []).each  do |legacy_id|
-         LegacyNationalIds.find_or_create_by_value_and_person_id(:value => legacy_id,:person_id => @person.id)
-       end
+        unless old_national_id.blank?
+         LegacyNationalIds.find_or_create_by_value_and_person_id(:value => old_national_id, :person_id => @person.id)
+        end
         saved_people << @person
       end
     end
