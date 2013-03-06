@@ -2,7 +2,7 @@
 # v4 Id: base30(Random Number + Check Digit)
 #
 class NationalPatientIdentifier < ActiveRecord::Base
-  #default_scope where('voided = 0 AND decimal_num IS NOT NULL')
+  default_scope where('voided = 0 AND decimal_num IS NOT NULL')
   belongs_to :person
   belongs_to :assigner,
       :class_name => 'User'
