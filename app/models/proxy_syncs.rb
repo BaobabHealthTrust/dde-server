@@ -12,7 +12,7 @@ class ProxySyncs < ActiveRecord::Base
     unless sync_complete_date.blank?
       return sync_complete_date
     else
-      return nil
+      return self.where("start_date IS NOT NULL AND end_date IS NOT NULL").maximum(:created_at)
     end
   end
 
