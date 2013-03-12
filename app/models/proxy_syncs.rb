@@ -1,31 +1,28 @@
 class ProxySyncs < ActiveRecord::Base
 
   def self.last_updated_datetime
-    date = self.where("created_at IS NOT NULL AND end_date IS NULL")
-    return date.first.created_at unless date.blank?
-    self.where("start_date IS NOT NULL 
-      AND end_date IS NOT NULL").maximum(:updated_at)
+    datetime = self.where("start_date IS NOT NULL AND end_date IS NULL")
+    unless datetime.blank?
+      #something went wrong - so what this block will do is: give query for a date when
+      #the sync was complete.
+      sync_complete_date = self.where("start_date IS NOT NULL 
+      AND end_date IS NOT NULL").maximum(:created_at)
+    end
+
+    unless sync_complete_date.blank?
+      return sync_complete_date
+    else
+      return nil
+    end
   end
 
   def self.check_for_valid_start_date
-    if not(self.where("start_date IS NOT NULL AND end_date IS NULL")).blank?
-      if(Person.count < 1)
-        self.create(:start_date => DateTime.now())
-      else
-        self.create(:start_date => (Person.where('id > 0').minimum('created_at') - 1.minute))
-      end
-    elsif not(self.where("start_date IS NOT NULL AND end_date IS NOT NULL").last).blank?
-      if(Person.count < 1)
-        self.create(:start_date => DateTime.now())
-      else
-        self.create(:start_date => (Person.where('id > 0').maximum(:updated_at)))
-      end
+    if (self.where("start_date IS NOT NULL AND end_date IS NULL")).blank?
+      return true
+    elsif (self.where("start_date IS NOT NULL AND end_date IS NOT NULL").last).blank?
+      self.create(:start_date => DateTime.now())
     else
-      if(Person.count < 1)
-        self.create(:start_date => DateTime.now())
-      else
-        self.create(:start_date => (Person.where('id > 0').minimum('created_at') - 1.minute))
-      end
+      self.create(:start_date => DateTime.now())
     end
   end
 
