@@ -1,6 +1,6 @@
 class ProxySyncs < ActiveRecord::Base
 
-  def self.last_updated_date
+  def self.last_updated_datetime
     date = self.where("created_at IS NOT NULL AND end_date IS NULL")
     return date.first.created_at unless date.blank?
     self.where("start_date IS NOT NULL 

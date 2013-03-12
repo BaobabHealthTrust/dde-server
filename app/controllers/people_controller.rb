@@ -330,7 +330,7 @@ class PeopleController < ApplicationController
   end
 
   def proxy_people_to_sync
-    last_updated_date = ProxySyncs.last_updated_date
+    last_updated_date = ProxySyncs.last_updated_datetime
     if last_updated_date
       people_ids =  Person.joins(:national_patient_identifier).where("people.updated_at > ?",
         last_updated_date.strftime("%Y-%m-%d %H:%M:%S")).select("people.id").order(:id).map(&:id)
@@ -404,7 +404,7 @@ class PeopleController < ApplicationController
     else
       site_id = params[:site_id]
       site_code = Site.find_by_id(site_id).code
-      last_updated_date = ProxySyncs.last_updated_date(site_code)
+      last_updated_date = ProxySyncs.last_updated_datetime(site_code)
       unless last_updated_date.blank?
         people_ids = Person.find(:all,:conditions => ["creator_site_id != ? 
           AND updated_at > ?",site_id,last_updated_date],
@@ -425,7 +425,7 @@ class PeopleController < ApplicationController
     else
       site_id = params[:site_id]
       site_code = Site.find(site_id).code
-      last_updated_date = MasterSyncs.last_updated_date(site_code)
+      last_updated_date = MasterSyncs.last_updated_datetime(site_code)
       unless last_updated_date.blank?
         people_ids = Person.where("creator_site_id != ? AND updated_at > ?",
           site_id,last_updated_date.strftime("%Y-%m-%d %H:%M:%S")).select(:id).order(:id).map(&:id)
@@ -477,7 +477,7 @@ class PeopleController < ApplicationController
   end
 
   def update_proxy_sync
-    last_updated_date = ProxySyncs.last_updated_date
+    last_updated_date = ProxySyncs.last_updated_datetime
     max_person_updated_date = Person.maximum(:created_at)
     ProxySyncs.create(:start_date => last_updated_date, 
       :end_date => max_person_updated_date)
