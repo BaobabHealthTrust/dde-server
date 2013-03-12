@@ -1,7 +1,7 @@
 class MasterSyncs < ActiveRecord::Base
 
   def self.last_updated_datetime(site_code)             
-    self.where("site_code <> ? AND created_date IS NOT NULL 
+    self.where("site_code = ? AND created_date IS NOT NULL 
       AND updated_date IS NOT NULL",site_code).maximum(:created_at)
   end                                                                           
                                                                                 
