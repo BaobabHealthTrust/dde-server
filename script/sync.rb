@@ -38,7 +38,6 @@ class SyncService
   end
 
   def self.send_demographics_file(file)
-    RestClient.get("http://admin:admin@localhost:#{ProxyPort}/people/record_sync_starttime")
 
     (file || {}).each do |key,ids|
       param = "patient_ids=#{ids.join(',')}"
@@ -50,7 +49,6 @@ class SyncService
     end
 
     RestClient.get("http://admin:admin@localhost:#{ProxyPort}/people/record_successful_sync")
-    RestClient.get("http://admin:admin@localhost:#{ProxyPort}/people/record_successful_sync?update_master=true")
   end
 
   def self.compile_ids(current_ids)
