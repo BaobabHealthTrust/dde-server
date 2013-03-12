@@ -457,7 +457,18 @@ class PeopleController < ApplicationController
     render :text => 'done ...' and return
   end
 
- 
+  def record_sync_starttime
+    if Site.proxy?
+      uri = "http://#{dde_master_user}:#{dde_master_password}@#{dde_master_uri}/people/record_sync_starttime/"
+      RestClient.post(uri,{"site_id" => Site.current_id})
+    else
+      site_id = params[:site_id]
+      site_code = Site.find(site_id).code
+      MasterSyncs.check_for_valid_start_date(site_code) 
+    end
+    render :text => 'done ...' and return
+  end
+   
   protected
 
   
