@@ -17,12 +17,12 @@ class ProxySyncs < ActiveRecord::Base
   end
 
   def self.check_for_valid_start_date
-    if (self.where("start_date IS NOT NULL AND end_date IS NULL")).blank?
+    if not(self.where("start_date IS NOT NULL AND end_date IS NULL").blank?)
       return true
     elsif (self.where("start_date IS NOT NULL AND end_date IS NOT NULL").last).blank?
-      self.create(:start_date => DateTime.now())
+      self.create(:start_date => Date.today)
     else
-      self.create(:start_date => DateTime.now())
+      self.create(:start_date => Date.today)
     end
   end
 
