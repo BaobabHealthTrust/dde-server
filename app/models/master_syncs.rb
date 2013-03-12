@@ -7,13 +7,14 @@ class MasterSyncs < ActiveRecord::Base
       #something went wrong - so what this block will do is: give query for a date when
       #the sync was complete.                                                   
       sync_complete_date = self.where("created_date IS NOT NULL                   
-      AND updated_date IS NOT NULL").maximum(:created_at)                           
+      AND updated_date IS NOT NULL AND site_code = ?",site_code).maximum(:created_at)                           
     end                                                                         
                                                                                 
     unless sync_complete_date.blank?                                            
       return sync_complete_date                                                 
     else                                                                        
-      return self.where("created_date IS NOT NULL AND updated_date IS NOT NULL").maximum(:created_at)
+      return self.where("created_date IS NOT NULL 
+        AND updated_date IS NOT NULL AND site_code = ?",site_code).maximum(:created_at)
     end
   end                                                                           
                                                                                 
