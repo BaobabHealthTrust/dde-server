@@ -425,20 +425,15 @@ class PeopleController < ApplicationController
     else
       site_id = params[:site_id]
       site_code = Site.find(site_id).code
-      last_updated_date = MasterSyncs.last_updated_datetime(site_code)
-      unless last_updated_date.blank?
-        people_ids = Person.where("creator_site_id != ? AND updated_at > ?",
-          site_id,last_updated_date.strftime("%Y-%m-%d %H:%M:%S")).select(:id).order(:id).map(&:id)
-        if people_ids.blank?
-          people_ids = check_if_site_has_sync_before(site_code)
-        end
-          
+      last_updated_datetime = MasterSyncs.last_updated_datetime(site_code)
+      unless last_updated_datetime.blank?
+        people_ids = Person.where("creator_site_id != ? AND updated_at > ?",site_id,
+          last_updated_datetime.strftime("%Y-%m-%d %H:%M:%S")).select(:id).order(:id).map(&:id)
+
         MasterSyncs.check_for_valid_start_date(site_code) unless people_ids.blank?
-      else
-        people_ids = Person.where("creator_site_id != ?",site_id).select(:id).order(:id).map(&:id)
-        MasterSyncs.check_for_valid_start_date(site_code) unless people_ids.blank?
+        render :text => people_ids.sort.to_json and return
       end
-      render :text => people_ids.sort.to_json and return
+      render :text => [].to_json and return
     end
   end
   
@@ -446,7 +441,7 @@ class PeopleController < ApplicationController
     if Site.proxy?
       if params[:update_master].blank?
         sync = ProxySyncs.where("start_date IS NOT NULL AND end_date IS NULL").first
-        sync.end_date = DateTime.now()
+        sync.end_date = Date.today
         sync.save
       elsif not params[:update_master].blank?
         uri = "http://#{dde_master_user}:#{dde_master_password}@#{dde_master_uri}/people/record_successful_sync/"
@@ -456,7 +451,7 @@ class PeopleController < ApplicationController
     elsif Site.master?
       sync = MasterSyncs.where("created_date IS NOT NULL 
         AND updated_date IS NULL AND site_code = ?",params[:site_code]).first
-      sync.updated_date = DateTime.now()
+      sync.updated_date = Date.today
       sync.save
     end
     render :text => 'done ...' and return
@@ -466,16 +461,6 @@ class PeopleController < ApplicationController
   protected
 
   
-  def check_if_site_has_sync_before(site_code)
-    sync = MasterSyncs.where(:'site_code' => site_code)
-    if sync.blank?
-      creator_site_id = Site.where(:'code' => site_code).first.id
-      return Person.where('creator_site_id <> ?', 
-        creator_site_id).select(:id).map(&:id)
-    end
-    return []
-  end
-
   def update_proxy_sync
     last_updated_date = ProxySyncs.last_updated_datetime
     max_person_updated_date = Person.maximum(:created_at)
