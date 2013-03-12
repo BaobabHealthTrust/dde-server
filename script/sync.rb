@@ -6,11 +6,12 @@ require 'rails'
 Modulepath = File.expand_path($PROGRAM_NAME)
 AppPath = Modulepath.gsub($PROGRAM_NAME,"")
 LogErr = Logger.new(File.join(AppPath,'log/sync.txt'))
+ProxyPort = 3001
 
 class SyncService
 
   def self.get_available_ids
-    results = RestClient.get('http://admin:admin@localhost:3001/people/proxy_people_to_sync')
+    results = RestClient.get("http://admin:admin@localhost:#{ProxyPort}/people/proxy_people_to_sync")
     current_ids = JSON.parse(results)
 
     patients_ids_batch = self.compile_ids(current_ids)
@@ -21,32 +22,32 @@ class SyncService
   end
 
   def self.get_demographics_from_master
-    results = RestClient.get("http://admin:admin@localhost:3001/people/master_people_to_sync")
+    results = RestClient.get("http://admin:admin@localhost:#{ProxyPort}/people/master_people_to_sync")
     current_ids = JSON.parse(results) rescue JSON.parse(results.gsub('"',''))
 
     (self.compile_ids(current_ids) || {}).each do |key,ids|
       param = "patient_ids=#{ids.join(',')}"
-      RestClient.get("http://admin:admin@localhost:3001/people/sync_demographics_with_proxy?#{param}")
+      RestClient.get("http://admin:admin@localhost:#{ProxyPort}/people/sync_demographics_with_proxy?#{param}")
       puts "Got from master successfully .... #{ids.join(',')}"
       LogErr.info("Got from master successfully .... #{ids.join(',')}")
     end
     
     unless current_ids.blank?
-      RestClient.get("http://admin:admin@localhost:3001/people/record_successful_sync?update_master=true")
+      RestClient.get("http://admin:admin@localhost:#{ProxyPort}/people/record_successful_sync?update_master=true")
     end
   end
 
   def self.send_demographics_file(file)
     (file || {}).each do |key,ids|
       param = "patient_ids=#{ids.join(',')}"
-      uri = "http://admin:admin@localhost:3001/people/sync_demographics_with_master?#{param}"
+      uri = "http://admin:admin@localhost:#{ProxyPort}/people/sync_demographics_with_master?#{param}"
       puts "url #{uri}"
       RestClient.get(uri)
       puts "Send to master successfully .... #{ids.join(',')}"
       LogErr.info("Send to master successfully .... #{ids.join(',')}")
     end
 
-    RestClient.get("http://admin:admin@localhost:3001/people/record_successful_sync")
+    RestClient.get("http://admin:admin@localhost:#{ProxyPort}/people/record_successful_sync")
   end
 
   def self.compile_ids(current_ids)
