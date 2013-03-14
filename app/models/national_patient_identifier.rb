@@ -1,3 +1,22 @@
+# == Schema Information
+#
+# Table name: national_patient_identifiers
+#
+#  id               :integer          not null, primary key
+#  value            :string(255)
+#  decimal_num      :integer
+#  person_id        :string(255)
+#  pulled           :boolean
+#  assigned_at      :datetime
+#  assigner_id      :integer
+#  assigner_site_id :integer
+#  created_at       :datetime
+#  updated_at       :datetime
+#  voided           :integer          default(0), not null
+#  void_reason      :string(255)
+#  voided_date      :datetime
+#
+
 # v3 Id: P + Version + Site Code + Sequential Number + Check Digit
 # v4 Id: base30(Random Number + Check Digit)
 #

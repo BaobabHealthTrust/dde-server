@@ -1,3 +1,15 @@
+# == Schema Information
+#
+# Table name: master_syncs
+#
+#  id           :integer          not null, primary key
+#  site_code    :string(255)      not null
+#  created_date :date
+#  updated_date :date
+#  created_at   :datetime
+#  updated_at   :datetime
+#
+
 class MasterSyncs < ActiveRecord::Base
 
   def self.last_updated_datetime(site_code)             

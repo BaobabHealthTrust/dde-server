@@ -1,3 +1,14 @@
+# == Schema Information
+#
+# Table name: proxy_syncs
+#
+#  id         :integer          not null, primary key
+#  start_date :date
+#  end_date   :date
+#  created_at :datetime
+#  updated_at :datetime
+#
+
 # Read about fixtures at http://ar.rubyonrails.org/classes/Fixtures.html
 
 # This model initially had no columns defined.  If you add columns to the
