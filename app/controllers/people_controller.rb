@@ -332,8 +332,9 @@ class PeopleController < ApplicationController
   def proxy_people_to_sync
     last_updated_date = ProxySyncs.last_updated_datetime
     if last_updated_date
-      people_ids =  Person.joins(:national_patient_identifier).where("people.updated_at > ?",
-        last_updated_date.strftime("%Y-%m-%d %H:%M:%S")).select("people.id").order(:id).map(&:id)
+      people_ids =  Person.joins(:national_patient_identifier).where("people.updated_at > ?
+        AND people.creator_site_id = ?",last_updated_date.strftime("%Y-%m-%d %H:%M:%S"),
+        Site.current_id).select("people.id").order(:id).map(&:id)
       ProxySyncs.check_for_valid_start_date unless people_ids.blank?
     else
       people_ids = Person.where("creator_site_id = ?" , Site.current_id
