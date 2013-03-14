@@ -336,7 +336,8 @@ class PeopleController < ApplicationController
         last_updated_date.strftime("%Y-%m-%d %H:%M:%S")).select("people.id").order(:id).map(&:id)
       ProxySyncs.check_for_valid_start_date unless people_ids.blank?
     else
-      people_ids = Person.joins(:national_patient_identifier).select("people.id").order(:id).map(&:id)
+      people_ids = Person.where("creator_site_id = ?" , Site.current_id
+        ).joins(:national_patient_identifier).select("people.id").order(:id).map(&:id)
       ProxySyncs.check_for_valid_start_date unless people_ids.blank?
     end
     render :text => people_ids.sort.to_json
