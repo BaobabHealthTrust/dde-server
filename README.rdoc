@@ -14,13 +14,13 @@ Edit config/database.yml to match your local database setup.
 
 # for proxy mode
   $ export RAILS_ENV=development
-  $ bundle exec rake db:create db:migrate db:seed
+  $ bundle exec rake db:reset db:setup
   $ bundle exec rails server -p 3001
 
 # for master mode
   $ export RAILS_ENV=integration
-  $ rake db:create db:migrate db:seed
-  $ rails server -p 3002
+  $ bundle exec rake db:reset db:setup
+  $ bundle exec rails server -p 3002
 
 This will generate a user 'admin' with password 'admin' on the proxy and the
 master service, then start the server. The master will be listeing on port 3002,
