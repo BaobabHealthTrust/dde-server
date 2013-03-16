@@ -6,6 +6,10 @@ class NpidRequest
 
   attr_accessor :npids, :errors
 
+  validates :count, :numericality => { :only_integer => true }
+  validates :count, :numericality => { :greater_than => 0, :less_than_or_equal_to => 4000 }
+  validates :site_code, :length => { :is => 3 }
+
   def count=(val)
     self.attributes['count'] = val
   end
@@ -25,12 +29,6 @@ class NpidRequest
   def errors
     @errors ||= ActiveModel::Errors.new(self)
   end
-
-  validates_numericality_of :count,
-      :only_integer => true
-
-  validates_length_of :site_code,
-      :is => 3
 
   def self.create(attrs = {}, &block)
     self.new(attrs).save &block
