@@ -8,6 +8,15 @@
   </div>
 </div>
 
+<div class="flash">
+<% if @npid_request.errors.any? %>
+      <div class="message error">
+        <% @npid_request.errors.full_messages.each do |msg| %>
+          <p><%= msg %></p>
+        <% end %>
+      </div>
+  <% end %>
+</div>
 <script>
 
 var numberOfNewIDsRequested = 0;                                             
@@ -201,7 +210,7 @@ function doDelayLoop() {
 
 <h2>Request new NPIDs</h2><br />
 
-<%= form_for @npid_request do |f| %>
+<%= form_for @npid_request, :html => {:action => "" } do |f| %>
 
   <div class="field">
     <%= f.label :count, 'Number of IDs to request' %><br />
