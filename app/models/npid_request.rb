@@ -6,6 +6,7 @@ class NpidRequest
 
   attr_accessor :npids, :errors
 
+  validates :count, :presence => true
   validates :count, :numericality => { :only_integer => true }
   validates :count, :numericality => { :greater_than => 0, :less_than_or_equal_to => 4000 }
   validates :site_code, :length => { :is => 3 }
