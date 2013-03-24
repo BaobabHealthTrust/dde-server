@@ -16,6 +16,11 @@ class PersonNameCode < ActiveRecord::Base
 
   def self.create_name_code(person)
     found = self.find_by_person_id(person.id)
+    return if person.given_name.blank?
+    return if person.family_name.blank?
+    return unless person.given_name.match(/[0-9]/).blank?
+    return unless person.family_name.match(/[0-9]/).blank?
+    
     if found.blank?
       self.create(:person_id => person.id,
                 :given_name_code => person.given_name.soundex,
