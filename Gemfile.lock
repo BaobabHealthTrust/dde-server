@@ -34,8 +34,6 @@ GEM
       activemodel (= 3.0.9)
       activesupport (= 3.0.9)
     activesupport (3.0.9)
-    annotate (2.5.0)
-      rake
     arel (2.0.10)
     bcrypt-ruby (2.1.4)
     builder (2.1.2)
@@ -93,7 +91,6 @@ PLATFORMS
   ruby
 
 DEPENDENCIES
-  annotate (~> 2.5.0)
   bcrypt-ruby
   cancan
   composite_primary_keys (= 3.1.0)
