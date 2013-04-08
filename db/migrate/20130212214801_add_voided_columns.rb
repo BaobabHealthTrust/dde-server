@@ -9,7 +9,7 @@ class AddVoidedColumns < ActiveRecord::Migration
   end
 
   def self.down
-  	remove_column :national_patient_identifiers,:voided
+    remove_column :national_patient_identifiers,:voided
     remove_column :national_patient_identifiers,:void_reason
     remove_column :national_patient_identifiers,:voided_date
     remove_column :legacy_national_ids,:voided
