@@ -71,8 +71,9 @@ class SyncService
     end
     patients_ids_batch.sort{|a,b| a <=> b }
   end
-  
+  LogErr.info("Started at : #{Time.now().strftime('%Y-%m-%d %H:%M:%S')}")
   get_available_ids
+  LogErr.info("Finished at : #{Time.now().strftime('%Y-%m-%d %H:%M:%S')}")
   
 end
 
