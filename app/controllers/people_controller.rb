@@ -6,7 +6,8 @@ class PeopleController < ApplicationController
   # GET /people
   # GET /people.xml
   def index
-    @people = Person.page(params[:page]).all
+    #@people = Person.page(params[:page]).all
+    @people = Person.page(params[:page]).joins(:national_patient_identifier).select("people.*")
 
     respond_to do |format|
       format.html # index.html.erb
