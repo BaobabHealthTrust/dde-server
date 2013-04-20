@@ -331,14 +331,20 @@ class PeopleController < ApplicationController
 
   def proxy_people_to_sync
     last_updated_date = ProxySyncs.last_updated_datetime
+
+    people_with_duplicate_ids_not_to_sync =  NationalPatientIdentifier.where("voided = 0 
+      AND person_id IS NOT NULL").group(:value).having("count(value) > 1").map(&:value)
+
+    people_with_duplicate_ids_not_to_sync = ['0'] if people_with_duplicate_ids_not_to_sync.blank?
+
     if last_updated_date
       people_ids =  Person.joins(:national_patient_identifier).where("people.updated_at > ?
-        AND people.creator_site_id = ?",last_updated_date.strftime("%Y-%m-%d %H:%M:%S"),
-        Site.current_id).select("people.id").order(:id).map(&:id)
+        AND people.creator_site_id = ? AND value NOT IN(?)",last_updated_date.strftime("%Y-%m-%d %H:%M:%S"),
+        Site.current_id,people_with_duplicate_ids_not_to_sync).select("people.id").order(:id).map(&:id)
       ProxySyncs.check_for_valid_start_date unless people_ids.blank?
     else
-      people_ids = Person.where("creator_site_id = ?" , Site.current_id
-        ).joins(:national_patient_identifier).select("people.id").order(:id).map(&:id)
+      people_ids = Person.where("creator_site_id = ? AND value NOT IN(?)" , Site.current_id,
+        people_with_duplicate_ids_not_to_sync).joins(:national_patient_identifier).select("people.id").order(:id).map(&:id)
       ProxySyncs.check_for_valid_start_date unless people_ids.blank?
     end
     render :text => people_ids.sort.to_json
