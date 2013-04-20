@@ -12,7 +12,7 @@ notes
 doc
 development.sql
 development_structure.sql
-schema.rb
+db/schema.rb
 *~
 mockups
 rerun.txt
