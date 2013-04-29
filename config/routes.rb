@@ -1,5 +1,6 @@
 DdeServer::Application.routes.draw do
-  resources :users
+ 
+  resources :users,:npid_auto_generations
 
   resources :sites do
     collection do
