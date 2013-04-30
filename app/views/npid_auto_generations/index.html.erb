@@ -2,13 +2,13 @@
 
 <table class="table">
   <tr>
-    <th>Sitename</th>
+    <th style="width: 200px;">Sitename</th>
     <th>Threshold</th>
     <th>Date Created</th>
 
     <th style="width: 130px;"></th>
   </tr>
-
+  
   <% @npid_autogenerates.each do |npid_setting| %>
     <tr>
       <td><%= npid_setting.site.name %></td>

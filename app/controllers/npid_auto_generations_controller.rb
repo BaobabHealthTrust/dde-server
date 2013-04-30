@@ -7,7 +7,7 @@ class NpidAutoGenerationsController < ApplicationController
       npid_autogenerate.threshold = params[:npid_auto_generation][:threshold]
       npid_autogenerate.save!
     end
-    render :index
+   redirect_to npid_auto_generations_path
   end
 
   def edit
@@ -22,6 +22,11 @@ class NpidAutoGenerationsController < ApplicationController
   end
 
   def show
+  end
+
+  def destroy
+    @npid_autogenerate = NpidAutoGeneration.find(params[:id]).destroy
+    redirect_to npid_auto_generations_path
   end
 
 end
