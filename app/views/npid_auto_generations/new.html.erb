@@ -1,2 +1,23 @@
-<h1>NpidAutoGenerations#new</h1>
-<p>Find me in app/views/npid_auto_generations/new.html.erb</p>
+<h2>Set NPID Threshold</h2><br />
+
+<%= form_for @npid_autogenerate do |f| %>
+
+  <div class="field">
+    <%= f.label :threshold, 'Threshold' %><br />
+    <%= f.text_field :threshold %>
+  </div>
+
+  <% if Site.master? %>
+    <div class="field">
+      <%= f.label :site_code, 'Site' %><br />
+      <%= f.collection_select :site_code, Site.all, :code, :name %>
+    </div>
+  <% end %>
+
+  <div class="actions">
+    <%= f.submit 'Set Treshold'%>
+  </div>
+
+<% end %>
+
+<%= link_to 'Back', national_patient_identifiers_path %>

@@ -14,6 +14,8 @@ class Site < ActiveRecord::Base
 
   has_many :users
 
+  has_many :npid_auto_generations
+
   has_many :national_patient_identifiers,
       :foreign_key => :assigner_site_id
 

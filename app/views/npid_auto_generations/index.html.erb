@@ -1,2 +1,32 @@
-<h1>NpidAutoGenerations#index</h1>
-<p>Find me in app/views/npid_auto_generations/index.html.erb</p>
+<h2>Auto Request settings</h2>
+
+<table class="table">
+  <tr>
+    <th>Sitename</th>
+    <th>Threshold</th>
+    <th>Date Created</th>
+
+    <th style="width: 130px;"></th>
+  </tr>
+
+  <% @npid_autogenerates.each do |npid_setting| %>
+    <tr>
+      <td><%= npid_setting.site.name %></td>
+      <td><%= npid_setting.threshold %></td>
+      <td><%= npid_setting.created_at %></td>
+      <td>
+        <%= link_to 'Show', npid_setting %> |
+        <%= link_to 'Edit', edit_npid_auto_generation_path(npid_setting) %> |
+        <%= link_to 'Destroy', npid_setting, :confirm => 'Are you sure?', :method => :delete %>
+      </td>
+    </tr>
+  <% end %>
+</table>
+
+<%= will_paginate @npid_autogenerates rescue nil %>
+<br/>
+<p>
+<div id="new" align="center">
+<%= link_to 'New Setting', new_npid_auto_generation_path %>
+</div>
+</p>
