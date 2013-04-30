@@ -15,18 +15,12 @@ class NpidAutoGenerationsController < ApplicationController
    redirect_to npid_auto_generations_path
   end
 
-  def edit
-  end
-
   def index
     @npid_autogenerates = NpidAutoGeneration.all
   end
 
   def new
     @npid_autogenerate = NpidAutoGeneration.new
-  end
-
-  def show
   end
 
   def destroy
