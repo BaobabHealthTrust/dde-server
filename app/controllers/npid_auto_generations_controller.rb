@@ -16,7 +16,7 @@ class NpidAutoGenerationsController < ApplicationController
   end
 
   def index
-    @npid_autogenerates = NpidAutoGeneration.all
+    @npid_autogenerates = NpidAutoGeneration.page(params[:page]).all
   end
 
   def new
