@@ -2,15 +2,15 @@ class NpidAutoGenerationsController < ApplicationController
 
   def create
     if Site.proxy?
-      npid_autogenerate = NpidAutoGeneration.new
-      npid_autogenerate.site_id = Site.current_id
-      npid_autogenerate.threshold = params[:npid_auto_generation][:threshold]
-      npid_autogenerate.save!
+      npid_threshold_setting = NpidAutoGeneration.new
+      npid_threshold_setting.site_id = Site.current_id
+      npid_threshold_setting.threshold = params[:npid_auto_generation][:threshold]
+      npid_threshold_setting.save!
     else
-      npid_autogenerate = NpidAutoGeneration.new
-      npid_autogenerate.site_id = params[:npid_auto_generation][:site_id]
-      npid_autogenerate.threshold = params[:npid_auto_generation][:threshold]
-      npid_autogenerate.save!
+      npid_threshold_setting = NpidAutoGeneration.new
+      npid_threshold_setting.site_id = params[:npid_auto_generation][:site_id]
+      npid_threshold_setting.threshold = params[:npid_auto_generation][:threshold]
+      npid_threshold_setting.save!
     end
 
    redirect_to npid_auto_generations_path
@@ -18,7 +18,7 @@ class NpidAutoGenerationsController < ApplicationController
   end
 
   def index
-    @npid_autogenerates = NpidAutoGeneration.page(params[:page]).all
+    @npid_settings = NpidAutoGeneration.page(params[:page]).all
 
     if Site.master?
       npid_set_sites = NpidAutoGeneration.count
@@ -31,7 +31,7 @@ class NpidAutoGenerationsController < ApplicationController
   end
 
   def new
-    @npid_autogenerate = NpidAutoGeneration.new
+    @npid_setting = NpidAutoGeneration.new
 
     if Site.master?
       @npid_set_sites = NpidAutoGeneration.all.collect(&:site_id)
@@ -45,7 +45,7 @@ class NpidAutoGenerationsController < ApplicationController
   end
 
   def edit
-    @npid_autogenerate = NpidAutoGeneration.find(params[:id])
+    @npid_setting = NpidAutoGeneration.find(params[:id])
  
     if Site.master?
       @npid_set_sites = NpidAutoGeneration.all.collect(&:site_id)
@@ -59,14 +59,14 @@ class NpidAutoGenerationsController < ApplicationController
   end
 
   def update
-    @npid_autogenerate = NpidAutoGeneration.find(params[:id])
-    @npid_autogenerate.threshold = params[:npid_auto_generation][:threshold]
-    @npid_autogenerate.save!
+    npid_setting = NpidAutoGeneration.find(params[:id])
+    npid_setting.threshold = params[:npid_auto_generation][:threshold]
+    npid_setting.save!
     redirect_to npid_auto_generations_path
   end
 
   def destroy
-    @npid_autogenerate = NpidAutoGeneration.find(params[:id]).destroy
+    NpidAutoGeneration.find(params[:id]).destroy
     redirect_to npid_auto_generations_path
   end
 

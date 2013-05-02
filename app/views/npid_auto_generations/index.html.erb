@@ -9,7 +9,7 @@
     <th style="width: 130px;"></th>
   </tr>
   
-  <% @npid_autogenerates.each do |npid_setting| %>
+  <% @npid_settings.each do |npid_setting| %>
     <tr>
       <td><%= npid_setting.site.name %></td>
       <td><%= npid_setting.threshold %></td>
@@ -22,7 +22,7 @@
   <% end %>
 </table>
 
-<%= will_paginate @npid_autogenerates %>
+<%= will_paginate @npid_settings %>
 <br/>
 <p>
 <div id="new" align="center">
