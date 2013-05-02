@@ -13,7 +13,7 @@ class NpidAutoGenerationsController < ApplicationController
 
     respond_to do |format|
       if @npid_threshold_setting.save
-          format.html { redirect_to(npid_auto_generations_path, :notice => 'NPID setting was successfully created.') }
+          format.html { redirect_to(npid_auto_generations_path, :notice => 'NPID threshold setting was successfully created.') }
           format.xml  { render :xml => @npid_threshold_setting, :status => :created, :location => @npid_threshold_setting }
       else
           format.html { render :action => 'new' }
@@ -81,7 +81,7 @@ class NpidAutoGenerationsController < ApplicationController
     
     respond_to do |format|
       if @npid_threshold_setting.save
-          format.html { redirect_to(npid_auto_generations_path, :notice => 'NPID setting was successfully updated.') }
+          format.html { redirect_to(npid_auto_generations_path, :notice => 'NPID threshold setting was successfully updated.') }
           format.xml  { head :ok }
       else
           format.html { render :action => 'new' }
@@ -95,7 +95,7 @@ class NpidAutoGenerationsController < ApplicationController
     @npid_threshold_setting = NpidAutoGeneration.find(params[:id]).destroy
 
     respond_to do |format|
-      format.html { redirect_to(npid_auto_generations_url, :notice => 'NPID setting was successfully destroyed.') }
+      format.html { redirect_to(npid_auto_generations_url, :notice => 'NPID threshold setting was successfully destroyed.') }
       format.xml  { head :ok }
     end
 
