@@ -1,34 +1,5 @@
 <h2>Set NPID Threshold</h2><br />
 
-<div class="flash">
-<% if @npid_autogenerate.errors.any? %>
-      <div class="message error">
-        <% @npid_autogenerate.errors.full_messages.each do |msg| %>
-          <p><%= msg %></p>
-        <% end %>
-      </div>
-  <% end %>
-</div>
-
-
-<%= form_for @npid_autogenerate do |f| %>
-
-  <div class="field">
-    <%= f.label :threshold, 'Threshold' %><br />
-    <%= f.text_field :threshold %>
-  </div>
-
-  <% if Site.master? %>
-    <div class="field">
-      <%= f.label :site_code, 'Site' %><br />
-      <%= f.collection_select :site_id, Site.all, :id, :name %>
-    </div>
-  <% end %>
-
-  <div class="actions">
-    <%= f.submit 'Set Threshold'%>
-  </div>
-
-<% end %>
+<%= render 'form' %>
 
 <%= link_to 'Back', npid_auto_generations_path %>

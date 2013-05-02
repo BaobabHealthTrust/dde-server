@@ -15,6 +15,7 @@
       <td><%= npid_setting.threshold %></td>
       <td><%= npid_setting.created_at %></td>
       <td>
+        <%= link_to 'Edit', edit_npid_auto_generation_path(npid_setting) %> |
         <%= link_to 'Destroy', npid_setting, :confirm => 'Are you sure?', :method => :delete %>
       </td>
     </tr>
@@ -25,6 +26,8 @@
 <br/>
 <p>
 <div id="new" align="center">
-<%= link_to 'New Setting', new_npid_auto_generation_path %>
+<% if (Site.master? and @unset_sites_count > 0) or (Site.proxy? and @site_not_set) %>
+  <%= link_to 'New Setting', new_npid_auto_generation_path %>
+<% end %>
 </div>
 </p>
