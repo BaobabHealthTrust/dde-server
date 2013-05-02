@@ -1,14 +1,14 @@
 <div class="flash">
-<% if @npid_setting.errors.any? %>
+<% if @npid_threshold_setting.errors.any? %>
       <div class="message error">
-        <% @npid_setting.errors.full_messages.each do |msg| %>
+        <% @npid_threshold_setting.errors.full_messages.each do |msg| %>
           <p><%= msg %></p>
         <% end %>
       </div>
   <% end %>
 </div>
 
-<%= form_for @npid_setting do |f| %>
+<%= form_for @npid_threshold_setting do |f| %>
 
   <div class="field">
     <%= f.label :threshold, 'Threshold' %><br />

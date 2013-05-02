@@ -2,19 +2,24 @@ class NpidAutoGenerationsController < ApplicationController
 
   def create
     if Site.proxy?
-      npid_threshold_setting = NpidAutoGeneration.new
-      npid_threshold_setting.site_id = Site.current_id
-      npid_threshold_setting.threshold = params[:npid_auto_generation][:threshold]
-      npid_threshold_setting.save!
+      @npid_threshold_setting = NpidAutoGeneration.new
+      @npid_threshold_setting.site_id = Site.current_id
+      @npid_threshold_setting.threshold = params[:npid_auto_generation][:threshold]
     else
-      npid_threshold_setting = NpidAutoGeneration.new
-      npid_threshold_setting.site_id = params[:npid_auto_generation][:site_id]
-      npid_threshold_setting.threshold = params[:npid_auto_generation][:threshold]
-      npid_threshold_setting.save!
+      @npid_threshold_setting = NpidAutoGeneration.new
+      @npid_threshold_setting.site_id = params[:npid_auto_generation][:site_id]
+      @npid_threshold_setting.threshold = params[:npid_auto_generation][:threshold]
     end
 
-   redirect_to npid_auto_generations_path
-   
+    respond_to do |format|
+      if @npid_threshold_setting.save
+          format.html { redirect_to(npid_auto_generations_path, :notice => 'NPID setting was successfully created.') }
+          format.xml  { render :xml => @npid_threshold_setting, :status => :created, :location => @npid_threshold_setting }
+      else
+          format.html { render :action => 'new' }
+          format.xml  { render :xml => @npid_threshold_setting.errors, :status => :unprocessable_entity }
+      end
+    end
   end
 
   def index
@@ -28,10 +33,14 @@ class NpidAutoGenerationsController < ApplicationController
       @site_not_set = NpidAutoGeneration.count == 0 ? true : false
     end
 
+    respond_to do |format|
+        format.html
+    end
+
   end
 
   def new
-    @npid_setting = NpidAutoGeneration.new
+    @npid_threshold_setting = NpidAutoGeneration.new
 
     if Site.master?
       @npid_set_sites = NpidAutoGeneration.all.collect(&:site_id)
@@ -41,11 +50,15 @@ class NpidAutoGenerationsController < ApplicationController
         @sites = Site.all
       end
     end
+
+    respond_to do |format|
+        format.html
+    end
     
   end
 
   def edit
-    @npid_setting = NpidAutoGeneration.find(params[:id])
+    @npid_threshold_setting = NpidAutoGeneration.find(params[:id])
  
     if Site.master?
       @npid_set_sites = NpidAutoGeneration.all.collect(&:site_id)
@@ -56,18 +69,36 @@ class NpidAutoGenerationsController < ApplicationController
       end
     end
 
+    respond_to do |format|
+        format.html
+    end
+
   end
 
   def update
-    npid_setting = NpidAutoGeneration.find(params[:id])
-    npid_setting.threshold = params[:npid_auto_generation][:threshold]
-    npid_setting.save!
-    redirect_to npid_auto_generations_path
+    @npid_threshold_setting = NpidAutoGeneration.find(params[:id])
+    @npid_threshold_setting.threshold = params[:npid_auto_generation][:threshold]
+    
+    respond_to do |format|
+      if @npid_threshold_setting.save
+          format.html { redirect_to(npid_auto_generations_path, :notice => 'NPID setting was successfully updated.') }
+          format.xml  { head :ok }
+      else
+          format.html { render :action => 'new' }
+          format.xml  { render :xml => @npid_threshold_setting.errors, :status => :unprocessable_entity }
+      end
+    end
+    
   end
 
   def destroy
-    NpidAutoGeneration.find(params[:id]).destroy
-    redirect_to npid_auto_generations_path
+    @npid_threshold_setting = NpidAutoGeneration.find(params[:id]).destroy
+
+    respond_to do |format|
+      format.html { redirect_to(npid_auto_generations_url, :notice => 'NPID setting was successfully destroyed.') }
+      format.xml  { head :ok }
+    end
+
   end
 
 end
