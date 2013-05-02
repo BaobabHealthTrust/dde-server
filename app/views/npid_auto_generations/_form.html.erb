@@ -13,17 +13,18 @@
   <div class="field">
     <%= f.label :threshold, 'Threshold' %><br />
     <%= f.text_field :threshold %>
-  </div>
+  </div><br />
 
   <% if (Site.master? and not @sites.blank?) %>
     <div class="field">
       <%= f.label :site_code, 'Site' %><br />
-      <%= f.collection_select :site_id, @sites, :id, :name %>
-    </div>
+      <%= f.collection_select :site_id, @sites, :id, :name %> 
+    </div><br />
   <% end %>
 
   <div class="actions">
-    <%= f.submit 'Set Threshold'%>
+    <%= f.submit params[:action]== 'edit' ? 'Update Threshold' : 'Set Threshold'%>
   </div>
 
 <% end %>
+<br/>
