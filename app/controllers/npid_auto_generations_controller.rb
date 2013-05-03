@@ -114,5 +114,34 @@ class NpidAutoGenerationsController < ApplicationController
         NpidAutoGeneration.generate_npids(params)
     end
   end
+
+  def auto_request_npids
+    if Site.proxy?
+      params[:npid_request].merge!('site_code' => Site.current.code)
+      uri = "http://#{dde_master_user}:#{dde_master_password}@#{dde_master_uri}/npid_requests/get_npids/"
+      npid = RestClient.post(uri,params)
+
+      ack = false
+      if npid
+        NationalPatientIdentifier.create!(:value => npid,:assigner_site_id => Site.current.id)
+        uri = "http://#{dde_master_user}:#{dde_master_password}@#{dde_master_uri}/npid_requests/ack/"
+        ack = RestClient.post(uri,"ids[]=#{npid}")
+      end
+      resp = "#{ack}"
+    end  
+  end
+
+  def master_available_npids
+    if Site.master?
+     
+    else
+      params = {}
+      params.merge!('site_code' => Site.current.code)
+      uri = "http://#{dde_master_user}:#{dde_master_password}@#{dde_master_uri}/npid_auto_generations/master_available_npids/"
+      available_npid_count = RestClient.post(uri,params)
+
+    end
+    
+  end
   
 end
