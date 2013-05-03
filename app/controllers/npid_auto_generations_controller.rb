@@ -101,4 +101,20 @@ class NpidAutoGenerationsController < ApplicationController
 
   end
 
+  def generate_npids
+    @set_sites = NpidAutoGeneration.all
+    @set_sites.each do |set_site|
+      if set_site.site.available_npids.count == 0
+        params = {}
+        npid_request = {}
+        npid_request.merge!("last_timestamp" => Time.now)
+        npid_request.merge!("site_code" => set_site.site.code)
+        npid_request.merge!("count" =>  set_site.threshold)
+        params.merge!(:npid_request => npid_request)
+        NpidAutoGeneration.generate_npids(params)
+      end
+    end
+  end
+
+
 end
