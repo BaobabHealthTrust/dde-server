@@ -206,14 +206,23 @@ class NpidAutoGenerationsController < ApplicationController
     end
   end
 
-  def auto_request_npids
+  def request_npids
     available_ids_to_request = master_available_npids
     if available_ids_to_request > 0
       file_name = get_npids_in_batch(available_ids_to_request)
       if acknowledge(file_name).to_s == "true"
-        save_requested_ids(file_name)
+       return save_requested_ids(file_name)
       end
     end
+  end
+
+  def create_npids
+    if Site.master?
+      generate_npids
+    else
+      request_npids
+    end
+    render :text => "done" and return
   end
 
 end
