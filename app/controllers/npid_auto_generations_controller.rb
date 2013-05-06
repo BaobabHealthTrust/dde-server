@@ -196,8 +196,7 @@ class NpidAutoGenerationsController < ApplicationController
   def master_available_npids
     if Site.master?
       site = Site.find_by_code(params[:site_code])
-      render :text => site.available_npids.count.to_json
-      return
+      render :text => site.available_npids.count.to_json and return
     else
       params = {}
       params.merge!('site_code' => Site.current.code)
