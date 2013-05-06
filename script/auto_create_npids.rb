@@ -11,7 +11,6 @@ AppPort = 3002
 class AutoNpidService
 
   def self.auto_create_npids
-   LogErr.info "in class"
    begin
   	results = RestClient.get("http://admin:admin@localhost:#{AppPort}/npid_auto_generations/create_npids")
    rescue => e
