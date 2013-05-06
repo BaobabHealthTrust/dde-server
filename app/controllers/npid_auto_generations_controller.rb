@@ -207,12 +207,12 @@ class NpidAutoGenerationsController < ApplicationController
   end
 
   def auto_request_npids
-    check_npids = master_available_npids
-    a = check_npids
-    if a > 0
-      a = get_npids_in_batch(check_npids)
-      b = acknowledge(a)
-      c = save_requested_ids(a)
+    available_ids_to_request = master_available_npids
+    if available_ids_to_request > 0
+      file_name = get_npids_in_batch(available_ids_to_request)
+      if acknowledge(file_name).to_s == "true"
+        save_requested_ids(file_name)
+      end
     end
   end
 
