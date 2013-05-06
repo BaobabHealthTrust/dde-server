@@ -54,12 +54,12 @@ class NpidAutoGenerationsController < ApplicationController
     respond_to do |format|
         format.html
     end
-    
+
   end
 
   def edit
     @npid_threshold_setting = NpidAutoGeneration.find(params[:id])
- 
+
     if Site.master?
       @npid_set_sites = NpidAutoGeneration.all.collect(&:site_id)
       unless @npid_set_sites.blank?
@@ -78,7 +78,7 @@ class NpidAutoGenerationsController < ApplicationController
   def update
     @npid_threshold_setting = NpidAutoGeneration.find(params[:id])
     @npid_threshold_setting.threshold = params[:npid_auto_generation][:threshold]
-    
+
     respond_to do |format|
       if @npid_threshold_setting.save
           format.html { redirect_to(npid_auto_generations_path, :notice => 'NPID threshold setting was successfully updated.') }
@@ -88,7 +88,7 @@ class NpidAutoGenerationsController < ApplicationController
           format.xml  { render :xml => @npid_threshold_setting.errors, :status => :unprocessable_entity }
       end
     end
-    
+
   end
 
   def destroy
@@ -115,33 +115,106 @@ class NpidAutoGenerationsController < ApplicationController
     end
   end
 
-  def auto_request_npids
+  def get_npids_in_batch(count)
     if Site.proxy?
-      params[:npid_request].merge!('site_code' => Site.current.code)
+      params = {}
+      npid_request = {}
+      npid_request.merge!("last_timestamp" => Time.now)
+      npid_request.merge!("site_code" => Site.current.code)
+      npid_request.merge!("count" => count)
+      params.merge!(:npid_request => npid_request)
       uri = "http://#{dde_master_user}:#{dde_master_password}@#{dde_master_uri}/npid_requests/get_npids/"
-      npid = RestClient.post(uri,params)
+      json_text = RestClient.post(uri,params)
+      ids = JSON.parse(json_text)
 
-      ack = false
-      if npid
-        NationalPatientIdentifier.create!(:value => npid,:assigner_site_id => Site.current.id)
-        uri = "http://#{dde_master_user}:#{dde_master_password}@#{dde_master_uri}/npid_requests/ack/"
-        ack = RestClient.post(uri,"ids[]=#{npid}")
+      unless ids.blank?
+        filename = ids['file_name']
+        `touch #{Rails.root}/npids/#{filename}`
+        l = Logger.new(Rails.root.join("npids",filename))
+
+        (ids['ids']).each do |id|
+          l.info "#{id}"
+        end
+
+        batch_info = {}
+
+        file_info = `cksum #{Rails.root}/npids/#{filename}`.split(' ')
+        batch_info[:check_sum] = file_info[0]
+        batch_info[:file_size] = file_info[1]
+        batch_info[:file_name] = filename
+        complete_transfer = (filename == batch_info[:file_name])
+
+        if complete_transfer
+          IdentifiersToBeAssigned.create!(:file => filename,:assigned => 0, :pulled_at => Time.now())
+        end
+
+        return filename if complete_transfer
+        return complete_transfer unless complete_transfer
       end
-      resp = "#{ack}"
-    end  
+    end
+  end
+
+  def acknowledge(file_name)
+    params = {}
+    params[:file] = file_name
+    if Site.proxy?
+      uri = "http://#{dde_master_user}:#{dde_master_password}@#{dde_master_uri}/npid_requests/acknowledge/"
+      resp = RestClient.post(uri,params)
+      return resp
+    else
+      resp = false
+      ids = []
+      File.open("#{Rails.root}/npids/#{params[:file]}", "r").each_line do |line|
+        ids << line.sub("\n",'')
+      end
+
+      resp = NationalPatientIdentifier.where('value IN(?) AND pulled IS NULL',ids).update_all(:pulled => true) != 0
+      render :text => resp and return
+    end
+  end
+
+  def save_requested_ids(file_name)
+    resp = false
+    file_found = IdentifiersToBeAssigned.where(:file => file_name, :assigned => 0).blank? != true
+
+    if Site.proxy?
+      ActiveRecord::Base.transaction do
+        File.open("#{Rails.root}/npids/#{file_name}", "r").each_line do |line|
+          id = line.sub("\n",'')
+          success = NationalPatientIdentifier.create!(:value => id,:assigner_site_id => Site.current.id) rescue nil
+          if success.blank?
+            logger = Logger.new(Rails.root.join("log","requested_duplicate_ids.log"))
+            logger.info id.to_s
+          end
+        end
+        resp = IdentifiersToBeAssigned.where(:file => file_name,:assigned => 0).update_all(:assigned => 1) != 0
+      end
+    end if file_found
+    return resp
   end
 
   def master_available_npids
     if Site.master?
-     
+      site = Site.find_by_code(params[:site_code])
+      render :text => site.available_npids.count.to_json
+      return
     else
       params = {}
       params.merge!('site_code' => Site.current.code)
       uri = "http://#{dde_master_user}:#{dde_master_password}@#{dde_master_uri}/npid_auto_generations/master_available_npids/"
       available_npid_count = RestClient.post(uri,params)
-
+      return JSON.parse(available_npid_count,:quirks_mode => true)
     end
-    
   end
-  
+
+  def auto_request_npids
+    check_npids = master_available_npids
+    a = check_npids
+    if a > 0
+      a = get_npids_in_batch(check_npids)
+      b = acknowledge(a)
+      c = save_requested_ids(a)
+    end
+  end
+
 end

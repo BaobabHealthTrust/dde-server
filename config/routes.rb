@@ -1,6 +1,6 @@
 DdeServer::Application.routes.draw do
  
-  resources :users,:npid_auto_generations
+  resources :users
 
   resources :sites do
     collection do
@@ -12,6 +12,13 @@ DdeServer::Application.routes.draw do
     collection do
       post :get_npids, :ack, :get_npids_in_batch, :acknowledge, :save_requested_ids
       get :get_npids, :ack, :get_npids_in_batch, :acknowledge, :save_requested_ids
+    end
+  end
+
+  resources :npid_auto_generations do
+    collection do
+      post :master_available_npids
+      get :master_available_npids
     end
   end
 
