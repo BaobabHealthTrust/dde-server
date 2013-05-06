@@ -24,4 +24,3 @@ class AutoNpidService
   LogErr.info("Finished at : #{Time.now().strftime('%Y-%m-%d %H:%M:%S')}")
   
 end
-
