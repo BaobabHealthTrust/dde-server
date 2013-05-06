@@ -17,8 +17,8 @@ DdeServer::Application.routes.draw do
 
   resources :npid_auto_generations do
     collection do
-      post :master_available_npids
-      get :master_available_npids
+      post :master_available_npids, :create_npids
+      get :master_available_npids, :create_npids
     end
   end
 
