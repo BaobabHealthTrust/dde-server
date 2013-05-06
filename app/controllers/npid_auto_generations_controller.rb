@@ -107,10 +107,10 @@ class NpidAutoGenerationsController < ApplicationController
         next if set_site.site.available_npids.count > 0
         params = {}
         npid_request = {}
-        npid_request.merge!("last_timestamp" => Time.now)
-        npid_request.merge!("site_code" => set_site.site.code)
-        npid_request.merge!("count" =>  set_site.threshold)
-        params.merge!(:npid_request => npid_request)
+        npid_request["last_timestamp"] = Time.now
+        npid_request["site_code"] = set_site.site.code
+        npid_request["count"] =  set_site.threshold
+        params[:npid_request] = npid_request
         NpidAutoGeneration.generate_npids(params)
     end
   end
@@ -119,10 +119,10 @@ class NpidAutoGenerationsController < ApplicationController
     if Site.proxy?
       params = {}
       npid_request = {}
-      npid_request.merge!("last_timestamp" => Time.now)
-      npid_request.merge!("site_code" => Site.current.code)
-      npid_request.merge!("count" => count)
-      params.merge!(:npid_request => npid_request)
+      npid_request["last_timestamp"] = Time.now
+      npid_request["site_code"] = Site.current.code
+      npid_request["count"] = count
+      params[:npid_request] = npid_request
       uri = "http://#{dde_master_user}:#{dde_master_password}@#{dde_master_uri}/npid_requests/get_npids/"
       json_text = RestClient.post(uri,params)
       ids = JSON.parse(json_text)
@@ -199,7 +199,7 @@ class NpidAutoGenerationsController < ApplicationController
       render :text => site.available_npids.count.to_json and return
     else
       params = {}
-      params.merge!('site_code' => Site.current.code)
+      params['site_code'] = Site.current.code
       uri = "http://#{dde_master_user}:#{dde_master_password}@#{dde_master_uri}/npid_auto_generations/master_available_npids/"
       available_npid_count = RestClient.post(uri,params)
       return JSON.parse(available_npid_count,:quirks_mode => true)
