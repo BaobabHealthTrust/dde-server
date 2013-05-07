@@ -207,6 +207,11 @@ class NpidAutoGenerationsController < ApplicationController
   end
 
   def request_npids
+    set_site = NpidAutoGeneration.find_by_site_id(Site.current_id)
+    set_threshold = set_site.threshold
+    available_npids = set_site.site.available_npids.count
+    return false if available_npids > set_threshold
+
     available_ids_to_request = master_available_npids
     if available_ids_to_request > 0
       file_name = get_npids_in_batch(available_ids_to_request)
