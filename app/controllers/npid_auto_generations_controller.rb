@@ -221,6 +221,12 @@ class NpidAutoGenerationsController < ApplicationController
       if acknowledge(file_name).to_s == "true"
        return save_requested_ids(file_name)
       end
+    else
+      user = User.find_by_name("support")
+      subject = "DDE Notification" 
+      body = "The are no available National Patient Identifiers to request from DDE Master<br />
+							The site currently has " + available_npids.to_s + " and its threshold is " + set_threshold.to_s 
+			Notifications.notify(user,Site.current_name,subject,body).deliver
     end
   end
 
