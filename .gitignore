@@ -4,6 +4,7 @@ log/*.log
 tmp/
 config/site_config.yml
 config/database.yml
+config/email.yml
 .DS_Store
 *.swp
 *.swo
