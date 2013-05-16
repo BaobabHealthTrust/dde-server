@@ -4,9 +4,9 @@
     <meta content="text/html; charset=UTF-8" http-equiv="Content-Type" />
   </head>
   <body>
-    <h1>Notification from, DDE@<%= @site_name %></h1>
-    <p><%= @body %><br/>
-    </p>
+    <h1>Test Notification from DDE@<%= @site_name %></h1>
+		<p>This site does not have national identifiers to request from DDE Master</p>	
+    <p><%= @email_body.to_s%></p>
     <p>Sent at <%= Time.now %></p>
   </body>
 </html>
