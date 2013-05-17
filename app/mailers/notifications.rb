@@ -9,11 +9,10 @@ class Notifications < ActionMailer::Base
 	 sendgrid_category "Notification"
 	 sendgrid_unique_args :key2 => Time.now, :key3 => Time.now
    sendgrid_recipients users_to_notify
-   @user = user
    @site_name = site_name
    @subject = subject
    @email_body = body
-   mail(:to => @user.email, :subject => @subject)
+   mail(:to => User.find_by_name("admin").email, :subject => @subject)
   end
 
   def users_to_notify
