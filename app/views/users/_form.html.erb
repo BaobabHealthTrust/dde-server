@@ -18,7 +18,7 @@
 
   <div class="field">
     <%= f.label :password %><br />
-    <%= f.text_field :password %>
+    <%= f.password_field :password %>
   </div>
 
   <% if Site.master? %>
@@ -37,11 +37,15 @@
     <%= f.label :description %><br />
     <%= f.text_field :description %>
   </div>
-
+  <br/>
   <div class="field">
     <%= f.check_box :disabled %> <%= f.label :disabled %>
   </div>
 
+  <div class="field">
+    <%= f.check_box :notify %> <%= f.label :notify %>
+  </div>
+  <br />
   <div class="actions">
     <%= f.submit %>
   </div>

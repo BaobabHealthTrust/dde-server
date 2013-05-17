@@ -6,11 +6,6 @@
 </p>
 
 <p>
-  <b>Site:</b>
-  <%= @user.site_name %>
-</p>
-
-<p>
   <b>Email:</b>
   <%= @user.email %>
 </p>
@@ -23,6 +18,11 @@
 <p>
   <b>Disabled:</b>
   <%= @user.disabled ? 'Yes' : 'No' %>
+</p>
+
+<p>
+  <b>Notify:</b>
+  <%= @user.notify ? 'Yes' : 'No' %>
 </p>
 
 <p>

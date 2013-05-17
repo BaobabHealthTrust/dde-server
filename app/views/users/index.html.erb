@@ -4,17 +4,17 @@
   <tr>
     <th>Name</th>
     <th>Email</th>
-    <th>Site</th>
     <th>Disabled?</th>
-    <th>actions</th>
+    <th>Notify?</th>
+    <th></th>
   </tr>
 
   <% @users.each do |user| %>
     <tr>
       <td><%= link_to user.name, user %></td>
       <td><%= user.email %></td>
-      <td><%= user.site_name %></td>
       <td><%= user.disabled ? 'Yes' : 'No' %></td>
+      <td><%= user.notify ? 'Yes' : 'No' %></td>
       <td>
         <%= link_to 'Show', user %> |
         <%= link_to 'Edit', edit_user_path(user) %> |

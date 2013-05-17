@@ -7,7 +7,7 @@ begin
 rescue => e
   LogErr.error(e.inspect)
 end
-AppPort = 3002
+AppPort = 3001
 class AutoNpidService
 
   def self.auto_create_npids
