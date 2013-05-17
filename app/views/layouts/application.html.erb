@@ -25,16 +25,16 @@
         <% if can? :access, :anything %>
           <ul class="wat-cf">
             <li class="<%= params[:controller] == 'people' ? 'active' : '' %>">
-              <%= link_to 'Patient management', people_path %>
+              <%= link_to 'Patient Management', people_path %>
             </li>
             <li class="<%= params[:controller] == 'users' ? 'active' : '' %>">
-              <%= link_to 'User management', users_path %>
+              <%= link_to 'User Management', users_path %>
             </li>
             <li class="<%= params[:controller] == 'national_patient_identifiers' ? 'active' : '' %>">
-              <%= link_to 'NPID management', national_patient_identifiers_path %>
+              <%= link_to 'NPID Management', national_patient_identifiers_path %>
             </li>
             <li class="<%= params[:controller] == 'npid_auto_generations' ? 'active' : '' %>">
-              <%= link_to Site.proxy?? 'NPID auto request' : 'NPID auto generation', npid_auto_generations_path %>
+              <%= link_to Site.proxy?? 'NPID Auto Request' : 'NPID Auto Generation', npid_auto_generations_path %>
             </li>
             <li class="<%= params[:controller] == 'sites' ? 'active' : '' %>">
               <%= link_to 'Site Management', sites_path %>
