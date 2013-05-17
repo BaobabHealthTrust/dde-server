@@ -63,6 +63,25 @@ Put the following into config/site_config.yml for each proxy instance:
         timeout:      10     # data timout in seconds - increase for connections known to be slow, decrease to allow faster feedback on broken lines
         open_timeout: 10     # open_timout, same as above
 
+== Syncronisation
+
+Set your proxy port in script/sync.rb.
+
+Set the following in config/site_config.yml and make sure there is connetivity between master and proxy.
+
+		production:
+      mode:    proxy
+      site_id: site_id          # ID of the site this service is runnig on. Get it from the master.
+      master_uri: http://... # URI of the master instance
+      remote_http_options:   # options for remote HTTP operations:
+        user:         ''     # user name to use for basic auth, as configured in the Master server's user setup
+        password:     ''     # password to use for basic auth, as configured in the Master server's user setup
+        timeout:      10     # data timout in seconds - increase for connections known to be slow, decrease to allow faster feedback on broken lines
+        open_timeout: 10     # open_timout, same as above
+
+Set a cron job on the proxy as follows:
+
+		*[interval] * * * * ruby [dde_proxy_root_path]/script/sync.rb
 
 
 Written by Willem van Kerkhof <willem.van-kerkhof@innoq.com>
