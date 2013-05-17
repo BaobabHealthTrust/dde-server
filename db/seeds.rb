@@ -6,11 +6,11 @@ site = Site.create :name => 'My Local Site', :code => 'MLS'
 if Site.master?
   #NationalPatientIdentifier.generate!({:count => 19, :assigner_site_id => site.id})
 
-  User.create :name => 'admin', :password => 'admin'
+  User.create :name => 'admin', :password => 'admin',:email => 'dde@baobabhealth.org'
   puts "The user for your site uses API key: xxxxxxxxxxxxxxxxxxxxxxxxxxxxxx42 and password: xxxxxxxxxxxxxxxxxxxxxxxxxxxxxx23"
 end
 
-User.create :name => 'admin', :password => 'admin'
+User.create :name => 'admin', :password => 'admin',:email => 'dde@baobabhealth.org'
 puts "Your new user is: admin, password: admin"
 
 
