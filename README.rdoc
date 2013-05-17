@@ -63,7 +63,7 @@ Put the following into config/site_config.yml for each proxy instance:
         timeout:      10     # data timout in seconds - increase for connections known to be slow, decrease to allow faster feedback on broken lines
         open_timeout: 10     # open_timout, same as above
 
-== Syncronisation
+=== Syncronisation
 
 Set your proxy port in script/sync.rb.
 
@@ -80,9 +80,52 @@ Set the following in config/site_config.yml and make sure there is connetivity b
         open_timeout: 10     # open_timout, same as above
 
 
+
 Set a cron job on the proxy as follows:
 
 		*[interval] * * * * ruby [dde_proxy_root_path]/script/sync.rb
+
+
+=== Notifications
+
+Make sure both master and proxy can connect to each other and can access the internet.
+Copy config/email.yml.example to config/email.yml and set config/email.yml with provided email settings.
+
+		development:
+			:address: stmp_server
+			:port: port_number
+			:domain: your_domain
+			:authentication: :your_anthentication_method
+			:user_name: your_username
+			:password: your_password
+
+		production:
+			:address: stmp_server
+			:port: port_number
+			:domain: your_domain
+			:authentication: :your_anthentication_method
+			:user_name: your_username
+			:password: your_password
+
+		integration:
+			:address: stmp_server
+			:port: port_number
+			:domain: your_domain
+			:authentication: :your_anthentication_method
+			:user_name: your_username
+			:password: your_password
+
+
+Set your application port in script/auto_create_npids.rb.
+
+Set a cron job on the proxy as follows:
+
+		*[interval] * * * * ruby [dde_proxy_root_path]/script/auto_create_npids.rb.
+
+
+
+
+
 
 
 Written by Willem van Kerkhof <willem.van-kerkhof@innoq.com>
