@@ -15,6 +15,7 @@
 
 class User < ActiveRecord::Base
   validates :name, :password,:email, :presence => true
+  validates_uniqueness_of :name, :email
   attr_reader :password
   attr_accessor :password_confirmation
   cattr_accessor :current_user

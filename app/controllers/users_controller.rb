@@ -39,8 +39,6 @@ class UsersController < ApplicationController
   # GET /users/1/edit
   def edit
     @user = User.find(params[:id])
-		@user.password = nil
-		@user
   end
 
   # POST /users
@@ -72,7 +70,7 @@ class UsersController < ApplicationController
         format.json { head :ok }
         format.xml  { head :ok }
       else
-        format.html { render :action => '#edit' }
+        format.html { render :action => "edit" }
         format.json { render :json => @user.errors, :status => :unprocessable_entity }
         format.xml  { render :xml  => @user.errors, :status => :unprocessable_entity }
       end
