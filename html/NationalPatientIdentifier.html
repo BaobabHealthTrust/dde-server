@@ -1,0 +1,515 @@
+<!DOCTYPE html>
+
+<html>
+<head>
+<meta content="text/html; charset=UTF-8" http-equiv="Content-Type">
+
+<title>class NationalPatientIdentifier - App Documentation</title>
+
+<link type="text/css" media="screen" href="./rdoc.css" rel="stylesheet">
+
+<script type="text/javascript">
+  var rdoc_rel_prefix = "./";
+</script>
+
+<script type="text/javascript" charset="utf-8" src="./js/jquery.js"></script>
+<script type="text/javascript" charset="utf-8" src="./js/navigation.js"></script>
+<script type="text/javascript" charset="utf-8" src="./js/search_index.js"></script>
+<script type="text/javascript" charset="utf-8" src="./js/search.js"></script>
+<script type="text/javascript" charset="utf-8" src="./js/searcher.js"></script>
+<script type="text/javascript" charset="utf-8" src="./js/darkfish.js"></script>
+
+
+<body id="top" class="class">
+<nav id="metadata">
+  <nav id="home-section" class="section">
+  <h3 class="section-header">
+    <a href="./index.html">Home</a>
+    <a href="./table_of_contents.html#classes">Classes</a>
+    <a href="./table_of_contents.html#methods">Methods</a>
+  </h3>
+</nav>
+
+
+  <nav id="search-section" class="section project-section" class="initially-hidden">
+  <form action="#" method="get" accept-charset="utf-8">
+    <h3 class="section-header">
+      <input type="text" name="search" placeholder="Search" id="search-field"
+             title="Type to search, Up and Down to navigate, Enter to load">
+    </h3>
+  </form>
+
+  <ul id="search-results" class="initially-hidden"></ul>
+</nav>
+
+
+  <div id="file-metadata">
+    <nav id="file-list-section" class="section">
+  <h3 class="section-header">Defined In</h3>
+  <ul>
+    <li>app/models/national_patient_identifier.rb
+  </ul>
+</nav>
+
+    
+  </div>
+
+  <div id="class-metadata">
+    
+    <nav id="parent-class-section" class="section">
+  <h3 class="section-header">Parent</h3>
+  
+  <p class="link">ActiveRecord::Base
+  
+</nav>
+
+    
+    <!-- Method Quickref -->
+<nav id="method-list-section" class="section">
+  <h3 class="section-header">Methods</h3>
+
+  <ul class="link-list">
+    
+    <li><a href="#method-c-find_or_create_from_attributes">::find_or_create_from_attributes</a>
+    
+    <li><a href="#method-c-get_blank_decimal_num_identifier">::get_blank_decimal_num_identifier</a>
+    
+    <li><a href="#method-c-get_national_patient_identifier">::get_national_patient_identifier</a>
+    
+    <li><a href="#method-c-next_id_val">::next_id_val</a>
+    
+    <li><a href="#method-c-next_random_num">::next_random_num</a>
+    
+    <li><a href="#method-i-force_void">#force_void</a>
+    
+    <li><a href="#method-i-remote_attributes">#remote_attributes</a>
+    
+    <li><a href="#method-i-to_json">#to_json</a>
+    
+  </ul>
+</nav>
+
+  </div>
+
+  <div id="project-metadata">
+    <nav id="fileindex-section" class="section project-section">
+  <h3 class="section-header">Pages</h3>
+
+  <ul>
+  
+    <li class="file"><a href="./README_rdoc.html">README</a>
+  
+  </ul>
+</nav>
+
+    <nav id="classindex-section" class="section project-section">
+  <h3 class="section-header">Class and Module Index</h3>
+
+  <ul class="link-list">
+  
+    <li><a href="./DdeServer.html">DdeServer</a>
+  
+    <li><a href="./DdeServer/Application.html">DdeServer::Application</a>
+  
+    <li><a href="./Ability.html">Ability</a>
+  
+    <li><a href="./ApplicationController.html">ApplicationController</a>
+  
+    <li><a href="./ApplicationHelper.html">ApplicationHelper</a>
+  
+    <li><a href="./IdentifiersToBeAssigned.html">IdentifiersToBeAssigned</a>
+  
+    <li><a href="./LegacyNationalIds.html">LegacyNationalIds</a>
+  
+    <li><a href="./LoginHelper.html">LoginHelper</a>
+  
+    <li><a href="./LoginsController.html">LoginsController</a>
+  
+    <li><a href="./MasterSyncs.html">MasterSyncs</a>
+  
+    <li><a href="./NationalIdSite.html">NationalIdSite</a>
+  
+    <li><a href="./NationalPatientIdentifier.html">NationalPatientIdentifier</a>
+  
+    <li><a href="./NationalPatientIdentifiersController.html">NationalPatientIdentifiersController</a>
+  
+    <li><a href="./NationalPatientIdentifiersHelper.html">NationalPatientIdentifiersHelper</a>
+  
+    <li><a href="./Notifications.html">Notifications</a>
+  
+    <li><a href="./NpidAutoGeneration.html">NpidAutoGeneration</a>
+  
+    <li><a href="./NpidAutoGenerationsController.html">NpidAutoGenerationsController</a>
+  
+    <li><a href="./NpidAutoGenerationsHelper.html">NpidAutoGenerationsHelper</a>
+  
+    <li><a href="./NpidRequest.html">NpidRequest</a>
+  
+    <li><a href="./NpidRequestsController.html">NpidRequestsController</a>
+  
+    <li><a href="./Object.html">Object</a>
+  
+    <li><a href="./PendingSyncRequest.html">PendingSyncRequest</a>
+  
+    <li><a href="./PeopleController.html">PeopleController</a>
+  
+    <li><a href="./PeopleHelper.html">PeopleHelper</a>
+  
+    <li><a href="./Person.html">Person</a>
+  
+    <li><a href="./PersonNameCode.html">PersonNameCode</a>
+  
+    <li><a href="./ProxySyncs.html">ProxySyncs</a>
+  
+    <li><a href="./Site.html">Site</a>
+  
+    <li><a href="./SitesController.html">SitesController</a>
+  
+    <li><a href="./SitesHelper.html">SitesHelper</a>
+  
+    <li><a href="./String.html">String</a>
+  
+    <li><a href="./User.html">User</a>
+  
+    <li><a href="./UsersController.html">UsersController</a>
+  
+  </ul>
+</nav>
+
+  </div>
+</nav>
+
+<div id="documentation">
+  <h1 class="class">class NationalPatientIdentifier</h1>
+
+  <div id="description" class="description">
+    
+<p>v3 Id: P + Version + <a href="Site.html">Site</a> Code + Sequential Number
++ Check Digit v4 Id: base30(Random Number + Check Digit)</p>
+
+  </div><!-- description -->
+
+  
+  
+  
+  <section id="5Buntitled-5D" class="documentation-section">
+    
+
+    
+
+    
+
+    
+
+    <!-- Methods -->
+    
+     <section id="public-instance-5Buntitled-5D-method-details" class="method-section section">
+      <h3 class="section-header">Public Instance Methods</h3>
+
+    
+      <div id="method-i-force_void" class="method-detail ">
+        
+        <div class="method-heading">
+          <span class="method-name">force_void</span><span
+            class="method-args">(message = nil)</span>
+          <span class="method-click-advice">click to toggle source</span>
+        </div>
+        
+
+        <div class="method-description">
+          
+          
+          
+
+          
+          <div class="method-source-code" id="force_void-source">
+            <pre><span class="ruby-comment"># File app/models/national_patient_identifier.rb, line 87</span>
+  <span class="ruby-keyword">def</span> <span class="ruby-identifier">force_void</span>(<span class="ruby-identifier">message</span> = <span class="ruby-keyword">nil</span>)
+    <span class="ruby-identifier">sql</span> =<span class="ruby-value">&lt;&lt;EOF
+    UPDATE national_patient_identifiers SET person_id = NULL,voided = 1,
+    void_reason = &quot;#{message}&quot;,voided_date = '#{Time.now().strftime('%Y-%m-%d %H:%M:%S')}'
+    WHERE id = #{self.id}
+EOF</span>
+
+    <span class="ruby-constant">ActiveRecord</span><span class="ruby-operator">::</span><span class="ruby-constant">Base</span>.<span class="ruby-identifier">connection</span>().<span class="ruby-identifier">execute</span>(<span class="ruby-identifier">sql</span>)
+  <span class="ruby-keyword">end</span></pre>
+          </div><!-- force_void-source -->
+          
+        </div>
+
+        
+
+        
+      </div><!-- force_void-method -->
+
+    
+      <div id="method-i-remote_attributes" class="method-detail ">
+        
+        <div class="method-heading">
+          <span class="method-name">remote_attributes</span><span
+            class="method-args">()</span>
+          <span class="method-click-advice">click to toggle source</span>
+        </div>
+        
+
+        <div class="method-description">
+          
+          
+          
+
+          
+          <div class="method-source-code" id="remote_attributes-source">
+            <pre><span class="ruby-comment"># File app/models/national_patient_identifier.rb, line 65</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier">remote_attributes</span>
+  { <span class="ruby-string">'npid'</span> =<span class="ruby-operator">&gt;</span> {
+      <span class="ruby-string">'value'</span>            =<span class="ruby-operator">&gt;</span> <span class="ruby-keyword">self</span>.<span class="ruby-identifier">value</span>,
+      <span class="ruby-string">'assigner_site_id'</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-keyword">self</span>.<span class="ruby-identifier">assigner_site_id</span>,
+      <span class="ruby-string">'assigned_at'</span>      =<span class="ruby-operator">&gt;</span> <span class="ruby-keyword">self</span>.<span class="ruby-identifier">assigned_at</span>
+    }
+  }
+<span class="ruby-keyword">end</span></pre>
+          </div><!-- remote_attributes-source -->
+          
+        </div>
+
+        
+
+        
+      </div><!-- remote_attributes-method -->
+
+    
+      <div id="method-i-to_json" class="method-detail ">
+        
+        <div class="method-heading">
+          <span class="method-name">to_json</span><span
+            class="method-args">()</span>
+          <span class="method-click-advice">click to toggle source</span>
+        </div>
+        
+
+        <div class="method-description">
+          
+          
+          
+
+          
+          <div class="method-source-code" id="to_json-source">
+            <pre><span class="ruby-comment"># File app/models/national_patient_identifier.rb, line 74</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier">to_json</span>
+  <span class="ruby-keyword">self</span>.<span class="ruby-identifier">remote_attributes</span>.<span class="ruby-identifier">to_json</span>
+<span class="ruby-keyword">end</span></pre>
+          </div><!-- to_json-source -->
+          
+        </div>
+
+        
+
+        
+      </div><!-- to_json-method -->
+
+    
+    </section><!-- public-instance-method-details -->
+  
+     <section id="public-class-5Buntitled-5D-method-details" class="method-section section">
+      <h3 class="section-header">Public Class Methods</h3>
+
+    
+      <div id="method-c-find_or_create_from_attributes" class="method-detail ">
+        
+        <div class="method-heading">
+          <span class="method-name">find_or_create_from_attributes</span><span
+            class="method-args">(attrs, options = {:update => false})</span>
+          <span class="method-click-advice">click to toggle source</span>
+        </div>
+        
+
+        <div class="method-description">
+          
+          
+          
+
+          
+          <div class="method-source-code" id="find_or_create_from_attributes-source">
+            <pre><span class="ruby-comment"># File app/models/national_patient_identifier.rb, line 55</span>
+<span class="ruby-keyword">def</span> <span class="ruby-keyword">self</span>.<span class="ruby-identifier">find_or_create_from_attributes</span>(<span class="ruby-identifier">attrs</span>, <span class="ruby-identifier">options</span> = {<span class="ruby-value">:update</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-keyword">false</span>})
+  <span class="ruby-keyword">if</span> <span class="ruby-identifier">attrs</span>[<span class="ruby-string">'value'</span>]
+    <span class="ruby-keyword">self</span>.<span class="ruby-identifier">find_or_initialize_by_value</span>(<span class="ruby-identifier">attrs</span>[<span class="ruby-string">'value'</span>]).<span class="ruby-identifier">tap</span> <span class="ruby-keyword">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">npid</span><span class="ruby-operator">|</span>
+      <span class="ruby-identifier">npid</span>.<span class="ruby-identifier">update_attributes</span>(<span class="ruby-identifier">attrs</span>) <span class="ruby-keyword">if</span> <span class="ruby-identifier">npid</span>.<span class="ruby-identifier">new_record?</span> <span class="ruby-keyword">or</span> <span class="ruby-identifier">options</span>[<span class="ruby-value">:update</span>]
+    <span class="ruby-keyword">end</span>
+  <span class="ruby-keyword">else</span>
+    <span class="ruby-identifier">raise</span> <span class="ruby-constant">ArgumentError</span>, <span class="ruby-string">%q(expected attrs hash to have key named 'value')</span>
+  <span class="ruby-keyword">end</span>
+<span class="ruby-keyword">end</span></pre>
+          </div><!-- find_or_create_from_attributes-source -->
+          
+        </div>
+
+        
+
+        
+      </div><!-- find_or_create_from_attributes-method -->
+
+    
+      <div id="method-c-get_blank_decimal_num_identifier" class="method-detail ">
+        
+        <div class="method-heading">
+          <span class="method-name">get_blank_decimal_num_identifier</span><span
+            class="method-args">(person_id)</span>
+          <span class="method-click-advice">click to toggle source</span>
+        </div>
+        
+
+        <div class="method-description">
+          
+          
+          
+
+          
+          <div class="method-source-code" id="get_blank_decimal_num_identifier-source">
+            <pre><span class="ruby-comment"># File app/models/national_patient_identifier.rb, line 82</span>
+<span class="ruby-keyword">def</span> <span class="ruby-keyword">self</span>.<span class="ruby-identifier">get_blank_decimal_num_identifier</span>(<span class="ruby-identifier">person_id</span>)
+  <span class="ruby-keyword">self</span>.<span class="ruby-identifier">find_by_sql</span>(<span class="ruby-node">&quot;SELECT * FROM national_patient_identifiers 
+  WHERE person_id = #{person_id} AND decimal_num IS NULL&quot;</span>).<span class="ruby-identifier">first</span> <span class="ruby-keyword">rescue</span> <span class="ruby-keyword">nil</span>
+<span class="ruby-keyword">end</span></pre>
+          </div><!-- get_blank_decimal_num_identifier-source -->
+          
+        </div>
+
+        
+
+        
+      </div><!-- get_blank_decimal_num_identifier-method -->
+
+    
+      <div id="method-c-get_national_patient_identifier" class="method-detail ">
+        
+        <div class="method-heading">
+          <span class="method-name">get_national_patient_identifier</span><span
+            class="method-args">()</span>
+          <span class="method-click-advice">click to toggle source</span>
+        </div>
+        
+
+        <div class="method-description">
+          
+          
+          
+
+          
+          <div class="method-source-code" id="get_national_patient_identifier-source">
+            <pre><span class="ruby-comment"># File app/models/national_patient_identifier.rb, line 78</span>
+<span class="ruby-keyword">def</span> <span class="ruby-keyword">self</span>.<span class="ruby-identifier">get_national_patient_identifier</span>
+  <span class="ruby-keyword">self</span>.<span class="ruby-identifier">order</span>(<span class="ruby-string">'id ASC'</span>).<span class="ruby-identifier">where</span>(<span class="ruby-value">:'person_id'</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-keyword">nil</span>).<span class="ruby-identifier">first</span> <span class="ruby-keyword">rescue</span> <span class="ruby-keyword">nil</span>
+<span class="ruby-keyword">end</span></pre>
+          </div><!-- get_national_patient_identifier-source -->
+          
+        </div>
+
+        
+
+        
+      </div><!-- get_national_patient_identifier-method -->
+
+    
+    </section><!-- public-class-method-details -->
+  
+     <section id="protected-class-5Buntitled-5D-method-details" class="method-section section">
+      <h3 class="section-header">Protected Class Methods</h3>
+
+    
+      <div id="method-c-next_id_val" class="method-detail ">
+        
+        <div class="method-heading">
+          <span class="method-name">next_id_val</span><span
+            class="method-args">(version, site_code=nil, last_number = nil)</span>
+          <span class="method-click-advice">click to toggle source</span>
+        </div>
+        
+
+        <div class="method-description">
+          
+          
+          
+
+          
+          <div class="method-source-code" id="next_id_val-source">
+            <pre><span class="ruby-comment"># File app/models/national_patient_identifier.rb, line 99</span>
+<span class="ruby-keyword">def</span> <span class="ruby-keyword">self</span>.<span class="ruby-identifier">next_id_val</span>(<span class="ruby-identifier">version</span>, <span class="ruby-identifier">site_code</span>=<span class="ruby-keyword">nil</span>, <span class="ruby-identifier">last_number</span> = <span class="ruby-keyword">nil</span>)
+  <span class="ruby-keyword">if</span> <span class="ruby-identifier">version</span> <span class="ruby-operator">==</span> <span class="ruby-value">3</span>
+    <span class="ruby-identifier">raise</span> <span class="ruby-constant">ArgumentError</span>, <span class="ruby-string">%q(site_code (2nd arg) is mandatory for version 3 ids)</span> <span class="ruby-keyword">if</span> <span class="ruby-identifier">site_code</span>.<span class="ruby-identifier">blank?</span>
+    <span class="ruby-identifier">npid_version</span>  = <span class="ruby-string">'1'</span>
+    <span class="ruby-identifier">npid_prefix</span>   = <span class="ruby-node">&quot;P#{npid_version}#{site_code.rjust(3, '0')}&quot;</span>
+    <span class="ruby-identifier">last_number</span> <span class="ruby-operator">||=</span> <span class="ruby-keyword">self</span>.<span class="ruby-identifier">first</span>(<span class="ruby-value">:conditions</span> =<span class="ruby-operator">&gt;</span> [<span class="ruby-string">'left(value, 5) = ?'</span>, <span class="ruby-identifier">npid_prefix</span>], <span class="ruby-value">:order</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-string">'value DESC'</span>).<span class="ruby-identifier">try</span>(<span class="ruby-value">:value</span>) <span class="ruby-operator">||</span> <span class="ruby-keyword">nil</span>
+    <span class="ruby-identifier">last_number</span> <span class="ruby-operator">||=</span> <span class="ruby-constant">SITE_CONFIG</span>[<span class="ruby-value">:base_npid</span>] <span class="ruby-operator">||</span> <span class="ruby-string">'0'</span>
+    
+    <span class="ruby-identifier">next_number</span> = (<span class="ruby-identifier">last_number</span>.<span class="ruby-identifier">to_s</span>[<span class="ruby-value">5</span><span class="ruby-operator">..</span><span class="ruby-value">-2</span>].<span class="ruby-identifier">to_i</span> <span class="ruby-operator">+</span> <span class="ruby-value">1</span>).<span class="ruby-identifier">to_s</span>.<span class="ruby-identifier">rjust</span>(<span class="ruby-value">7</span>, <span class="ruby-string">'0'</span>)
+    <span class="ruby-identifier">national_id_without_check_digit</span> = <span class="ruby-node">&quot;#{npid_prefix}#{next_number}&quot;</span>
+    
+    <span class="ruby-node">&quot;#{national_id_without_check_digit}#{NationalPatientId.check_digit(national_id_without_check_digit[1..-1])}&quot;</span>
+  <span class="ruby-keyword">elsif</span> <span class="ruby-identifier">version</span> <span class="ruby-operator">==</span> <span class="ruby-value">4</span>
+    <span class="ruby-constant">NationalPatientId</span>.<span class="ruby-identifier">new</span>(<span class="ruby-constant">NationalPatientIdentifier</span>.<span class="ruby-identifier">next_random_num</span>).<span class="ruby-identifier">value</span>
+  <span class="ruby-keyword">else</span>
+    <span class="ruby-identifier">raise</span> <span class="ruby-constant">ArgumentError</span>, <span class="ruby-node">%Q(Unsupported version &quot;#{version}&quot;. Should be 3 or 4)</span>
+  <span class="ruby-keyword">end</span>
+<span class="ruby-keyword">end</span></pre>
+          </div><!-- next_id_val-source -->
+          
+        </div>
+
+        
+
+        
+      </div><!-- next_id_val-method -->
+
+    
+      <div id="method-c-next_random_num" class="method-detail ">
+        
+        <div class="method-heading">
+          <span class="method-name">next_random_num</span><span
+            class="method-args">()</span>
+          <span class="method-click-advice">click to toggle source</span>
+        </div>
+        
+
+        <div class="method-description">
+          
+          
+          
+
+          
+          <div class="method-source-code" id="next_random_num-source">
+            <pre><span class="ruby-comment"># File app/models/national_patient_identifier.rb, line 118</span>
+<span class="ruby-keyword">def</span> <span class="ruby-keyword">self</span>.<span class="ruby-identifier">next_random_num</span>
+  <span class="ruby-keyword">if</span> <span class="ruby-identifier">@@last_id</span>
+    <span class="ruby-identifier">@@generated_ids</span> <span class="ruby-operator">+=</span> <span class="ruby-constant">NationalPatientIdentifier</span>.<span class="ruby-identifier">select</span>(<span class="ruby-string">'id'</span>).<span class="ruby-identifier">where</span>([<span class="ruby-string">'id &gt; ?'</span>, <span class="ruby-identifier">@@last_id</span>]).<span class="ruby-identifier">map</span>(&amp;<span class="ruby-value">:id</span>)
+  <span class="ruby-keyword">else</span>
+    <span class="ruby-identifier">@@generated_ids</span> = <span class="ruby-constant">NationalPatientIdentifier</span>.<span class="ruby-identifier">select</span>(<span class="ruby-string">'id'</span>).<span class="ruby-identifier">map</span>(&amp;<span class="ruby-value">:id</span>)
+  <span class="ruby-keyword">end</span>
+  <span class="ruby-identifier">@@last_id</span> = <span class="ruby-constant">NationalPatientIdentifier</span>.<span class="ruby-identifier">select</span>(<span class="ruby-string">'id'</span>).<span class="ruby-identifier">last</span>.<span class="ruby-identifier">id</span> <span class="ruby-keyword">rescue</span> <span class="ruby-keyword">nil</span>
+  <span class="ruby-identifier">available_ids</span> = <span class="ruby-identifier">@@possible_ids</span> <span class="ruby-operator">-</span> <span class="ruby-identifier">@@generated_ids</span>
+  
+  <span class="ruby-identifier">available_ids</span>[<span class="ruby-identifier">rand</span>(<span class="ruby-identifier">available_ids</span>.<span class="ruby-identifier">length</span>)]
+<span class="ruby-keyword">end</span></pre>
+          </div><!-- next_random_num-source -->
+          
+        </div>
+
+        
+
+        
+      </div><!-- next_random_num-method -->
+
+    
+    </section><!-- protected-class-method-details -->
+  
+  </section><!-- 5Buntitled-5D -->
+
+</div><!-- documentation -->
+
+
+<footer id="validator-badges">
+  <p><a href="http://validator.w3.org/check/referer">[Validate]</a>
+  <p>Generated by <a href="https://github.com/rdoc/rdoc">RDoc</a> 3.12.2.
+  <p>Generated with the <a href="http://deveiate.org/projects/Darkfish-Rdoc/">Darkfish Rdoc Generator</a> 3.
+</footer>
+

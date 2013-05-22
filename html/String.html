@@ -1,0 +1,297 @@
+<!DOCTYPE html>
+
+<html>
+<head>
+<meta content="text/html; charset=UTF-8" http-equiv="Content-Type">
+
+<title>class String - App Documentation</title>
+
+<link type="text/css" media="screen" href="./rdoc.css" rel="stylesheet">
+
+<script type="text/javascript">
+  var rdoc_rel_prefix = "./";
+</script>
+
+<script type="text/javascript" charset="utf-8" src="./js/jquery.js"></script>
+<script type="text/javascript" charset="utf-8" src="./js/navigation.js"></script>
+<script type="text/javascript" charset="utf-8" src="./js/search_index.js"></script>
+<script type="text/javascript" charset="utf-8" src="./js/search.js"></script>
+<script type="text/javascript" charset="utf-8" src="./js/searcher.js"></script>
+<script type="text/javascript" charset="utf-8" src="./js/darkfish.js"></script>
+
+
+<body id="top" class="class">
+<nav id="metadata">
+  <nav id="home-section" class="section">
+  <h3 class="section-header">
+    <a href="./index.html">Home</a>
+    <a href="./table_of_contents.html#classes">Classes</a>
+    <a href="./table_of_contents.html#methods">Methods</a>
+  </h3>
+</nav>
+
+
+  <nav id="search-section" class="section project-section" class="initially-hidden">
+  <form action="#" method="get" accept-charset="utf-8">
+    <h3 class="section-header">
+      <input type="text" name="search" placeholder="Search" id="search-field"
+             title="Type to search, Up and Down to navigate, Enter to load">
+    </h3>
+  </form>
+
+  <ul id="search-results" class="initially-hidden"></ul>
+</nav>
+
+
+  <div id="file-metadata">
+    <nav id="file-list-section" class="section">
+  <h3 class="section-header">Defined In</h3>
+  <ul>
+    <li>lib/bantu_soundex.rb
+  </ul>
+</nav>
+
+    
+  </div>
+
+  <div id="class-metadata">
+    
+    <nav id="parent-class-section" class="section">
+  <h3 class="section-header">Parent</h3>
+  
+  <p class="link"><a href="Object.html">Object</a>
+  
+</nav>
+
+    
+    <!-- Method Quickref -->
+<nav id="method-list-section" class="section">
+  <h3 class="section-header">Methods</h3>
+
+  <ul class="link-list">
+    
+    <li><a href="#method-i-soundex">#soundex</a>
+    
+  </ul>
+</nav>
+
+  </div>
+
+  <div id="project-metadata">
+    <nav id="fileindex-section" class="section project-section">
+  <h3 class="section-header">Pages</h3>
+
+  <ul>
+  
+    <li class="file"><a href="./README_rdoc.html">README</a>
+  
+  </ul>
+</nav>
+
+    <nav id="classindex-section" class="section project-section">
+  <h3 class="section-header">Class and Module Index</h3>
+
+  <ul class="link-list">
+  
+    <li><a href="./DdeServer.html">DdeServer</a>
+  
+    <li><a href="./DdeServer/Application.html">DdeServer::Application</a>
+  
+    <li><a href="./Ability.html">Ability</a>
+  
+    <li><a href="./ApplicationController.html">ApplicationController</a>
+  
+    <li><a href="./ApplicationHelper.html">ApplicationHelper</a>
+  
+    <li><a href="./IdentifiersToBeAssigned.html">IdentifiersToBeAssigned</a>
+  
+    <li><a href="./LegacyNationalIds.html">LegacyNationalIds</a>
+  
+    <li><a href="./LoginHelper.html">LoginHelper</a>
+  
+    <li><a href="./LoginsController.html">LoginsController</a>
+  
+    <li><a href="./MasterSyncs.html">MasterSyncs</a>
+  
+    <li><a href="./NationalIdSite.html">NationalIdSite</a>
+  
+    <li><a href="./NationalPatientIdentifier.html">NationalPatientIdentifier</a>
+  
+    <li><a href="./NationalPatientIdentifiersController.html">NationalPatientIdentifiersController</a>
+  
+    <li><a href="./NationalPatientIdentifiersHelper.html">NationalPatientIdentifiersHelper</a>
+  
+    <li><a href="./Notifications.html">Notifications</a>
+  
+    <li><a href="./NpidAutoGeneration.html">NpidAutoGeneration</a>
+  
+    <li><a href="./NpidAutoGenerationsController.html">NpidAutoGenerationsController</a>
+  
+    <li><a href="./NpidAutoGenerationsHelper.html">NpidAutoGenerationsHelper</a>
+  
+    <li><a href="./NpidRequest.html">NpidRequest</a>
+  
+    <li><a href="./NpidRequestsController.html">NpidRequestsController</a>
+  
+    <li><a href="./Object.html">Object</a>
+  
+    <li><a href="./PendingSyncRequest.html">PendingSyncRequest</a>
+  
+    <li><a href="./PeopleController.html">PeopleController</a>
+  
+    <li><a href="./PeopleHelper.html">PeopleHelper</a>
+  
+    <li><a href="./Person.html">Person</a>
+  
+    <li><a href="./PersonNameCode.html">PersonNameCode</a>
+  
+    <li><a href="./ProxySyncs.html">ProxySyncs</a>
+  
+    <li><a href="./Site.html">Site</a>
+  
+    <li><a href="./SitesController.html">SitesController</a>
+  
+    <li><a href="./SitesHelper.html">SitesHelper</a>
+  
+    <li><a href="./String.html">String</a>
+  
+    <li><a href="./User.html">User</a>
+  
+    <li><a href="./UsersController.html">UsersController</a>
+  
+  </ul>
+</nav>
+
+  </div>
+</nav>
+
+<div id="documentation">
+  <h1 class="class">class String</h1>
+
+  <div id="description" class="description">
+    
+<p>QUESTION: Should double letters at the beginning of the word be removed?
+For example: LLAMA. Is there a Chichewa example of this? QUESTION: Should
+prefixes be dropped, for example “wa” in Bingu wa Mutharinka, “ma”
+in Maganga This soundex algorithm uses the modified soundex from <a
+href="http://www.creativyst.com/Doc/Articles/SoundEx1/SoundEx1.htm">www.creativyst.com/Doc/Articles/SoundEx1/SoundEx1.htm</a>
+We also modified it further to support common chichewa word beginnings and
+match ‘L’ and ‘R’</p>
+
+  </div><!-- description -->
+
+  
+  
+  
+  <section id="5Buntitled-5D" class="documentation-section">
+    
+
+    
+
+    
+
+    
+
+    <!-- Methods -->
+    
+     <section id="public-instance-5Buntitled-5D-method-details" class="method-section section">
+      <h3 class="section-header">Public Instance Methods</h3>
+
+    
+      <div id="method-i-soundex" class="method-detail ">
+        
+        <div class="method-heading">
+          <span class="method-name">soundex</span><span
+            class="method-args">()</span>
+          <span class="method-click-advice">click to toggle source</span>
+        </div>
+        
+
+        <div class="method-description">
+          
+          
+          
+
+          
+          <div class="method-source-code" id="soundex-source">
+            <pre><span class="ruby-comment"># File lib/bantu_soundex.rb, line 6</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier">soundex</span>
+  <span class="ruby-comment"># Grab a temporary copy of the word</span>
+  <span class="ruby-identifier">word</span> = <span class="ruby-node">&quot;#{self}&quot;</span>    
+  <span class="ruby-comment"># Handle blanks</span>
+  <span class="ruby-keyword">return</span> <span class="ruby-keyword">nil</span> <span class="ruby-keyword">if</span> <span class="ruby-identifier">word</span>.<span class="ruby-identifier">blank?</span>  
+  <span class="ruby-comment"># Capitalize all letters in the word</span>
+  <span class="ruby-identifier">word</span>.<span class="ruby-identifier">upcase!</span>
+  <span class="ruby-comment"># Drop all punctuation marks and numbers and spaces</span>
+  <span class="ruby-identifier">word</span>.<span class="ruby-identifier">gsub!</span>(<span class="ruby-regexp">/[^A-Z]/</span>, <span class="ruby-string">''</span>)    
+  <span class="ruby-keyword">return</span> <span class="ruby-keyword">nil</span> <span class="ruby-keyword">if</span> <span class="ruby-identifier">word</span>.<span class="ruby-identifier">blank?</span>  
+  <span class="ruby-comment"># Words starting with M or N or D followed by another consonant should drop the first letter</span>
+  <span class="ruby-identifier">word</span>.<span class="ruby-identifier">gsub!</span>(<span class="ruby-regexp">/^M([BDFGJKLMNPQRSTVXZ])/</span>, <span class="ruby-string">'\1'</span>) 
+  <span class="ruby-identifier">word</span>.<span class="ruby-identifier">gsub!</span>(<span class="ruby-regexp">/^N([BCDFGJKLMNPQRSTVXZ])/</span>, <span class="ruby-string">'\1'</span>)
+  <span class="ruby-identifier">word</span>.<span class="ruby-identifier">gsub!</span>(<span class="ruby-regexp">/^D([BCDFGJKLMNPQRSTVXZ])/</span>, <span class="ruby-string">'\1'</span>)
+  <span class="ruby-comment"># silent R enhancement (Margret, Esnart)</span>
+  <span class="ruby-identifier">word</span>.<span class="ruby-identifier">gsub!</span>(<span class="ruby-regexp">/(ARG)/</span>, <span class="ruby-string">'AG'</span>)
+  <span class="ruby-identifier">word</span>.<span class="ruby-identifier">gsub!</span>(<span class="ruby-regexp">/(ART)/</span>, <span class="ruby-string">'AT'</span>)
+  <span class="ruby-comment"># THY and CH as common phonemes enhancement</span>
+  <span class="ruby-identifier">word</span>.<span class="ruby-identifier">gsub!</span>(<span class="ruby-regexp">/(THY|CH|TCH)/</span>, <span class="ruby-string">'9'</span>)    
+  <span class="ruby-comment"># Retain the first letter of the word</span>
+  <span class="ruby-identifier">initial</span> = <span class="ruby-identifier">word</span>.<span class="ruby-identifier">slice</span>(<span class="ruby-value">0</span><span class="ruby-operator">..</span><span class="ruby-value">0</span>)
+  <span class="ruby-identifier">tail</span> = <span class="ruby-identifier">word</span>.<span class="ruby-identifier">slice</span>(<span class="ruby-value">1</span><span class="ruby-operator">..</span><span class="ruby-identifier">word</span>.<span class="ruby-identifier">size</span>)
+  <span class="ruby-comment"># Initial vowel enhancement</span>
+  <span class="ruby-identifier">initial</span>.<span class="ruby-identifier">gsub!</span>(<span class="ruby-regexp">/[AEI]/</span>, <span class="ruby-string">'E'</span>)
+  <span class="ruby-comment"># Initial C/K enhancement</span>
+  <span class="ruby-identifier">initial</span>.<span class="ruby-identifier">gsub!</span>(<span class="ruby-regexp">/[CK]/</span>, <span class="ruby-string">'K'</span>)    
+  <span class="ruby-identifier">initial</span>.<span class="ruby-identifier">gsub!</span>(<span class="ruby-regexp">/[JY]/</span>, <span class="ruby-string">'Y'</span>)    
+  <span class="ruby-identifier">initial</span>.<span class="ruby-identifier">gsub!</span>(<span class="ruby-regexp">/[VF]/</span>, <span class="ruby-string">'F'</span>)    
+  <span class="ruby-identifier">initial</span>.<span class="ruby-identifier">gsub!</span>(<span class="ruby-regexp">/[LR]/</span>, <span class="ruby-string">'R'</span>)
+  <span class="ruby-identifier">initial</span>.<span class="ruby-identifier">gsub!</span>(<span class="ruby-regexp">/[MN]/</span>, <span class="ruby-string">'N'</span>)
+  <span class="ruby-identifier">initial</span>.<span class="ruby-identifier">gsub!</span>(<span class="ruby-regexp">/[SZ]/</span>, <span class="ruby-string">'Z'</span>) 
+  <span class="ruby-comment"># W followed by a vowel should be treated as a consonant enhancement</span>
+  <span class="ruby-identifier">tail</span>.<span class="ruby-identifier">gsub!</span>(<span class="ruby-regexp">/W[AEIOUHY]/</span>, <span class="ruby-string">'8'</span>)
+  <span class="ruby-comment"># Change letters from the following sets into the digit given</span>
+  <span class="ruby-identifier">tail</span>.<span class="ruby-identifier">gsub!</span>(<span class="ruby-regexp">/[AEIOUHWY]/</span>, <span class="ruby-string">'0'</span>)
+  <span class="ruby-identifier">tail</span>.<span class="ruby-identifier">gsub!</span>(<span class="ruby-regexp">/[BFPV]/</span>, <span class="ruby-string">'1'</span>)
+  <span class="ruby-identifier">tail</span>.<span class="ruby-identifier">gsub!</span>(<span class="ruby-regexp">/[CGKQX]/</span>, <span class="ruby-string">'2'</span>) 
+  <span class="ruby-identifier">tail</span>.<span class="ruby-identifier">gsub!</span>(<span class="ruby-regexp">/[DT]/</span>, <span class="ruby-string">'3'</span>)
+  <span class="ruby-identifier">tail</span>.<span class="ruby-identifier">gsub!</span>(<span class="ruby-regexp">/[LR]/</span>, <span class="ruby-string">'4'</span>)
+  <span class="ruby-identifier">tail</span>.<span class="ruby-identifier">gsub!</span>(<span class="ruby-regexp">/[MN]/</span>, <span class="ruby-string">'5'</span>)
+  <span class="ruby-identifier">tail</span>.<span class="ruby-identifier">gsub!</span>(<span class="ruby-regexp">/[SZ]/</span>, <span class="ruby-string">'6'</span>) <span class="ruby-comment"># Originally with CGKQX</span>
+  <span class="ruby-identifier">tail</span>.<span class="ruby-identifier">gsub!</span>(<span class="ruby-regexp">/[J]/</span>, <span class="ruby-string">'7'</span>) <span class="ruby-comment"># Originally with CGKQX</span>
+  <span class="ruby-comment"># Remove all pairs of digits which occur beside each other from the string</span>
+  <span class="ruby-identifier">tail</span>.<span class="ruby-identifier">gsub!</span>(<span class="ruby-regexp">/1+/</span>, <span class="ruby-string">'1'</span>)
+  <span class="ruby-identifier">tail</span>.<span class="ruby-identifier">gsub!</span>(<span class="ruby-regexp">/2+/</span>, <span class="ruby-string">'2'</span>)
+  <span class="ruby-identifier">tail</span>.<span class="ruby-identifier">gsub!</span>(<span class="ruby-regexp">/3+/</span>, <span class="ruby-string">'3'</span>)
+  <span class="ruby-identifier">tail</span>.<span class="ruby-identifier">gsub!</span>(<span class="ruby-regexp">/4+/</span>, <span class="ruby-string">'4'</span>)
+  <span class="ruby-identifier">tail</span>.<span class="ruby-identifier">gsub!</span>(<span class="ruby-regexp">/5+/</span>, <span class="ruby-string">'5'</span>)
+  <span class="ruby-identifier">tail</span>.<span class="ruby-identifier">gsub!</span>(<span class="ruby-regexp">/6+/</span>, <span class="ruby-string">'6'</span>)
+  <span class="ruby-identifier">tail</span>.<span class="ruby-identifier">gsub!</span>(<span class="ruby-regexp">/7+/</span>, <span class="ruby-string">'7'</span>)
+  <span class="ruby-identifier">tail</span>.<span class="ruby-identifier">gsub!</span>(<span class="ruby-regexp">/8+/</span>, <span class="ruby-string">'8'</span>)
+  <span class="ruby-identifier">tail</span>.<span class="ruby-identifier">gsub!</span>(<span class="ruby-regexp">/9+/</span>, <span class="ruby-string">'9'</span>)
+  <span class="ruby-comment"># Remove all zeros from the string</span>
+  <span class="ruby-identifier">tail</span>.<span class="ruby-identifier">gsub!</span>(<span class="ruby-regexp">/0/</span>, <span class="ruby-string">''</span>)
+  <span class="ruby-comment"># Return only the first four positions</span>
+  <span class="ruby-identifier">initial</span> <span class="ruby-operator">+</span> <span class="ruby-identifier">tail</span>.<span class="ruby-identifier">slice</span>(<span class="ruby-value">0</span><span class="ruby-operator">..</span><span class="ruby-value">2</span>)
+<span class="ruby-keyword">end</span></pre>
+          </div><!-- soundex-source -->
+          
+        </div>
+
+        
+
+        
+      </div><!-- soundex-method -->
+
+    
+    </section><!-- public-instance-method-details -->
+  
+  </section><!-- 5Buntitled-5D -->
+
+</div><!-- documentation -->
+
+
+<footer id="validator-badges">
+  <p><a href="http://validator.w3.org/check/referer">[Validate]</a>
+  <p>Generated by <a href="https://github.com/rdoc/rdoc">RDoc</a> 3.12.2.
+  <p>Generated with the <a href="http://deveiate.org/projects/Darkfish-Rdoc/">Darkfish Rdoc Generator</a> 3.
+</footer>
+

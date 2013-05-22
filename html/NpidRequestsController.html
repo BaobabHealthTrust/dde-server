@@ -1,0 +1,594 @@
+<!DOCTYPE html>
+
+<html>
+<head>
+<meta content="text/html; charset=UTF-8" http-equiv="Content-Type">
+
+<title>class NpidRequestsController - App Documentation</title>
+
+<link type="text/css" media="screen" href="./rdoc.css" rel="stylesheet">
+
+<script type="text/javascript">
+  var rdoc_rel_prefix = "./";
+</script>
+
+<script type="text/javascript" charset="utf-8" src="./js/jquery.js"></script>
+<script type="text/javascript" charset="utf-8" src="./js/navigation.js"></script>
+<script type="text/javascript" charset="utf-8" src="./js/search_index.js"></script>
+<script type="text/javascript" charset="utf-8" src="./js/search.js"></script>
+<script type="text/javascript" charset="utf-8" src="./js/searcher.js"></script>
+<script type="text/javascript" charset="utf-8" src="./js/darkfish.js"></script>
+
+
+<body id="top" class="class">
+<nav id="metadata">
+  <nav id="home-section" class="section">
+  <h3 class="section-header">
+    <a href="./index.html">Home</a>
+    <a href="./table_of_contents.html#classes">Classes</a>
+    <a href="./table_of_contents.html#methods">Methods</a>
+  </h3>
+</nav>
+
+
+  <nav id="search-section" class="section project-section" class="initially-hidden">
+  <form action="#" method="get" accept-charset="utf-8">
+    <h3 class="section-header">
+      <input type="text" name="search" placeholder="Search" id="search-field"
+             title="Type to search, Up and Down to navigate, Enter to load">
+    </h3>
+  </form>
+
+  <ul id="search-results" class="initially-hidden"></ul>
+</nav>
+
+
+  <div id="file-metadata">
+    <nav id="file-list-section" class="section">
+  <h3 class="section-header">Defined In</h3>
+  <ul>
+    <li>app/controllers/npid_requests_controller.rb
+  </ul>
+</nav>
+
+    
+  </div>
+
+  <div id="class-metadata">
+    
+    <nav id="parent-class-section" class="section">
+  <h3 class="section-header">Parent</h3>
+  
+  <p class="link"><a href="ApplicationController.html">ApplicationController</a>
+  
+</nav>
+
+    
+    <!-- Method Quickref -->
+<nav id="method-list-section" class="section">
+  <h3 class="section-header">Methods</h3>
+
+  <ul class="link-list">
+    
+    <li><a href="#method-i-ack">#ack</a>
+    
+    <li><a href="#method-i-acknowledge">#acknowledge</a>
+    
+    <li><a href="#method-i-create">#create</a>
+    
+    <li><a href="#method-i-get_npids">#get_npids</a>
+    
+    <li><a href="#method-i-get_npids_in_batch">#get_npids_in_batch</a>
+    
+    <li><a href="#method-i-index">#index</a>
+    
+    <li><a href="#method-i-new">#new</a>
+    
+    <li><a href="#method-i-save_requested_ids">#save_requested_ids</a>
+    
+  </ul>
+</nav>
+
+  </div>
+
+  <div id="project-metadata">
+    <nav id="fileindex-section" class="section project-section">
+  <h3 class="section-header">Pages</h3>
+
+  <ul>
+  
+    <li class="file"><a href="./README_rdoc.html">README</a>
+  
+  </ul>
+</nav>
+
+    <nav id="classindex-section" class="section project-section">
+  <h3 class="section-header">Class and Module Index</h3>
+
+  <ul class="link-list">
+  
+    <li><a href="./DdeServer.html">DdeServer</a>
+  
+    <li><a href="./DdeServer/Application.html">DdeServer::Application</a>
+  
+    <li><a href="./Ability.html">Ability</a>
+  
+    <li><a href="./ApplicationController.html">ApplicationController</a>
+  
+    <li><a href="./ApplicationHelper.html">ApplicationHelper</a>
+  
+    <li><a href="./IdentifiersToBeAssigned.html">IdentifiersToBeAssigned</a>
+  
+    <li><a href="./LegacyNationalIds.html">LegacyNationalIds</a>
+  
+    <li><a href="./LoginHelper.html">LoginHelper</a>
+  
+    <li><a href="./LoginsController.html">LoginsController</a>
+  
+    <li><a href="./MasterSyncs.html">MasterSyncs</a>
+  
+    <li><a href="./NationalIdSite.html">NationalIdSite</a>
+  
+    <li><a href="./NationalPatientIdentifier.html">NationalPatientIdentifier</a>
+  
+    <li><a href="./NationalPatientIdentifiersController.html">NationalPatientIdentifiersController</a>
+  
+    <li><a href="./NationalPatientIdentifiersHelper.html">NationalPatientIdentifiersHelper</a>
+  
+    <li><a href="./Notifications.html">Notifications</a>
+  
+    <li><a href="./NpidAutoGeneration.html">NpidAutoGeneration</a>
+  
+    <li><a href="./NpidAutoGenerationsController.html">NpidAutoGenerationsController</a>
+  
+    <li><a href="./NpidAutoGenerationsHelper.html">NpidAutoGenerationsHelper</a>
+  
+    <li><a href="./NpidRequest.html">NpidRequest</a>
+  
+    <li><a href="./NpidRequestsController.html">NpidRequestsController</a>
+  
+    <li><a href="./Object.html">Object</a>
+  
+    <li><a href="./PendingSyncRequest.html">PendingSyncRequest</a>
+  
+    <li><a href="./PeopleController.html">PeopleController</a>
+  
+    <li><a href="./PeopleHelper.html">PeopleHelper</a>
+  
+    <li><a href="./Person.html">Person</a>
+  
+    <li><a href="./PersonNameCode.html">PersonNameCode</a>
+  
+    <li><a href="./ProxySyncs.html">ProxySyncs</a>
+  
+    <li><a href="./Site.html">Site</a>
+  
+    <li><a href="./SitesController.html">SitesController</a>
+  
+    <li><a href="./SitesHelper.html">SitesHelper</a>
+  
+    <li><a href="./String.html">String</a>
+  
+    <li><a href="./User.html">User</a>
+  
+    <li><a href="./UsersController.html">UsersController</a>
+  
+  </ul>
+</nav>
+
+  </div>
+</nav>
+
+<div id="documentation">
+  <h1 class="class">class NpidRequestsController</h1>
+
+  <div id="description" class="description">
+    
+  </div><!-- description -->
+
+  
+  
+  
+  <section id="5Buntitled-5D" class="documentation-section">
+    
+
+    
+
+    
+
+    
+
+    <!-- Methods -->
+    
+     <section id="public-instance-5Buntitled-5D-method-details" class="method-section section">
+      <h3 class="section-header">Public Instance Methods</h3>
+
+    
+      <div id="method-i-ack" class="method-detail ">
+        
+        <div class="method-heading">
+          <span class="method-name">ack</span><span
+            class="method-args">()</span>
+          <span class="method-click-advice">click to toggle source</span>
+        </div>
+        
+
+        <div class="method-description">
+          
+          
+          
+
+          
+          <div class="method-source-code" id="ack-source">
+            <pre><span class="ruby-comment"># File app/controllers/npid_requests_controller.rb, line 82</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier">ack</span>
+  <span class="ruby-identifier">patient_ids</span> = []
+  <span class="ruby-identifier">patient_ids</span> = <span class="ruby-identifier">params</span>[<span class="ruby-value">:ids</span>] <span class="ruby-keyword">if</span> <span class="ruby-identifier">params</span>[<span class="ruby-value">:ids</span>]
+  <span class="ruby-identifier">patient_ids</span>.<span class="ruby-identifier">each</span> <span class="ruby-keyword">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">id</span><span class="ruby-operator">|</span>
+    <span class="ruby-identifier">npid</span> = <span class="ruby-constant">NationalPatientIdentifier</span>.<span class="ruby-identifier">find_by_value</span>(<span class="ruby-identifier">id</span>)
+    <span class="ruby-identifier">npid</span>.<span class="ruby-identifier">pulled</span> = <span class="ruby-keyword">true</span>
+    <span class="ruby-identifier">npid</span>.<span class="ruby-identifier">save</span>
+  <span class="ruby-keyword">end</span>
+  
+  <span class="ruby-identifier">respond_to</span> <span class="ruby-keyword">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">format</span><span class="ruby-operator">|</span>
+    <span class="ruby-identifier">format</span>.<span class="ruby-identifier">txt</span> { <span class="ruby-identifier">render</span> <span class="ruby-value">:text</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-string">'OK'</span> }
+  <span class="ruby-keyword">end</span>
+<span class="ruby-keyword">end</span></pre>
+          </div><!-- ack-source -->
+          
+        </div>
+
+        
+
+        
+      </div><!-- ack-method -->
+
+    
+      <div id="method-i-acknowledge" class="method-detail ">
+        
+        <div class="method-heading">
+          <span class="method-name">acknowledge</span><span
+            class="method-args">()</span>
+          <span class="method-click-advice">click to toggle source</span>
+        </div>
+        
+
+        <div class="method-description">
+          
+          
+          
+
+          
+          <div class="method-source-code" id="acknowledge-source">
+            <pre><span class="ruby-comment"># File app/controllers/npid_requests_controller.rb, line 132</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier">acknowledge</span>
+  <span class="ruby-keyword">if</span> <span class="ruby-constant">Site</span>.<span class="ruby-identifier">proxy?</span>
+    <span class="ruby-identifier">uri</span> = <span class="ruby-node">&quot;http://#{dde_master_user}:#{dde_master_password}@#{dde_master_uri}/npid_requests/acknowledge/&quot;</span>
+    <span class="ruby-identifier">resp</span> = <span class="ruby-constant">RestClient</span>.<span class="ruby-identifier">post</span>(<span class="ruby-identifier">uri</span>,<span class="ruby-identifier">params</span>) 
+  <span class="ruby-keyword">else</span>
+    <span class="ruby-identifier">resp</span> = <span class="ruby-keyword">false</span>
+    <span class="ruby-identifier">ids</span> = []
+    <span class="ruby-constant">File</span>.<span class="ruby-identifier">open</span>(<span class="ruby-node">&quot;#{Rails.root}/npids/#{params[:file]}&quot;</span>, <span class="ruby-string">&quot;r&quot;</span>).<span class="ruby-identifier">each_line</span> <span class="ruby-keyword">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">line</span><span class="ruby-operator">|</span>
+      <span class="ruby-identifier">ids</span> <span class="ruby-operator">&lt;&lt;</span> <span class="ruby-identifier">line</span>.<span class="ruby-identifier">sub</span>(<span class="ruby-string">&quot;\n&quot;</span>,<span class="ruby-string">''</span>)
+    <span class="ruby-keyword">end</span>
+    
+    <span class="ruby-identifier">resp</span> = <span class="ruby-constant">NationalPatientIdentifier</span>.<span class="ruby-identifier">where</span>(<span class="ruby-string">'value IN(?) AND pulled IS NULL'</span>,<span class="ruby-identifier">ids</span>).<span class="ruby-identifier">update_all</span>(<span class="ruby-value">:pulled</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-keyword">true</span>) <span class="ruby-operator">!=</span> <span class="ruby-value">0</span>
+
+  <span class="ruby-keyword">end</span>
+  <span class="ruby-identifier">render</span> <span class="ruby-value">:text</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-identifier">resp</span> <span class="ruby-keyword">and</span> <span class="ruby-keyword">return</span>
+<span class="ruby-keyword">end</span></pre>
+          </div><!-- acknowledge-source -->
+          
+        </div>
+
+        
+
+        
+      </div><!-- acknowledge-method -->
+
+    
+      <div id="method-i-create" class="method-detail ">
+        
+        <div class="method-heading">
+          <span class="method-name">create</span><span
+            class="method-args">()</span>
+          <span class="method-click-advice">click to toggle source</span>
+        </div>
+        
+
+        <div class="method-description">
+          
+          
+          
+
+          
+          <div class="method-source-code" id="create-source">
+            <pre><span class="ruby-comment"># File app/controllers/npid_requests_controller.rb, line 11</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier">create</span>
+  <span class="ruby-keyword">if</span> <span class="ruby-constant">Site</span>.<span class="ruby-identifier">proxy?</span>
+    <span class="ruby-identifier">params</span>[<span class="ruby-value">:npid_request</span>].<span class="ruby-identifier">merge!</span>(<span class="ruby-string">'site_code'</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-constant">Site</span>.<span class="ruby-identifier">current_code</span>)
+  <span class="ruby-keyword">end</span>
+
+  <span class="ruby-ivar">@npid_request</span> = <span class="ruby-constant">NpidRequest</span>.<span class="ruby-identifier">new</span> <span class="ruby-identifier">params</span>[<span class="ruby-value">:npid_request</span>]
+
+  <span class="ruby-identifier">respond_to</span> <span class="ruby-keyword">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">format</span><span class="ruby-operator">|</span>
+    <span class="ruby-keyword">if</span> <span class="ruby-ivar">@npid_request</span>.<span class="ruby-identifier">save</span>
+      <span class="ruby-ivar">@npids</span> = <span class="ruby-ivar">@npid_request</span>.<span class="ruby-identifier">npids</span>
+      <span class="ruby-identifier">format</span>.<span class="ruby-identifier">html</span> <span class="ruby-keyword">do</span>
+        <span class="ruby-keyword">if</span> <span class="ruby-constant">Site</span>.<span class="ruby-identifier">proxy?</span>
+          <span class="ruby-identifier">flash</span>[<span class="ruby-value">:notice</span>] = <span class="ruby-node">&quot;You have now #{@npids.size} new NPIDS assigned to your site.&quot;</span>
+          <span class="ruby-identifier">redirect_to</span> <span class="ruby-identifier">national_patient_identifiers_path</span>
+        <span class="ruby-keyword">else</span>
+          <span class="ruby-identifier">flash</span>[<span class="ruby-value">:notice</span>] = <span class="ruby-node">&quot;#{@npids.size} new NPIDS have been assigned to Site #{@npid_request.site_code}.&quot;</span>
+          <span class="ruby-identifier">redirect_to</span> <span class="ruby-identifier">site_specific_national_patient_identifiers_path</span>(<span class="ruby-ivar">@npid_request</span>.<span class="ruby-identifier">site_code</span>)
+        <span class="ruby-keyword">end</span>
+      <span class="ruby-keyword">end</span>
+      <span class="ruby-identifier">format</span>.<span class="ruby-identifier">json</span> { <span class="ruby-identifier">render</span> <span class="ruby-value">:json</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-ivar">@npids</span>.<span class="ruby-identifier">to_json</span>, <span class="ruby-value">:status</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-value">:created</span> }
+      <span class="ruby-identifier">format</span>.<span class="ruby-identifier">xml</span>  { <span class="ruby-identifier">render</span> <span class="ruby-value">:xml</span>  =<span class="ruby-operator">&gt;</span> <span class="ruby-ivar">@npids</span>, <span class="ruby-value">:status</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-value">:created</span> }
+      <span class="ruby-identifier">format</span>.<span class="ruby-identifier">txt</span>  { <span class="ruby-identifier">render</span> <span class="ruby-value">:text</span>  =<span class="ruby-operator">&gt;</span> <span class="ruby-string">'Assigned ID'</span> }
+    <span class="ruby-keyword">else</span>
+      <span class="ruby-identifier">format</span>.<span class="ruby-identifier">html</span> { <span class="ruby-identifier">render</span> <span class="ruby-value">:action</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-string">'new'</span> }
+      <span class="ruby-identifier">format</span>.<span class="ruby-identifier">json</span> { <span class="ruby-identifier">render</span> <span class="ruby-value">:json</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-ivar">@npid_request</span>.<span class="ruby-identifier">errors</span>, <span class="ruby-value">:status</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-value">:internal_server_error</span> }
+      <span class="ruby-identifier">format</span>.<span class="ruby-identifier">xml</span>  { <span class="ruby-identifier">render</span> <span class="ruby-value">:xml</span>  =<span class="ruby-operator">&gt;</span> <span class="ruby-ivar">@npid_request</span>.<span class="ruby-identifier">errors</span>, <span class="ruby-value">:status</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-value">:internal_server_error</span> }
+      <span class="ruby-identifier">format</span>.<span class="ruby-identifier">txt</span>  { <span class="ruby-identifier">render</span> <span class="ruby-value">:text</span>  =<span class="ruby-operator">&gt;</span> <span class="ruby-string">'Assigned ID'</span> }
+    <span class="ruby-keyword">end</span>
+  <span class="ruby-keyword">end</span>
+<span class="ruby-keyword">end</span></pre>
+          </div><!-- create-source -->
+          
+        </div>
+
+        
+
+        
+      </div><!-- create-method -->
+
+    
+      <div id="method-i-get_npids" class="method-detail ">
+        
+        <div class="method-heading">
+          <span class="method-name">get_npids</span><span
+            class="method-args">()</span>
+          <span class="method-click-advice">click to toggle source</span>
+        </div>
+        
+
+        <div class="method-description">
+          
+          
+          
+
+          
+          <div class="method-source-code" id="get_npids-source">
+            <pre><span class="ruby-comment"># File app/controllers/npid_requests_controller.rb, line 42</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier">get_npids</span>
+  <span class="ruby-keyword">if</span> <span class="ruby-constant">Site</span>.<span class="ruby-identifier">proxy?</span>
+    <span class="ruby-identifier">params</span>[<span class="ruby-value">:npid_request</span>].<span class="ruby-identifier">merge!</span>(<span class="ruby-string">'site_code'</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-constant">Site</span>.<span class="ruby-identifier">current</span>.<span class="ruby-identifier">code</span>)
+    <span class="ruby-identifier">uri</span> = <span class="ruby-node">&quot;http://#{dde_master_user}:#{dde_master_password}@#{dde_master_uri}/npid_requests/get_npids/&quot;</span>
+    <span class="ruby-identifier">npid</span> = <span class="ruby-constant">RestClient</span>.<span class="ruby-identifier">post</span>(<span class="ruby-identifier">uri</span>,<span class="ruby-identifier">params</span>)
+
+    <span class="ruby-identifier">ack</span> = <span class="ruby-keyword">false</span>
+    <span class="ruby-keyword">if</span> <span class="ruby-identifier">npid</span>
+      <span class="ruby-constant">NationalPatientIdentifier</span>.<span class="ruby-identifier">create!</span>(<span class="ruby-value">:value</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-identifier">npid</span>,<span class="ruby-value">:assigner_site_id</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-constant">Site</span>.<span class="ruby-identifier">current</span>.<span class="ruby-identifier">id</span>)
+      <span class="ruby-identifier">uri</span> = <span class="ruby-node">&quot;http://#{dde_master_user}:#{dde_master_password}@#{dde_master_uri}/npid_requests/ack/&quot;</span>
+      <span class="ruby-identifier">ack</span> = <span class="ruby-constant">RestClient</span>.<span class="ruby-identifier">post</span>(<span class="ruby-identifier">uri</span>,<span class="ruby-node">&quot;ids[]=#{npid}&quot;</span>)
+    <span class="ruby-keyword">end</span>
+    <span class="ruby-identifier">resp</span> = <span class="ruby-node">&quot;#{ack}&quot;</span> 
+  <span class="ruby-keyword">else</span>
+    <span class="ruby-ivar">@npid_request</span> = <span class="ruby-constant">NpidRequest</span>.<span class="ruby-identifier">new</span> <span class="ruby-identifier">params</span>[<span class="ruby-value">:npid_request</span>]
+    <span class="ruby-identifier">saved</span> = <span class="ruby-ivar">@npid_request</span>.<span class="ruby-identifier">save</span>
+    <span class="ruby-identifier">ids</span> = <span class="ruby-ivar">@npid_request</span>.<span class="ruby-identifier">npids</span>.<span class="ruby-identifier">map</span>(&amp;<span class="ruby-value">:value</span>) 
+    
+    <span class="ruby-identifier">filename</span> = (<span class="ruby-identifier">params</span>[<span class="ruby-value">:npid_request</span>][<span class="ruby-string">'site_code'</span>]) <span class="ruby-operator">+</span> <span class="ruby-constant">Time</span>.<span class="ruby-identifier">now</span>().<span class="ruby-identifier">strftime</span>(<span class="ruby-string">'%Y%m%d%H%M%S'</span>) <span class="ruby-operator">+</span> <span class="ruby-string">'.txt'</span>
+    <span class="ruby-node">%xtouch #{Rails.root}/npids/#{filename}`</span>
+    <span class="ruby-identifier">l</span> = <span class="ruby-constant">Logger</span>.<span class="ruby-identifier">new</span>(<span class="ruby-constant">Rails</span>.<span class="ruby-identifier">root</span>.<span class="ruby-identifier">join</span>(<span class="ruby-string">&quot;npids&quot;</span>,<span class="ruby-identifier">filename</span>)) 
+
+    (<span class="ruby-identifier">ids</span>).<span class="ruby-identifier">each</span> <span class="ruby-keyword">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">id</span><span class="ruby-operator">|</span>
+      <span class="ruby-identifier">l</span>.<span class="ruby-identifier">info</span> <span class="ruby-node">&quot;#{id}&quot;</span>
+    <span class="ruby-keyword">end</span>
+
+    <span class="ruby-identifier">batch_info</span> = {}
+
+    <span class="ruby-identifier">file_info</span> = <span class="ruby-node">%xcksum #{Rails.root}/npids/#{filename}`</span>.<span class="ruby-identifier">split</span>(<span class="ruby-string">' '</span>)
+    <span class="ruby-identifier">batch_info</span>[<span class="ruby-value">:check_sum</span>] = <span class="ruby-identifier">file_info</span>[<span class="ruby-value">0</span>]
+    <span class="ruby-identifier">batch_info</span>[<span class="ruby-value">:file_size</span>] = <span class="ruby-identifier">file_info</span>[<span class="ruby-value">1</span>]
+    <span class="ruby-identifier">batch_info</span>[<span class="ruby-value">:file_name</span>] = <span class="ruby-identifier">filename</span>
+    <span class="ruby-identifier">batch_info</span>[<span class="ruby-value">:ids</span>] = <span class="ruby-identifier">ids</span>
+    <span class="ruby-identifier">resp</span> = <span class="ruby-identifier">batch_info</span>.<span class="ruby-identifier">to_json</span>
+  <span class="ruby-keyword">end</span>
+  
+  <span class="ruby-identifier">render</span> <span class="ruby-value">:text</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-identifier">resp</span>
+  <span class="ruby-keyword">return</span>
+<span class="ruby-keyword">end</span></pre>
+          </div><!-- get_npids-source -->
+          
+        </div>
+
+        
+
+        
+      </div><!-- get_npids-method -->
+
+    
+      <div id="method-i-get_npids_in_batch" class="method-detail ">
+        
+        <div class="method-heading">
+          <span class="method-name">get_npids_in_batch</span><span
+            class="method-args">()</span>
+          <span class="method-click-advice">click to toggle source</span>
+        </div>
+        
+
+        <div class="method-description">
+          
+          
+          
+
+          
+          <div class="method-source-code" id="get_npids_in_batch-source">
+            <pre><span class="ruby-comment"># File app/controllers/npid_requests_controller.rb, line 96</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier">get_npids_in_batch</span>
+  <span class="ruby-keyword">if</span> <span class="ruby-constant">Site</span>.<span class="ruby-identifier">proxy?</span>
+    <span class="ruby-identifier">params</span>[<span class="ruby-value">:npid_request</span>].<span class="ruby-identifier">merge!</span>(<span class="ruby-string">'site_code'</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-constant">Site</span>.<span class="ruby-identifier">current</span>.<span class="ruby-identifier">code</span>)
+    <span class="ruby-identifier">uri</span> = <span class="ruby-node">&quot;http://#{dde_master_user}:#{dde_master_password}@#{dde_master_uri}/npid_requests/get_npids/&quot;</span>
+    <span class="ruby-identifier">json_text</span> = <span class="ruby-constant">RestClient</span>.<span class="ruby-identifier">post</span>(<span class="ruby-identifier">uri</span>,<span class="ruby-identifier">params</span>)
+    <span class="ruby-identifier">ids</span> = <span class="ruby-constant">JSON</span>.<span class="ruby-identifier">parse</span>(<span class="ruby-identifier">json_text</span>)
+
+    <span class="ruby-keyword">unless</span> <span class="ruby-identifier">ids</span>.<span class="ruby-identifier">blank?</span>
+      <span class="ruby-identifier">filename</span> = <span class="ruby-identifier">ids</span>[<span class="ruby-string">'file_name'</span>]
+      <span class="ruby-node">%xtouch #{Rails.root}/npids/#{filename}`</span>
+      <span class="ruby-identifier">l</span> = <span class="ruby-constant">Logger</span>.<span class="ruby-identifier">new</span>(<span class="ruby-constant">Rails</span>.<span class="ruby-identifier">root</span>.<span class="ruby-identifier">join</span>(<span class="ruby-string">&quot;npids&quot;</span>,<span class="ruby-identifier">filename</span>)) 
+
+      (<span class="ruby-identifier">ids</span>[<span class="ruby-string">'ids'</span>]).<span class="ruby-identifier">each</span> <span class="ruby-keyword">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">id</span><span class="ruby-operator">|</span>
+        <span class="ruby-identifier">l</span>.<span class="ruby-identifier">info</span> <span class="ruby-node">&quot;#{id}&quot;</span>
+      <span class="ruby-keyword">end</span>
+
+      <span class="ruby-identifier">batch_info</span> = {}
+
+      <span class="ruby-identifier">file_info</span> = <span class="ruby-node">%xcksum #{Rails.root}/npids/#{filename}`</span>.<span class="ruby-identifier">split</span>(<span class="ruby-string">' '</span>)
+      <span class="ruby-identifier">batch_info</span>[<span class="ruby-value">:check_sum</span>] = <span class="ruby-identifier">file_info</span>[<span class="ruby-value">0</span>]
+      <span class="ruby-identifier">batch_info</span>[<span class="ruby-value">:file_size</span>] = <span class="ruby-identifier">file_info</span>[<span class="ruby-value">1</span>]
+      <span class="ruby-identifier">batch_info</span>[<span class="ruby-value">:file_name</span>] = <span class="ruby-identifier">filename</span>
+      <span class="ruby-identifier">complete_tranfer</span> = (<span class="ruby-identifier">filename</span> <span class="ruby-operator">==</span> <span class="ruby-identifier">batch_info</span>[<span class="ruby-value">:file_name</span>])
+
+      <span class="ruby-keyword">if</span> <span class="ruby-identifier">complete_tranfer</span>
+        <span class="ruby-constant">IdentifiersToBeAssigned</span>.<span class="ruby-identifier">create!</span>(<span class="ruby-value">:file</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-identifier">filename</span>,<span class="ruby-value">:assigned</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-value">0</span>, <span class="ruby-value">:pulled_at</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-constant">Time</span>.<span class="ruby-identifier">now</span>())
+      <span class="ruby-keyword">end</span>
+
+      <span class="ruby-identifier">render</span> <span class="ruby-value">:text</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-identifier">filename</span> <span class="ruby-keyword">if</span> <span class="ruby-identifier">complete_tranfer</span>
+      <span class="ruby-identifier">render</span> <span class="ruby-value">:text</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-identifier">complete_tranfer</span> <span class="ruby-keyword">unless</span> <span class="ruby-identifier">complete_tranfer</span>
+      <span class="ruby-keyword">return</span>
+    <span class="ruby-keyword">end</span>
+  <span class="ruby-keyword">end</span>
+  
+<span class="ruby-keyword">end</span></pre>
+          </div><!-- get_npids_in_batch-source -->
+          
+        </div>
+
+        
+
+        
+      </div><!-- get_npids_in_batch-method -->
+
+    
+      <div id="method-i-index" class="method-detail ">
+        
+        <div class="method-heading">
+          <span class="method-name">index</span><span
+            class="method-args">()</span>
+          <span class="method-click-advice">click to toggle source</span>
+        </div>
+        
+
+        <div class="method-description">
+          
+          
+          
+
+          
+          <div class="method-source-code" id="index-source">
+            <pre><span class="ruby-comment"># File app/controllers/npid_requests_controller.rb, line 3</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier">index</span>
+  <span class="ruby-identifier">redirect_to</span> <span class="ruby-value">:action</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-value">:new</span>
+<span class="ruby-keyword">end</span></pre>
+          </div><!-- index-source -->
+          
+        </div>
+
+        
+
+        
+      </div><!-- index-method -->
+
+    
+      <div id="method-i-new" class="method-detail ">
+        
+        <div class="method-heading">
+          <span class="method-name">new</span><span
+            class="method-args">()</span>
+          <span class="method-click-advice">click to toggle source</span>
+        </div>
+        
+
+        <div class="method-description">
+          
+          
+          
+
+          
+          <div class="method-source-code" id="new-source">
+            <pre><span class="ruby-comment"># File app/controllers/npid_requests_controller.rb, line 7</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier">new</span>
+  <span class="ruby-ivar">@npid_request</span> = <span class="ruby-constant">NpidRequest</span>.<span class="ruby-identifier">new</span> <span class="ruby-value">:count</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-value">10</span>
+<span class="ruby-keyword">end</span></pre>
+          </div><!-- new-source -->
+          
+        </div>
+
+        
+
+        
+      </div><!-- new-method -->
+
+    
+      <div id="method-i-save_requested_ids" class="method-detail ">
+        
+        <div class="method-heading">
+          <span class="method-name">save_requested_ids</span><span
+            class="method-args">()</span>
+          <span class="method-click-advice">click to toggle source</span>
+        </div>
+        
+
+        <div class="method-description">
+          
+          
+          
+
+          
+          <div class="method-source-code" id="save_requested_ids-source">
+            <pre><span class="ruby-comment"># File app/controllers/npid_requests_controller.rb, line 149</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier">save_requested_ids</span>
+  <span class="ruby-identifier">resp</span> = <span class="ruby-keyword">false</span>
+  <span class="ruby-identifier">file_found</span> = <span class="ruby-constant">IdentifiersToBeAssigned</span>.<span class="ruby-identifier">where</span>(<span class="ruby-value">:file</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-identifier">params</span>[<span class="ruby-value">:file</span>], <span class="ruby-value">:assigned</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-value">0</span>).<span class="ruby-identifier">blank?</span> <span class="ruby-operator">!=</span> <span class="ruby-keyword">true</span>
+
+  <span class="ruby-keyword">if</span> <span class="ruby-constant">Site</span>.<span class="ruby-identifier">proxy?</span> 
+    <span class="ruby-constant">ActiveRecord</span><span class="ruby-operator">::</span><span class="ruby-constant">Base</span>.<span class="ruby-identifier">transaction</span> <span class="ruby-keyword">do</span>
+      <span class="ruby-constant">File</span>.<span class="ruby-identifier">open</span>(<span class="ruby-node">&quot;#{Rails.root}/npids/#{params[:file]}&quot;</span>, <span class="ruby-string">&quot;r&quot;</span>).<span class="ruby-identifier">each_line</span> <span class="ruby-keyword">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">line</span><span class="ruby-operator">|</span>
+        <span class="ruby-identifier">id</span> = <span class="ruby-identifier">line</span>.<span class="ruby-identifier">sub</span>(<span class="ruby-string">&quot;\n&quot;</span>,<span class="ruby-string">''</span>)
+        <span class="ruby-identifier">success</span> = <span class="ruby-constant">NationalPatientIdentifier</span>.<span class="ruby-identifier">create!</span>(<span class="ruby-value">:value</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-identifier">id</span>,<span class="ruby-value">:assigner_site_id</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-constant">Site</span>.<span class="ruby-identifier">current</span>.<span class="ruby-identifier">id</span>) <span class="ruby-keyword">rescue</span> <span class="ruby-keyword">nil</span>
+        <span class="ruby-keyword">if</span> <span class="ruby-identifier">success</span>.<span class="ruby-identifier">blank?</span>
+          <span class="ruby-identifier">logger</span> = <span class="ruby-constant">Logger</span>.<span class="ruby-identifier">new</span>(<span class="ruby-constant">Rails</span>.<span class="ruby-identifier">root</span>.<span class="ruby-identifier">join</span>(<span class="ruby-string">&quot;log&quot;</span>,<span class="ruby-string">&quot;requested_duplicate_ids.log&quot;</span>))
+          <span class="ruby-identifier">logger</span>.<span class="ruby-identifier">info</span> <span class="ruby-identifier">id</span>.<span class="ruby-identifier">to_s</span>
+        <span class="ruby-keyword">end</span>
+      <span class="ruby-keyword">end</span>
+      <span class="ruby-identifier">resp</span> = <span class="ruby-constant">IdentifiersToBeAssigned</span>.<span class="ruby-identifier">where</span>(<span class="ruby-value">:file</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-identifier">params</span>[<span class="ruby-value">:file</span>],<span class="ruby-value">:assigned</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-value">0</span>).<span class="ruby-identifier">update_all</span>(<span class="ruby-value">:assigned</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-value">1</span>) <span class="ruby-operator">!=</span> <span class="ruby-value">0</span>
+    <span class="ruby-keyword">end</span>
+  <span class="ruby-keyword">end</span> <span class="ruby-keyword">if</span> <span class="ruby-identifier">file_found</span>
+
+  <span class="ruby-identifier">render</span> <span class="ruby-value">:text</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-identifier">resp</span> <span class="ruby-keyword">and</span> <span class="ruby-keyword">return</span>
+<span class="ruby-keyword">end</span></pre>
+          </div><!-- save_requested_ids-source -->
+          
+        </div>
+
+        
+
+        
+      </div><!-- save_requested_ids-method -->
+
+    
+    </section><!-- public-instance-method-details -->
+  
+  </section><!-- 5Buntitled-5D -->
+
+</div><!-- documentation -->
+
+
+<footer id="validator-badges">
+  <p><a href="http://validator.w3.org/check/referer">[Validate]</a>
+  <p>Generated by <a href="https://github.com/rdoc/rdoc">RDoc</a> 3.12.2.
+  <p>Generated with the <a href="http://deveiate.org/projects/Darkfish-Rdoc/">Darkfish Rdoc Generator</a> 3.
+</footer>
+

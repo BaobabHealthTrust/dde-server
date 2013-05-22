@@ -1,0 +1,271 @@
+<!DOCTYPE html>
+
+<html>
+<head>
+<meta content="text/html; charset=UTF-8" http-equiv="Content-Type">
+
+<title>App Documentation</title>
+
+<link type="text/css" media="screen" href="./rdoc.css" rel="stylesheet">
+
+<script type="text/javascript">
+  var rdoc_rel_prefix = "./";
+</script>
+
+<script type="text/javascript" charset="utf-8" src="./js/jquery.js"></script>
+<script type="text/javascript" charset="utf-8" src="./js/navigation.js"></script>
+<script type="text/javascript" charset="utf-8" src="./js/search_index.js"></script>
+<script type="text/javascript" charset="utf-8" src="./js/search.js"></script>
+<script type="text/javascript" charset="utf-8" src="./js/searcher.js"></script>
+<script type="text/javascript" charset="utf-8" src="./js/darkfish.js"></script>
+
+
+<body>
+<nav id="metadata">
+  <nav id="home-section" class="section">
+  <h3 class="section-header">
+    <a href="./index.html">Home</a>
+    <a href="./table_of_contents.html#classes">Classes</a>
+    <a href="./table_of_contents.html#methods">Methods</a>
+  </h3>
+</nav>
+
+
+  <nav id="search-section" class="section project-section" class="initially-hidden">
+  <form action="#" method="get" accept-charset="utf-8">
+    <h3 class="section-header">
+      <input type="text" name="search" placeholder="Search" id="search-field"
+             title="Type to search, Up and Down to navigate, Enter to load">
+    </h3>
+  </form>
+
+  <ul id="search-results" class="initially-hidden"></ul>
+</nav>
+
+
+  <div id="project-metadata">
+    <nav id="fileindex-section" class="section project-section">
+  <h3 class="section-header">Pages</h3>
+
+  <ul>
+  
+    <li class="file"><a href="./README_rdoc.html">README</a>
+  
+  </ul>
+</nav>
+
+    <nav id="classindex-section" class="section project-section">
+  <h3 class="section-header">Class and Module Index</h3>
+
+  <ul class="link-list">
+  
+    <li><a href="./DdeServer.html">DdeServer</a>
+  
+    <li><a href="./DdeServer/Application.html">DdeServer::Application</a>
+  
+    <li><a href="./Ability.html">Ability</a>
+  
+    <li><a href="./ApplicationController.html">ApplicationController</a>
+  
+    <li><a href="./ApplicationHelper.html">ApplicationHelper</a>
+  
+    <li><a href="./IdentifiersToBeAssigned.html">IdentifiersToBeAssigned</a>
+  
+    <li><a href="./LegacyNationalIds.html">LegacyNationalIds</a>
+  
+    <li><a href="./LoginHelper.html">LoginHelper</a>
+  
+    <li><a href="./LoginsController.html">LoginsController</a>
+  
+    <li><a href="./MasterSyncs.html">MasterSyncs</a>
+  
+    <li><a href="./NationalIdSite.html">NationalIdSite</a>
+  
+    <li><a href="./NationalPatientIdentifier.html">NationalPatientIdentifier</a>
+  
+    <li><a href="./NationalPatientIdentifiersController.html">NationalPatientIdentifiersController</a>
+  
+    <li><a href="./NationalPatientIdentifiersHelper.html">NationalPatientIdentifiersHelper</a>
+  
+    <li><a href="./Notifications.html">Notifications</a>
+  
+    <li><a href="./NpidAutoGeneration.html">NpidAutoGeneration</a>
+  
+    <li><a href="./NpidAutoGenerationsController.html">NpidAutoGenerationsController</a>
+  
+    <li><a href="./NpidAutoGenerationsHelper.html">NpidAutoGenerationsHelper</a>
+  
+    <li><a href="./NpidRequest.html">NpidRequest</a>
+  
+    <li><a href="./NpidRequestsController.html">NpidRequestsController</a>
+  
+    <li><a href="./Object.html">Object</a>
+  
+    <li><a href="./PendingSyncRequest.html">PendingSyncRequest</a>
+  
+    <li><a href="./PeopleController.html">PeopleController</a>
+  
+    <li><a href="./PeopleHelper.html">PeopleHelper</a>
+  
+    <li><a href="./Person.html">Person</a>
+  
+    <li><a href="./PersonNameCode.html">PersonNameCode</a>
+  
+    <li><a href="./ProxySyncs.html">ProxySyncs</a>
+  
+    <li><a href="./Site.html">Site</a>
+  
+    <li><a href="./SitesController.html">SitesController</a>
+  
+    <li><a href="./SitesHelper.html">SitesHelper</a>
+  
+    <li><a href="./String.html">String</a>
+  
+    <li><a href="./User.html">User</a>
+  
+    <li><a href="./UsersController.html">UsersController</a>
+  
+  </ul>
+</nav>
+
+  </div>
+</nav>
+
+<div id="documentation" class="description">
+  
+<h2 id="label-DDE-Server">DDE-Server</h2>
+
+<p>This is the proxy and master service for Demographics Data Exchange to be
+used with the BART2 system build by Baobab. x</p>
+
+<h3 id="label-Installation+in+a+development+environment">Installation in a development environment</h3>
+
+<pre>$ bundle install</pre>
+
+<p>Edit config/database.yml to match your local database setup.</p>
+
+<p># for proxy mode</p>
+
+<pre>$ export RAILS_ENV=development
+$ bundle exec rake db:create db:migrate db:seed
+$ bundle exec rails server -p 3001</pre>
+
+<p># for master mode</p>
+
+<pre>$ export RAILS_ENV=integration
+$ bundle exec rake db:create db:migrate db:seed
+$ bundle exec rails server -p 3002</pre>
+
+<p>This will generate a user ‘admin’ with password ‘admin’ on the
+proxy and the master service, then start the server. The master will be
+listeing on port 3002, the proxy on port 3001.</p>
+
+<h3 id="label-Installation+in+a+production+environment">Installation in a production environment</h3>
+
+<p>Just as above, edit your config/database.yaml to match your database setup,
+then run</p>
+
+<pre>$ rake db:migrate db:seed</pre>
+
+<p>Put the following into config/site_config.yml for the master service</p>
+
+<pre>production:
+  mode:    master
+  site_id: 0
+  npid_version: 3 # or 4
+  base_npid: 24300000
+  npid_range: 48599999   # no. of ids from base_npid to pick random numbers from</pre>
+
+<p>Log into the master service with user name ‘admin’ and password
+‘admin’. Change the password first.</p>
+
+<p>For each proxy instance, log into the master service, go to ‘<a
+href="Site.html">Site</a> Administration’ and create a <a
+href="Site.html">Site</a> record with the apropriate information.</p>
+
+<p>Then go to ‘<a href="User.html">User</a> Management’ and create a user
+for each site. These users will be used by the proxy to access the master
+service.</p>
+
+<p>Put the following into config/site_config.yml for each proxy instance:</p>
+
+<pre>production:
+  mode:    proxy
+  site_id: 9999          # ID of the site this service is runnig on. Get it from the master.
+  master_uri: http://... # URI of the master instance
+  remote_http_options:   # options for remote HTTP operations:
+    user:         ''     # user name to use for basic auth, as configured in the Master server's user setup
+    password:     ''     # password to use for basic auth, as configured in the Master server's user setup
+    timeout:      10     # data timout in seconds - increase for connections known to be slow, decrease to allow faster feedback on broken lines
+    open_timeout: 10     # open_timout, same as above</pre>
+
+<h3 id="label-Syncronisation">Syncronisation</h3>
+
+<p>Set your proxy port in script/sync.rb.</p>
+
+<p>Set the following in config/site_config.yml and make sure there is
+connetivity between master and proxy:</p>
+
+<pre>          production:
+mode:    proxy
+site_id: 9999          # ID of the site this service is runnig on. Get it from the master.
+master_uri: http://... # URI of the master instance
+remote_http_options:   # options for remote HTTP operations:
+  user:         ''     # user name to use for basic auth, as configured in the Master server's user setup
+  password:     ''     # password to use for basic auth, as configured in the Master server's user setup
+  timeout:      10     # data timout in seconds - increase for connections known to be slow, decrease to allow faster feedback on broken lines
+  open_timeout: 10     # open_timout, same as above</pre>
+
+<p>Set a cron job on the proxy as follows:</p>
+
+<pre>*[interval] * * * * ruby [dde_proxy_root_path]/script/sync.rb</pre>
+
+<h3 id="label-Notifications"><a href="Notifications.html">Notifications</a></h3>
+
+<p>Make sure both master and proxy can connect to each other and can access
+the internet. Copy config/email.yml.example to config/email.yml and set
+config/email.yml with provided email settings.</p>
+
+<pre>development:
+        :address: stmp_server
+        :port: port_number
+        :domain: your_domain
+        :authentication: :your_anthentication_method
+        :user_name: your_username
+        :password: your_password
+
+production:
+        :address: stmp_server
+        :port: port_number
+        :domain: your_domain
+        :authentication: :your_anthentication_method
+        :user_name: your_username
+        :password: your_password
+
+integration:
+        :address: stmp_server
+        :port: port_number
+        :domain: your_domain
+        :authentication: :your_anthentication_method
+        :user_name: your_username
+        :password: your_password</pre>
+
+<p>Set your application port in script/auto_create_npids.rb.</p>
+
+<p>Set a cron job on the proxy as follows:</p>
+
+<pre>*[interval] * * * * ruby [dde_proxy_root_path]/script/auto_create_npids.rb.</pre>
+
+<p>Written by Willem van Kerkhof &lt;innoq at willem.van-kerkhof.com&gt;</p>
+
+<p>Copyright © 2011 Baobab Health Trust, Lilongwe, Malawi.</p>
+
+</div>
+
+
+<footer id="validator-badges">
+  <p><a href="http://validator.w3.org/check/referer">[Validate]</a>
+  <p>Generated by <a href="https://github.com/rdoc/rdoc">RDoc</a> 3.12.2.
+  <p>Generated with the <a href="http://deveiate.org/projects/Darkfish-Rdoc/">Darkfish Rdoc Generator</a> 3.
+</footer>
+

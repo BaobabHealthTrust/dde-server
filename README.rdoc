@@ -2,10 +2,7 @@
 
 This is the proxy and master service for Demographics Data Exchange to be used
 with the BART2 system build by Baobab.
-
-This is Work In Progress! Nothing that can be found here should be considered
-final or even remotely operational.
-
+x
 === Installation in a development environment
 
   $ bundle install
@@ -62,6 +59,7 @@ Put the following into config/site_config.yml for each proxy instance:
         password:     ''     # password to use for basic auth, as configured in the Master server's user setup
         timeout:      10     # data timout in seconds - increase for connections known to be slow, decrease to allow faster feedback on broken lines
         open_timeout: 10     # open_timout, same as above
+
 
 === Syncronisation
 

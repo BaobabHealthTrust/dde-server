@@ -1,0 +1,1554 @@
+<!DOCTYPE html>
+
+<html>
+<head>
+<meta content="text/html; charset=UTF-8" http-equiv="Content-Type">
+
+<title>class PeopleController - App Documentation</title>
+
+<link type="text/css" media="screen" href="./rdoc.css" rel="stylesheet">
+
+<script type="text/javascript">
+  var rdoc_rel_prefix = "./";
+</script>
+
+<script type="text/javascript" charset="utf-8" src="./js/jquery.js"></script>
+<script type="text/javascript" charset="utf-8" src="./js/navigation.js"></script>
+<script type="text/javascript" charset="utf-8" src="./js/search_index.js"></script>
+<script type="text/javascript" charset="utf-8" src="./js/search.js"></script>
+<script type="text/javascript" charset="utf-8" src="./js/searcher.js"></script>
+<script type="text/javascript" charset="utf-8" src="./js/darkfish.js"></script>
+
+
+<body id="top" class="class">
+<nav id="metadata">
+  <nav id="home-section" class="section">
+  <h3 class="section-header">
+    <a href="./index.html">Home</a>
+    <a href="./table_of_contents.html#classes">Classes</a>
+    <a href="./table_of_contents.html#methods">Methods</a>
+  </h3>
+</nav>
+
+
+  <nav id="search-section" class="section project-section" class="initially-hidden">
+  <form action="#" method="get" accept-charset="utf-8">
+    <h3 class="section-header">
+      <input type="text" name="search" placeholder="Search" id="search-field"
+             title="Type to search, Up and Down to navigate, Enter to load">
+    </h3>
+  </form>
+
+  <ul id="search-results" class="initially-hidden"></ul>
+</nav>
+
+
+  <div id="file-metadata">
+    <nav id="file-list-section" class="section">
+  <h3 class="section-header">Defined In</h3>
+  <ul>
+    <li>app/controllers/people_controller.rb
+  </ul>
+</nav>
+
+    
+  </div>
+
+  <div id="class-metadata">
+    
+    <nav id="parent-class-section" class="section">
+  <h3 class="section-header">Parent</h3>
+  
+  <p class="link"><a href="ApplicationController.html">ApplicationController</a>
+  
+</nav>
+
+    
+    <!-- Method Quickref -->
+<nav id="method-list-section" class="section">
+  <h3 class="section-header">Methods</h3>
+
+  <ul class="link-list">
+    
+    <li><a href="#method-i-create">#create</a>
+    
+    <li><a href="#method-i-create_from_master">#create_from_master</a>
+    
+    <li><a href="#method-i-create_from_proxy">#create_from_proxy</a>
+    
+    <li><a href="#method-i-default_path">#default_path</a>
+    
+    <li><a href="#method-i-demographics_to_sync">#demographics_to_sync</a>
+    
+    <li><a href="#method-i-destroy">#destroy</a>
+    
+    <li><a href="#method-i-edit">#edit</a>
+    
+    <li><a href="#method-i-find">#find</a>
+    
+    <li><a href="#method-i-handle_local_conflict">#handle_local_conflict</a>
+    
+    <li><a href="#method-i-handle_remote_conflict">#handle_remote_conflict</a>
+    
+    <li><a href="#method-i-index">#index</a>
+    
+    <li><a href="#method-i-load_person">#load_person</a>
+    
+    <li><a href="#method-i-master_people_to_sync">#master_people_to_sync</a>
+    
+    <li><a href="#method-i-new">#new</a>
+    
+    <li><a href="#method-i-post_back_person">#post_back_person</a>
+    
+    <li><a href="#method-i-proxy_people_to_sync">#proxy_people_to_sync</a>
+    
+    <li><a href="#method-i-reassign_identication">#reassign_identication</a>
+    
+    <li><a href="#method-i-reassign_national_identification">#reassign_national_identification</a>
+    
+    <li><a href="#method-i-record_successful_sync">#record_successful_sync</a>
+    
+    <li><a href="#method-i-record_sync_starttime">#record_sync_starttime</a>
+    
+    <li><a href="#method-i-show">#show</a>
+    
+    <li><a href="#method-i-show_remote">#show_remote</a>
+    
+    <li><a href="#method-i-sync_demographics_with_master">#sync_demographics_with_master</a>
+    
+    <li><a href="#method-i-sync_demographics_with_proxy">#sync_demographics_with_proxy</a>
+    
+    <li><a href="#method-i-update">#update</a>
+    
+    <li><a href="#method-i-update_proxy_sync">#update_proxy_sync</a>
+    
+  </ul>
+</nav>
+
+  </div>
+
+  <div id="project-metadata">
+    <nav id="fileindex-section" class="section project-section">
+  <h3 class="section-header">Pages</h3>
+
+  <ul>
+  
+    <li class="file"><a href="./README_rdoc.html">README</a>
+  
+  </ul>
+</nav>
+
+    <nav id="classindex-section" class="section project-section">
+  <h3 class="section-header">Class and Module Index</h3>
+
+  <ul class="link-list">
+  
+    <li><a href="./DdeServer.html">DdeServer</a>
+  
+    <li><a href="./DdeServer/Application.html">DdeServer::Application</a>
+  
+    <li><a href="./Ability.html">Ability</a>
+  
+    <li><a href="./ApplicationController.html">ApplicationController</a>
+  
+    <li><a href="./ApplicationHelper.html">ApplicationHelper</a>
+  
+    <li><a href="./IdentifiersToBeAssigned.html">IdentifiersToBeAssigned</a>
+  
+    <li><a href="./LegacyNationalIds.html">LegacyNationalIds</a>
+  
+    <li><a href="./LoginHelper.html">LoginHelper</a>
+  
+    <li><a href="./LoginsController.html">LoginsController</a>
+  
+    <li><a href="./MasterSyncs.html">MasterSyncs</a>
+  
+    <li><a href="./NationalIdSite.html">NationalIdSite</a>
+  
+    <li><a href="./NationalPatientIdentifier.html">NationalPatientIdentifier</a>
+  
+    <li><a href="./NationalPatientIdentifiersController.html">NationalPatientIdentifiersController</a>
+  
+    <li><a href="./NationalPatientIdentifiersHelper.html">NationalPatientIdentifiersHelper</a>
+  
+    <li><a href="./Notifications.html">Notifications</a>
+  
+    <li><a href="./NpidAutoGeneration.html">NpidAutoGeneration</a>
+  
+    <li><a href="./NpidAutoGenerationsController.html">NpidAutoGenerationsController</a>
+  
+    <li><a href="./NpidAutoGenerationsHelper.html">NpidAutoGenerationsHelper</a>
+  
+    <li><a href="./NpidRequest.html">NpidRequest</a>
+  
+    <li><a href="./NpidRequestsController.html">NpidRequestsController</a>
+  
+    <li><a href="./Object.html">Object</a>
+  
+    <li><a href="./PendingSyncRequest.html">PendingSyncRequest</a>
+  
+    <li><a href="./PeopleController.html">PeopleController</a>
+  
+    <li><a href="./PeopleHelper.html">PeopleHelper</a>
+  
+    <li><a href="./Person.html">Person</a>
+  
+    <li><a href="./PersonNameCode.html">PersonNameCode</a>
+  
+    <li><a href="./ProxySyncs.html">ProxySyncs</a>
+  
+    <li><a href="./Site.html">Site</a>
+  
+    <li><a href="./SitesController.html">SitesController</a>
+  
+    <li><a href="./SitesHelper.html">SitesHelper</a>
+  
+    <li><a href="./String.html">String</a>
+  
+    <li><a href="./User.html">User</a>
+  
+    <li><a href="./UsersController.html">UsersController</a>
+  
+  </ul>
+</nav>
+
+  </div>
+</nav>
+
+<div id="documentation">
+  <h1 class="class">class PeopleController</h1>
+
+  <div id="description" class="description">
+    
+  </div><!-- description -->
+
+  
+  
+  
+  <section id="5Buntitled-5D" class="documentation-section">
+    
+
+    
+
+    
+
+    
+
+    <!-- Methods -->
+    
+     <section id="public-instance-5Buntitled-5D-method-details" class="method-section section">
+      <h3 class="section-header">Public Instance Methods</h3>
+
+    
+      <div id="method-i-create" class="method-detail ">
+        
+        <div class="method-heading">
+          <span class="method-name">create</span><span
+            class="method-args">()</span>
+          <span class="method-click-advice">click to toggle source</span>
+        </div>
+        
+
+        <div class="method-description">
+          
+          <p>POST /people POST /people.xml</p>
+          
+
+          
+          <div class="method-source-code" id="create-source">
+            <pre><span class="ruby-comment"># File app/controllers/people_controller.rb, line 119</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier">create</span>
+  <span class="ruby-identifier">passed_national_id</span> = (<span class="ruby-identifier">params</span>[<span class="ruby-value">:person</span>][<span class="ruby-string">'data'</span>][<span class="ruby-string">'patient'</span>][<span class="ruby-string">'identifiers'</span>][<span class="ruby-string">'old_identification_number'</span>])
+
+  <span class="ruby-keyword">unless</span> <span class="ruby-identifier">passed_national_id</span>.<span class="ruby-identifier">blank?</span>
+    <span class="ruby-identifier">national_id</span> = <span class="ruby-identifier">passed_national_id</span>.<span class="ruby-identifier">gsub</span>(<span class="ruby-string">'-'</span>,<span class="ruby-string">''</span>).<span class="ruby-identifier">strip</span>
+
+    <span class="ruby-ivar">@person</span> = <span class="ruby-constant">Person</span>.<span class="ruby-identifier">where</span>(<span class="ruby-string">&quot;legacy_national_ids.value = ?&quot;</span>,<span class="ruby-identifier">national_id</span>).<span class="ruby-identifier">includes</span>([<span class="ruby-value">:legacy_national_ids</span>]).<span class="ruby-identifier">first</span> <span class="ruby-keyword">rescue</span> <span class="ruby-keyword">nil</span>
+
+    <span class="ruby-keyword">if</span> <span class="ruby-ivar">@person</span>.<span class="ruby-identifier">blank?</span>
+      <span class="ruby-ivar">@person</span> = <span class="ruby-constant">Person</span>.<span class="ruby-identifier">where</span>(<span class="ruby-string">&quot;national_patient_identifiers.value = ?&quot;</span>,<span class="ruby-identifier">national_id</span>).<span class="ruby-identifier">includes</span>([<span class="ruby-value">:national_patient_identifier</span>]).<span class="ruby-identifier">first</span> <span class="ruby-keyword">rescue</span> <span class="ruby-keyword">nil</span>
+    <span class="ruby-keyword">end</span>
+
+    <span class="ruby-keyword">if</span> <span class="ruby-ivar">@person</span>
+      <span class="ruby-identifier">respond_to</span> <span class="ruby-keyword">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">format</span><span class="ruby-operator">|</span>
+          <span class="ruby-identifier">format</span>.<span class="ruby-identifier">html</span> { <span class="ruby-identifier">redirect_to</span>(<span class="ruby-ivar">@person</span>, <span class="ruby-value">:notice</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-string">'Person was successfully created.'</span>) }
+          <span class="ruby-identifier">format</span>.<span class="ruby-identifier">xml</span>  { <span class="ruby-identifier">render</span> <span class="ruby-value">:xml</span>  =<span class="ruby-operator">&gt;</span> <span class="ruby-ivar">@person</span>, <span class="ruby-value">:status</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-value">:created</span>, <span class="ruby-value">:location</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-ivar">@person</span> }
+          <span class="ruby-identifier">format</span>.<span class="ruby-identifier">json</span> { <span class="ruby-identifier">render</span> <span class="ruby-value">:json</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-ivar">@person</span>, <span class="ruby-value">:status</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-value">:created</span>, <span class="ruby-value">:location</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-ivar">@person</span> }
+      <span class="ruby-keyword">end</span>
+    <span class="ruby-keyword">end</span>
+    <span class="ruby-keyword">return</span> <span class="ruby-keyword">if</span> <span class="ruby-keyword">not</span> <span class="ruby-ivar">@person</span>.<span class="ruby-identifier">blank?</span>
+  <span class="ruby-keyword">end</span>
+
+  <span class="ruby-identifier">version</span> = <span class="ruby-constant">Guid</span>.<span class="ruby-identifier">new</span>.<span class="ruby-identifier">to_s</span>
+  <span class="ruby-ivar">@person</span> = <span class="ruby-constant">Person</span>.<span class="ruby-identifier">new</span>(<span class="ruby-identifier">params</span>[<span class="ruby-value">:person</span>].<span class="ruby-identifier">merge</span>(
+                       {<span class="ruby-value">:creator_site_id</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-constant">Site</span>.<span class="ruby-identifier">current_id</span> ,
+                       <span class="ruby-value">:given_name</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-identifier">params</span>[<span class="ruby-value">:person</span>][<span class="ruby-string">&quot;data&quot;</span>][<span class="ruby-string">&quot;names&quot;</span>][<span class="ruby-string">&quot;given_name&quot;</span>] ,
+                       <span class="ruby-value">:family_name</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-identifier">params</span>[<span class="ruby-value">:person</span>][<span class="ruby-string">&quot;data&quot;</span>][<span class="ruby-string">&quot;names&quot;</span>][<span class="ruby-string">&quot;family_name&quot;</span>] ,
+                       <span class="ruby-value">:gender</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-identifier">params</span>[<span class="ruby-value">:person</span>][<span class="ruby-string">&quot;data&quot;</span>][<span class="ruby-string">&quot;gender&quot;</span>] ,
+                       <span class="ruby-value">:birthdate</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-identifier">params</span>[<span class="ruby-value">:person</span>][<span class="ruby-string">&quot;data&quot;</span>][<span class="ruby-string">&quot;birthdate&quot;</span>] ,
+                       <span class="ruby-value">:birthdate_estimated</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-identifier">params</span>[<span class="ruby-value">:person</span>][<span class="ruby-string">&quot;data&quot;</span>][<span class="ruby-string">&quot;birthdate_estimated&quot;</span>],
+                       <span class="ruby-value">:version_number</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-identifier">version</span>,
+                       <span class="ruby-value">:remote_version_number</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-identifier">version</span> }
+                      ))
+
+  <span class="ruby-identifier">respond_to</span> <span class="ruby-keyword">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">format</span><span class="ruby-operator">|</span>
+    <span class="ruby-keyword">if</span> <span class="ruby-ivar">@person</span>.<span class="ruby-identifier">save</span>
+      <span class="ruby-keyword">if</span> <span class="ruby-keyword">not</span> <span class="ruby-identifier">passed_national_id</span>.<span class="ruby-identifier">blank?</span>
+        <span class="ruby-identifier">legacy_national_id</span> = <span class="ruby-constant">LegacyNationalIds</span>.<span class="ruby-identifier">new</span>()
+        <span class="ruby-identifier">legacy_national_id</span>.<span class="ruby-identifier">person_id</span> = <span class="ruby-ivar">@person</span>.<span class="ruby-identifier">id</span>
+        <span class="ruby-identifier">legacy_national_id</span>.<span class="ruby-identifier">value</span> = <span class="ruby-identifier">national_id</span>
+        <span class="ruby-identifier">legacy_national_id</span>.<span class="ruby-identifier">save</span>
+      <span class="ruby-keyword">end</span>
+      <span class="ruby-identifier">format</span>.<span class="ruby-identifier">html</span> { <span class="ruby-identifier">redirect_to</span>(<span class="ruby-ivar">@person</span>, <span class="ruby-value">:notice</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-string">'Person was successfully created.'</span>) }
+      <span class="ruby-identifier">format</span>.<span class="ruby-identifier">xml</span>  { <span class="ruby-identifier">render</span> <span class="ruby-value">:xml</span>  =<span class="ruby-operator">&gt;</span> <span class="ruby-ivar">@person</span>, <span class="ruby-value">:status</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-value">:created</span>, <span class="ruby-value">:location</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-ivar">@person</span> }
+      <span class="ruby-identifier">format</span>.<span class="ruby-identifier">json</span> { <span class="ruby-identifier">render</span> <span class="ruby-value">:json</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-ivar">@person</span>, <span class="ruby-value">:status</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-value">:created</span>, <span class="ruby-value">:location</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-ivar">@person</span> }
+    <span class="ruby-keyword">else</span>
+      <span class="ruby-identifier">status</span> = <span class="ruby-ivar">@person</span>.<span class="ruby-identifier">errors</span>.<span class="ruby-identifier">delete</span>(<span class="ruby-value">:status</span>) <span class="ruby-operator">||</span> <span class="ruby-value">:unprocessable_entity</span>
+
+      <span class="ruby-identifier">format</span>.<span class="ruby-identifier">html</span> { <span class="ruby-identifier">render</span> <span class="ruby-value">:action</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-string">'new'</span> }
+      <span class="ruby-identifier">format</span>.<span class="ruby-identifier">xml</span>  { <span class="ruby-identifier">render</span> <span class="ruby-value">:xml</span>  =<span class="ruby-operator">&gt;</span> <span class="ruby-ivar">@person</span>.<span class="ruby-identifier">errors</span>, <span class="ruby-value">:status</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-identifier">status</span> }
+      <span class="ruby-identifier">format</span>.<span class="ruby-identifier">json</span> { <span class="ruby-identifier">render</span> <span class="ruby-value">:json</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-ivar">@person</span>.<span class="ruby-identifier">errors</span>, <span class="ruby-value">:status</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-identifier">status</span> }
+    <span class="ruby-keyword">end</span>
+  <span class="ruby-keyword">end</span>
+<span class="ruby-keyword">end</span></pre>
+          </div><!-- create-source -->
+          
+        </div>
+
+        
+
+        
+      </div><!-- create-method -->
+
+    
+      <div id="method-i-demographics_to_sync" class="method-detail ">
+        
+        <div class="method-heading">
+          <span class="method-name">demographics_to_sync</span><span
+            class="method-args">()</span>
+          <span class="method-click-advice">click to toggle source</span>
+        </div>
+        
+
+        <div class="method-description">
+          
+          
+          
+
+          
+          <div class="method-source-code" id="demographics_to_sync-source">
+            <pre><span class="ruby-comment"># File app/controllers/people_controller.rb, line 408</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier">demographics_to_sync</span>
+  <span class="ruby-keyword">if</span> <span class="ruby-constant">Site</span>.<span class="ruby-identifier">proxy?</span>
+    <span class="ruby-identifier">uri</span> = <span class="ruby-node">&quot;http://#{dde_master_user}:#{dde_master_password}@#{dde_master_uri}/people/demographics_to_sync/&quot;</span>
+    <span class="ruby-identifier">ids</span> = <span class="ruby-constant">RestClient</span>.<span class="ruby-identifier">post</span>(<span class="ruby-identifier">uri</span>,{<span class="ruby-string">&quot;site_id&quot;</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-constant">Site</span>.<span class="ruby-identifier">current_id</span>})
+    <span class="ruby-identifier">people_ids</span> = <span class="ruby-constant">JSON</span>.<span class="ruby-identifier">parse</span>(<span class="ruby-identifier">ids</span>)
+  <span class="ruby-keyword">else</span>
+    <span class="ruby-identifier">site_id</span> = <span class="ruby-identifier">params</span>[<span class="ruby-value">:site_id</span>]
+    <span class="ruby-identifier">site_code</span> = <span class="ruby-constant">Site</span>.<span class="ruby-identifier">find_by_id</span>(<span class="ruby-identifier">site_id</span>).<span class="ruby-identifier">code</span>
+    <span class="ruby-identifier">last_updated_date</span> = <span class="ruby-constant">ProxySyncs</span>.<span class="ruby-identifier">last_updated_datetime</span>(<span class="ruby-identifier">site_code</span>)
+    <span class="ruby-keyword">unless</span> <span class="ruby-identifier">last_updated_date</span>.<span class="ruby-identifier">blank?</span>
+      <span class="ruby-identifier">people_ids</span> = <span class="ruby-constant">Person</span>.<span class="ruby-identifier">find</span>(<span class="ruby-value">:all</span>,<span class="ruby-value">:conditions</span> =<span class="ruby-operator">&gt;</span> [<span class="ruby-string">&quot;creator_site_id != ? 
+        AND updated_at &gt; ?&quot;</span>,<span class="ruby-identifier">site_id</span>,<span class="ruby-identifier">last_updated_date</span>],
+        <span class="ruby-value">:order</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-string">&quot;id&quot;</span>).<span class="ruby-identifier">collect</span> {<span class="ruby-operator">|</span><span class="ruby-identifier">p</span><span class="ruby-operator">|</span><span class="ruby-identifier">p</span>.<span class="ruby-identifier">id</span>}
+    <span class="ruby-keyword">else</span>
+      <span class="ruby-identifier">people_ids</span> = <span class="ruby-constant">Person</span>.<span class="ruby-identifier">find</span>(<span class="ruby-value">:all</span>,<span class="ruby-value">:conditions</span> =<span class="ruby-operator">&gt;</span> [<span class="ruby-string">&quot;creator_site_id != ?&quot;</span>,<span class="ruby-identifier">site_id</span>],
+        <span class="ruby-value">:order</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-string">&quot;id&quot;</span>).<span class="ruby-identifier">collect</span>{<span class="ruby-operator">|</span><span class="ruby-identifier">p</span><span class="ruby-operator">|</span><span class="ruby-identifier">p</span>.<span class="ruby-identifier">id</span>}
+    <span class="ruby-keyword">end</span>
+  <span class="ruby-keyword">end</span> 
+  <span class="ruby-identifier">render</span> <span class="ruby-value">:text</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-identifier">people_ids</span>.<span class="ruby-identifier">sort</span>.<span class="ruby-identifier">to_json</span>
+<span class="ruby-keyword">end</span></pre>
+          </div><!-- demographics_to_sync-source -->
+          
+        </div>
+
+        
+
+        
+      </div><!-- demographics_to_sync-method -->
+
+    
+      <div id="method-i-destroy" class="method-detail ">
+        
+        <div class="method-heading">
+          <span class="method-name">destroy</span><span
+            class="method-args">()</span>
+          <span class="method-click-advice">click to toggle source</span>
+        </div>
+        
+
+        <div class="method-description">
+          
+          <p>DELETE /people/1 DELETE /people/1.xml</p>
+          
+
+          
+          <div class="method-source-code" id="destroy-source">
+            <pre><span class="ruby-comment"># File app/controllers/people_controller.rb, line 238</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier">destroy</span>
+  <span class="ruby-ivar">@person</span>.<span class="ruby-identifier">destroy</span>
+
+  <span class="ruby-identifier">respond_to</span> <span class="ruby-keyword">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">format</span><span class="ruby-operator">|</span>
+    <span class="ruby-identifier">format</span>.<span class="ruby-identifier">html</span> { <span class="ruby-identifier">redirect_to</span>(<span class="ruby-identifier">people_url</span>) }
+    <span class="ruby-identifier">format</span>.<span class="ruby-identifier">xml</span>  { <span class="ruby-identifier">head</span> <span class="ruby-value">:ok</span> }
+  <span class="ruby-keyword">end</span>
+<span class="ruby-keyword">end</span></pre>
+          </div><!-- destroy-source -->
+          
+        </div>
+
+        
+
+        
+      </div><!-- destroy-method -->
+
+    
+      <div id="method-i-edit" class="method-detail ">
+        
+        <div class="method-heading">
+          <span class="method-name">edit</span><span
+            class="method-args">()</span>
+          <span class="method-click-advice">click to toggle source</span>
+        </div>
+        
+
+        <div class="method-description">
+          
+          <p>GET /people/1/edit</p>
+          
+
+          
+          <div class="method-source-code" id="edit-source">
+            <pre><span class="ruby-comment"># File app/controllers/people_controller.rb, line 114</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier">edit</span>
+<span class="ruby-keyword">end</span></pre>
+          </div><!-- edit-source -->
+          
+        </div>
+
+        
+
+        
+      </div><!-- edit-method -->
+
+    
+      <div id="method-i-find" class="method-detail ">
+        
+        <div class="method-heading">
+          <span class="method-name">find</span><span
+            class="method-args">()</span>
+          <span class="method-click-advice">click to toggle source</span>
+        </div>
+        
+
+        <div class="method-description">
+          
+          <p>GET /people/find GET
+/people/find.xml?given_name=:given_name&amp;family_name=:family_name</p>
+          
+
+          
+          <div class="method-source-code" id="find-source">
+            <pre><span class="ruby-comment"># File app/controllers/people_controller.rb, line 49</span>
+  <span class="ruby-keyword">def</span> <span class="ruby-identifier">find</span>
+    <span class="ruby-keyword">if</span> <span class="ruby-keyword">not</span> <span class="ruby-identifier">params</span>[<span class="ruby-value">:value</span>].<span class="ruby-identifier">blank?</span>
+      <span class="ruby-identifier">national_id</span> = <span class="ruby-identifier">params</span>[<span class="ruby-value">:value</span>].<span class="ruby-identifier">gsub</span>(<span class="ruby-string">'-'</span>,<span class="ruby-string">''</span>)
+      <span class="ruby-identifier">people</span> = <span class="ruby-constant">Person</span>.<span class="ruby-identifier">joins</span>(<span class="ruby-value">:national_patient_identifier</span>).<span class="ruby-identifier">where</span>(<span class="ruby-string">'national_patient_identifiers.value'</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-identifier">national_id</span>).<span class="ruby-identifier">select</span>(<span class="ruby-string">&quot;people.*,national_patient_identifiers.value&quot;</span>)
+      
+      <span class="ruby-ivar">@people</span> = <span class="ruby-constant">Person</span>.<span class="ruby-identifier">joins</span>([<span class="ruby-value">:national_patient_identifier</span>,
+        <span class="ruby-value">:legacy_national_ids</span>]).<span class="ruby-identifier">where</span>(<span class="ruby-string">'legacy_national_ids.value'</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-identifier">national_id</span>).<span class="ruby-identifier">select</span>(<span class="ruby-string">&quot;people.*,national_patient_identifiers.value,legacy_national_ids.value AS old_identification_number&quot;</span>)
+
+      (<span class="ruby-identifier">people</span> <span class="ruby-operator">||</span> []).<span class="ruby-identifier">each</span> <span class="ruby-keyword">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">person</span><span class="ruby-operator">|</span>
+        <span class="ruby-keyword">next</span> <span class="ruby-keyword">if</span> <span class="ruby-ivar">@people</span>.<span class="ruby-identifier">collect</span>{<span class="ruby-operator">|</span><span class="ruby-identifier">p</span><span class="ruby-operator">|</span><span class="ruby-identifier">p</span>.<span class="ruby-identifier">id</span>}.<span class="ruby-identifier">include?</span>(<span class="ruby-identifier">person</span>.<span class="ruby-identifier">id</span>)
+        <span class="ruby-ivar">@people</span> <span class="ruby-operator">&lt;&lt;</span> <span class="ruby-identifier">person</span>
+      <span class="ruby-keyword">end</span>
+
+      <span class="ruby-identifier">people</span> = <span class="ruby-constant">Person</span>.<span class="ruby-identifier">joins</span>(<span class="ruby-value">:legacy_national_ids</span>).<span class="ruby-identifier">where</span>(<span class="ruby-string">'legacy_national_ids.value'</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-identifier">national_id</span>).<span class="ruby-identifier">select</span>(<span class="ruby-string">&quot;people.*,value AS old_identification_number&quot;</span>)
+
+      (<span class="ruby-identifier">people</span> <span class="ruby-operator">||</span> []).<span class="ruby-identifier">each</span> <span class="ruby-keyword">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">person</span><span class="ruby-operator">|</span>                                         
+        <span class="ruby-keyword">next</span> <span class="ruby-keyword">if</span> <span class="ruby-ivar">@people</span>.<span class="ruby-identifier">collect</span>{<span class="ruby-operator">|</span><span class="ruby-identifier">p</span><span class="ruby-operator">|</span><span class="ruby-identifier">p</span>.<span class="ruby-identifier">id</span>}.<span class="ruby-identifier">include?</span>(<span class="ruby-identifier">person</span>.<span class="ruby-identifier">id</span>)                  
+        <span class="ruby-ivar">@people</span> <span class="ruby-operator">&lt;&lt;</span> <span class="ruby-identifier">person</span>                                                     
+      <span class="ruby-keyword">end</span> 
+    <span class="ruby-keyword">else</span>
+      <span class="ruby-ivar">@people</span> = <span class="ruby-constant">Person</span>.<span class="ruby-identifier">search</span>(<span class="ruby-identifier">params</span>)
+    <span class="ruby-keyword">end</span>
+    
+    <span class="ruby-keyword">case</span> <span class="ruby-ivar">@people</span>.<span class="ruby-identifier">size</span>
+    <span class="ruby-keyword">when</span> <span class="ruby-value">0</span>
+      <span class="ruby-keyword">if</span> <span class="ruby-constant">Site</span>.<span class="ruby-identifier">master?</span>
+        <span class="ruby-identifier">head</span> <span class="ruby-value">:not_found</span>
+      <span class="ruby-keyword">else</span>
+<span class="ruby-comment">#       find_remote</span>
+        <span class="ruby-identifier">respond_to</span> <span class="ruby-keyword">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">format</span><span class="ruby-operator">|</span>
+          <span class="ruby-identifier">format</span>.<span class="ruby-identifier">json</span> <span class="ruby-keyword">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">f</span><span class="ruby-operator">|</span>
+            <span class="ruby-identifier">render</span> <span class="ruby-value">:text</span> =<span class="ruby-operator">&gt;</span> {}.<span class="ruby-identifier">to_json</span>
+          <span class="ruby-keyword">end</span>
+        <span class="ruby-keyword">end</span>
+      <span class="ruby-keyword">end</span>
+    <span class="ruby-keyword">when</span> <span class="ruby-value">1</span>
+      <span class="ruby-identifier">respond_to</span> <span class="ruby-keyword">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">format</span><span class="ruby-operator">|</span>
+        <span class="ruby-identifier">format</span>.<span class="ruby-identifier">html</span> <span class="ruby-keyword">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">f</span><span class="ruby-operator">|</span>
+          <span class="ruby-ivar">@person</span> = <span class="ruby-ivar">@people</span>.<span class="ruby-identifier">first</span>
+          <span class="ruby-identifier">render</span> <span class="ruby-value">:action</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-string">'show'</span>
+        <span class="ruby-keyword">end</span>
+        <span class="ruby-identifier">format</span>.<span class="ruby-identifier">xml</span>  { <span class="ruby-identifier">render</span> <span class="ruby-value">:xml</span>  =<span class="ruby-operator">&gt;</span> <span class="ruby-ivar">@people</span> }
+        <span class="ruby-identifier">format</span>.<span class="ruby-identifier">json</span> { <span class="ruby-identifier">render</span> <span class="ruby-value">:json</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-ivar">@people</span>.<span class="ruby-identifier">to_json</span> }
+      <span class="ruby-keyword">end</span>
+    <span class="ruby-keyword">else</span>
+      <span class="ruby-identifier">respond_to</span> <span class="ruby-keyword">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">format</span><span class="ruby-operator">|</span>
+        <span class="ruby-identifier">format</span>.<span class="ruby-identifier">html</span> { <span class="ruby-identifier">render</span> <span class="ruby-value">:action</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-string">'index'</span>,         <span class="ruby-value">:status</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-value">:multiple_choices</span> }
+        <span class="ruby-identifier">format</span>.<span class="ruby-identifier">xml</span>  { <span class="ruby-identifier">render</span> <span class="ruby-value">:xml</span>    =<span class="ruby-operator">&gt;</span> <span class="ruby-ivar">@people</span>,         <span class="ruby-value">:status</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-value">:multiple_choices</span> }
+        <span class="ruby-identifier">format</span>.<span class="ruby-identifier">json</span> { <span class="ruby-identifier">render</span> <span class="ruby-value">:json</span>   =<span class="ruby-operator">&gt;</span> <span class="ruby-ivar">@people</span>.<span class="ruby-identifier">to_json</span> } <span class="ruby-comment">#, :status =&gt; :multiple_choices }</span>
+      <span class="ruby-keyword">end</span>
+    <span class="ruby-keyword">end</span>
+  <span class="ruby-keyword">end</span></pre>
+          </div><!-- find-source -->
+          
+        </div>
+
+        
+
+        
+      </div><!-- find-method -->
+
+    
+      <div id="method-i-index" class="method-detail ">
+        
+        <div class="method-heading">
+          <span class="method-name">index</span><span
+            class="method-args">()</span>
+          <span class="method-click-advice">click to toggle source</span>
+        </div>
+        
+
+        <div class="method-description">
+          
+          <p>GET /people GET /people.xml</p>
+          
+
+          
+          <div class="method-source-code" id="index-source">
+            <pre><span class="ruby-comment"># File app/controllers/people_controller.rb, line 8</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier">index</span>
+  <span class="ruby-comment">#@people = Person.page(params[:page]).all</span>
+  <span class="ruby-ivar">@people</span> = <span class="ruby-constant">Person</span>.<span class="ruby-identifier">page</span>(<span class="ruby-identifier">params</span>[<span class="ruby-value">:page</span>]).<span class="ruby-identifier">joins</span>(<span class="ruby-value">:national_patient_identifier</span>).<span class="ruby-identifier">select</span>(<span class="ruby-string">&quot;people.*&quot;</span>)
+
+  <span class="ruby-identifier">respond_to</span> <span class="ruby-keyword">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">format</span><span class="ruby-operator">|</span>
+    <span class="ruby-identifier">format</span>.<span class="ruby-identifier">html</span> <span class="ruby-comment"># index.html.erb</span>
+    <span class="ruby-identifier">format</span>.<span class="ruby-identifier">xml</span>  { <span class="ruby-identifier">render</span> <span class="ruby-value">:xml</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-ivar">@people</span> }
+  <span class="ruby-keyword">end</span>
+<span class="ruby-keyword">end</span></pre>
+          </div><!-- index-source -->
+          
+        </div>
+
+        
+
+        
+      </div><!-- index-method -->
+
+    
+      <div id="method-i-master_people_to_sync" class="method-detail ">
+        
+        <div class="method-heading">
+          <span class="method-name">master_people_to_sync</span><span
+            class="method-args">()</span>
+          <span class="method-click-advice">click to toggle source</span>
+        </div>
+        
+
+        <div class="method-description">
+          
+          
+          
+
+          
+          <div class="method-source-code" id="master_people_to_sync-source">
+            <pre><span class="ruby-comment"># File app/controllers/people_controller.rb, line 429</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier">master_people_to_sync</span>
+  <span class="ruby-keyword">if</span> <span class="ruby-constant">Site</span>.<span class="ruby-identifier">proxy?</span>
+    <span class="ruby-identifier">uri</span> = <span class="ruby-node">&quot;http://#{dde_master_user}:#{dde_master_password}@#{dde_master_uri}/people/master_people_to_sync/&quot;</span>
+    <span class="ruby-identifier">ids</span> = <span class="ruby-constant">RestClient</span>.<span class="ruby-identifier">post</span>(<span class="ruby-identifier">uri</span>,{<span class="ruby-string">&quot;site_id&quot;</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-constant">Site</span>.<span class="ruby-identifier">current_id</span>})
+    <span class="ruby-identifier">render</span> <span class="ruby-value">:text</span> =<span class="ruby-operator">&gt;</span>  <span class="ruby-identifier">ids</span>.<span class="ruby-identifier">to_json</span> <span class="ruby-keyword">and</span> <span class="ruby-keyword">return</span>
+  <span class="ruby-keyword">else</span>
+    <span class="ruby-identifier">site_id</span> = <span class="ruby-identifier">params</span>[<span class="ruby-value">:site_id</span>]
+    <span class="ruby-identifier">site_code</span> = <span class="ruby-constant">Site</span>.<span class="ruby-identifier">find</span>(<span class="ruby-identifier">site_id</span>).<span class="ruby-identifier">code</span>
+    <span class="ruby-identifier">last_updated_datetime</span> = <span class="ruby-constant">MasterSyncs</span>.<span class="ruby-identifier">last_updated_datetime</span>(<span class="ruby-identifier">site_code</span>)
+    <span class="ruby-keyword">if</span> <span class="ruby-keyword">not</span> <span class="ruby-identifier">last_updated_datetime</span>.<span class="ruby-identifier">blank?</span>
+      <span class="ruby-identifier">people_ids</span> = <span class="ruby-constant">Person</span>.<span class="ruby-identifier">where</span>(<span class="ruby-string">&quot;creator_site_id != ? AND updated_at &gt; ?&quot;</span>,<span class="ruby-identifier">site_id</span>,
+        <span class="ruby-identifier">last_updated_datetime</span>.<span class="ruby-identifier">strftime</span>(<span class="ruby-string">&quot;%Y-%m-%d %H:%M:%S&quot;</span>)).<span class="ruby-identifier">select</span>(<span class="ruby-value">:id</span>).<span class="ruby-identifier">order</span>(<span class="ruby-value">:id</span>).<span class="ruby-identifier">map</span>(&amp;<span class="ruby-value">:id</span>)
+
+      <span class="ruby-constant">MasterSyncs</span>.<span class="ruby-identifier">check_for_valid_start_date</span>(<span class="ruby-identifier">site_code</span>) <span class="ruby-keyword">unless</span> <span class="ruby-identifier">people_ids</span>.<span class="ruby-identifier">blank?</span>
+      <span class="ruby-identifier">render</span> <span class="ruby-value">:text</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-identifier">people_ids</span>.<span class="ruby-identifier">sort</span>.<span class="ruby-identifier">to_json</span> <span class="ruby-keyword">and</span> <span class="ruby-keyword">return</span>
+    <span class="ruby-keyword">else</span>
+      <span class="ruby-identifier">people_ids</span> = <span class="ruby-constant">Person</span>.<span class="ruby-identifier">where</span>(<span class="ruby-string">&quot;creator_site_id &lt;&gt; ?&quot;</span>,<span class="ruby-identifier">site_id</span>).<span class="ruby-identifier">select</span>(<span class="ruby-value">:id</span>).<span class="ruby-identifier">order</span>(<span class="ruby-value">:id</span>).<span class="ruby-identifier">map</span>(&amp;<span class="ruby-value">:id</span>)
+      <span class="ruby-constant">MasterSyncs</span>.<span class="ruby-identifier">check_for_valid_start_date</span>(<span class="ruby-identifier">site_code</span>) <span class="ruby-keyword">unless</span> <span class="ruby-identifier">people_ids</span>.<span class="ruby-identifier">blank?</span>
+      <span class="ruby-identifier">render</span> <span class="ruby-value">:text</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-identifier">people_ids</span>.<span class="ruby-identifier">sort</span>.<span class="ruby-identifier">to_json</span> <span class="ruby-keyword">and</span> <span class="ruby-keyword">return</span>
+    <span class="ruby-keyword">end</span>
+  <span class="ruby-keyword">end</span>
+<span class="ruby-keyword">end</span></pre>
+          </div><!-- master_people_to_sync-source -->
+          
+        </div>
+
+        
+
+        
+      </div><!-- master_people_to_sync-method -->
+
+    
+      <div id="method-i-new" class="method-detail ">
+        
+        <div class="method-heading">
+          <span class="method-name">new</span><span
+            class="method-args">()</span>
+          <span class="method-click-advice">click to toggle source</span>
+        </div>
+        
+
+        <div class="method-description">
+          
+          <p>GET /people/new GET /people/new.xml</p>
+          
+
+          
+          <div class="method-source-code" id="new-source">
+            <pre><span class="ruby-comment"># File app/controllers/people_controller.rb, line 104</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier">new</span>
+  <span class="ruby-ivar">@person</span> = <span class="ruby-constant">Person</span>.<span class="ruby-identifier">new</span>
+
+  <span class="ruby-identifier">respond_to</span> <span class="ruby-keyword">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">format</span><span class="ruby-operator">|</span>
+    <span class="ruby-identifier">format</span>.<span class="ruby-identifier">html</span> <span class="ruby-comment"># new.html.erb</span>
+    <span class="ruby-identifier">format</span>.<span class="ruby-identifier">xml</span>  { <span class="ruby-identifier">render</span> <span class="ruby-value">:xml</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-ivar">@person</span> }
+  <span class="ruby-keyword">end</span>
+<span class="ruby-keyword">end</span></pre>
+          </div><!-- new-source -->
+          
+        </div>
+
+        
+
+        
+      </div><!-- new-method -->
+
+    
+      <div id="method-i-post_back_person" class="method-detail ">
+        
+        <div class="method-heading">
+          <span class="method-name">post_back_person</span><span
+            class="method-args">()</span>
+          <span class="method-click-advice">click to toggle source</span>
+        </div>
+        
+
+        <div class="method-description">
+          
+          
+          
+
+          
+          <div class="method-source-code" id="post_back_person-source">
+            <pre><span class="ruby-comment"># File app/controllers/people_controller.rb, line 42</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier">post_back_person</span>
+  <span class="ruby-identifier">person</span> = <span class="ruby-identifier">reassign_national_identification</span>(<span class="ruby-identifier">params</span>[<span class="ruby-value">:person_id</span>])
+  <span class="ruby-identifier">render</span> <span class="ruby-value">:text</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-identifier">person</span>.<span class="ruby-identifier">to_json</span> <span class="ruby-keyword">and</span> <span class="ruby-keyword">return</span>
+<span class="ruby-keyword">end</span></pre>
+          </div><!-- post_back_person-source -->
+          
+        </div>
+
+        
+
+        
+      </div><!-- post_back_person-method -->
+
+    
+      <div id="method-i-proxy_people_to_sync" class="method-detail ">
+        
+        <div class="method-heading">
+          <span class="method-name">proxy_people_to_sync</span><span
+            class="method-args">()</span>
+          <span class="method-click-advice">click to toggle source</span>
+        </div>
+        
+
+        <div class="method-description">
+          
+          
+          
+
+          
+          <div class="method-source-code" id="proxy_people_to_sync-source">
+            <pre><span class="ruby-comment"># File app/controllers/people_controller.rb, line 333</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier">proxy_people_to_sync</span>
+  <span class="ruby-identifier">last_updated_date</span> = <span class="ruby-constant">ProxySyncs</span>.<span class="ruby-identifier">last_updated_datetime</span>
+
+  <span class="ruby-identifier">people_with_duplicate_ids_not_to_sync</span> =  <span class="ruby-constant">NationalPatientIdentifier</span>.<span class="ruby-identifier">where</span>(<span class="ruby-string">&quot;voided = 0 
+    AND person_id IS NOT NULL&quot;</span>).<span class="ruby-identifier">group</span>(<span class="ruby-value">:value</span>).<span class="ruby-identifier">having</span>(<span class="ruby-string">&quot;count(value) &gt; 1&quot;</span>).<span class="ruby-identifier">map</span>(&amp;<span class="ruby-value">:value</span>)
+
+  <span class="ruby-identifier">people_with_duplicate_ids_not_to_sync</span> = [<span class="ruby-string">'0'</span>] <span class="ruby-keyword">if</span> <span class="ruby-identifier">people_with_duplicate_ids_not_to_sync</span>.<span class="ruby-identifier">blank?</span>
+
+  <span class="ruby-keyword">if</span> <span class="ruby-identifier">last_updated_date</span>
+    <span class="ruby-identifier">people_ids</span> =  <span class="ruby-constant">Person</span>.<span class="ruby-identifier">joins</span>(<span class="ruby-value">:national_patient_identifier</span>).<span class="ruby-identifier">where</span>(<span class="ruby-string">&quot;people.updated_at &gt; ?
+      AND people.creator_site_id = ? AND value NOT IN(?)&quot;</span>,<span class="ruby-identifier">last_updated_date</span>.<span class="ruby-identifier">strftime</span>(<span class="ruby-string">&quot;%Y-%m-%d %H:%M:%S&quot;</span>),
+      <span class="ruby-constant">Site</span>.<span class="ruby-identifier">current_id</span>,<span class="ruby-identifier">people_with_duplicate_ids_not_to_sync</span>).<span class="ruby-identifier">select</span>(<span class="ruby-string">&quot;people.id&quot;</span>).<span class="ruby-identifier">order</span>(<span class="ruby-value">:id</span>).<span class="ruby-identifier">map</span>(&amp;<span class="ruby-value">:id</span>)
+    <span class="ruby-constant">ProxySyncs</span>.<span class="ruby-identifier">check_for_valid_start_date</span> <span class="ruby-keyword">unless</span> <span class="ruby-identifier">people_ids</span>.<span class="ruby-identifier">blank?</span>
+  <span class="ruby-keyword">else</span>
+    <span class="ruby-identifier">people_ids</span> = <span class="ruby-constant">Person</span>.<span class="ruby-identifier">where</span>(<span class="ruby-string">&quot;creator_site_id = ? AND value NOT IN(?)&quot;</span> , <span class="ruby-constant">Site</span>.<span class="ruby-identifier">current_id</span>,
+      <span class="ruby-identifier">people_with_duplicate_ids_not_to_sync</span>).<span class="ruby-identifier">joins</span>(<span class="ruby-value">:national_patient_identifier</span>).<span class="ruby-identifier">select</span>(<span class="ruby-string">&quot;people.id&quot;</span>).<span class="ruby-identifier">order</span>(<span class="ruby-value">:id</span>).<span class="ruby-identifier">map</span>(&amp;<span class="ruby-value">:id</span>)
+    <span class="ruby-constant">ProxySyncs</span>.<span class="ruby-identifier">check_for_valid_start_date</span> <span class="ruby-keyword">unless</span> <span class="ruby-identifier">people_ids</span>.<span class="ruby-identifier">blank?</span>
+  <span class="ruby-keyword">end</span>
+  <span class="ruby-identifier">render</span> <span class="ruby-value">:text</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-identifier">people_ids</span>.<span class="ruby-identifier">sort</span>.<span class="ruby-identifier">to_json</span>
+<span class="ruby-keyword">end</span></pre>
+          </div><!-- proxy_people_to_sync-source -->
+          
+        </div>
+
+        
+
+        
+      </div><!-- proxy_people_to_sync-method -->
+
+    
+      <div id="method-i-reassign_identication" class="method-detail ">
+        
+        <div class="method-heading">
+          <span class="method-name">reassign_identication</span><span
+            class="method-args">()</span>
+          <span class="method-click-advice">click to toggle source</span>
+        </div>
+        
+
+        <div class="method-description">
+          
+          
+          
+
+          
+          <div class="method-source-code" id="reassign_identication-source">
+            <pre><span class="ruby-comment"># File app/controllers/people_controller.rb, line 37</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier">reassign_identication</span>
+  <span class="ruby-identifier">person</span> = <span class="ruby-identifier">reassign_national_identification</span>(<span class="ruby-identifier">params</span>[<span class="ruby-value">:person_id</span>])
+  <span class="ruby-identifier">render</span> <span class="ruby-value">:text</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-identifier">person</span>.<span class="ruby-identifier">national_patient_identifier</span>.<span class="ruby-identifier">value</span> <span class="ruby-keyword">and</span> <span class="ruby-keyword">return</span>
+<span class="ruby-keyword">end</span></pre>
+          </div><!-- reassign_identication-source -->
+          
+        </div>
+
+        
+
+        
+      </div><!-- reassign_identication-method -->
+
+    
+      <div id="method-i-record_successful_sync" class="method-detail ">
+        
+        <div class="method-heading">
+          <span class="method-name">record_successful_sync</span><span
+            class="method-args">()</span>
+          <span class="method-click-advice">click to toggle source</span>
+        </div>
+        
+
+        <div class="method-description">
+          
+          
+          
+
+          
+          <div class="method-source-code" id="record_successful_sync-source">
+            <pre><span class="ruby-comment"># File app/controllers/people_controller.rb, line 452</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier">record_successful_sync</span>
+  <span class="ruby-keyword">if</span> <span class="ruby-constant">Site</span>.<span class="ruby-identifier">proxy?</span>
+    <span class="ruby-keyword">if</span> <span class="ruby-identifier">params</span>[<span class="ruby-value">:update_master</span>].<span class="ruby-identifier">blank?</span>
+      <span class="ruby-identifier">sync</span> = <span class="ruby-constant">ProxySyncs</span>.<span class="ruby-identifier">where</span>(<span class="ruby-string">&quot;start_date IS NOT NULL AND end_date IS NULL&quot;</span>).<span class="ruby-identifier">first</span>
+      <span class="ruby-identifier">sync</span>.<span class="ruby-identifier">end_date</span> = <span class="ruby-constant">Date</span>.<span class="ruby-identifier">today</span>
+      <span class="ruby-identifier">sync</span>.<span class="ruby-identifier">save</span>
+    <span class="ruby-keyword">elsif</span> <span class="ruby-keyword">not</span> <span class="ruby-identifier">params</span>[<span class="ruby-value">:update_master</span>].<span class="ruby-identifier">blank?</span>
+      <span class="ruby-identifier">uri</span> = <span class="ruby-node">&quot;http://#{dde_master_user}:#{dde_master_password}@#{dde_master_uri}/people/record_successful_sync/&quot;</span>
+      <span class="ruby-constant">RestClient</span>.<span class="ruby-identifier">post</span>(<span class="ruby-identifier">uri</span>,{<span class="ruby-string">&quot;site_code&quot;</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-constant">Site</span>.<span class="ruby-identifier">current_code</span>})
+      <span class="ruby-identifier">update_proxy_sync</span> 
+    <span class="ruby-keyword">end</span>
+  <span class="ruby-keyword">elsif</span> <span class="ruby-constant">Site</span>.<span class="ruby-identifier">master?</span>
+    <span class="ruby-identifier">sync</span> = <span class="ruby-constant">MasterSyncs</span>.<span class="ruby-identifier">where</span>(<span class="ruby-string">&quot;created_date IS NOT NULL 
+      AND updated_date IS NULL AND site_code = ?&quot;</span>,<span class="ruby-identifier">params</span>[<span class="ruby-value">:site_code</span>]).<span class="ruby-identifier">first</span>
+    <span class="ruby-identifier">sync</span>.<span class="ruby-identifier">updated_date</span> = <span class="ruby-constant">Date</span>.<span class="ruby-identifier">today</span>
+    <span class="ruby-identifier">sync</span>.<span class="ruby-identifier">save</span>
+  <span class="ruby-keyword">end</span>
+  <span class="ruby-identifier">render</span> <span class="ruby-value">:text</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-string">'done ...'</span> <span class="ruby-keyword">and</span> <span class="ruby-keyword">return</span>
+<span class="ruby-keyword">end</span></pre>
+          </div><!-- record_successful_sync-source -->
+          
+        </div>
+
+        
+
+        
+      </div><!-- record_successful_sync-method -->
+
+    
+      <div id="method-i-record_sync_starttime" class="method-detail ">
+        
+        <div class="method-heading">
+          <span class="method-name">record_sync_starttime</span><span
+            class="method-args">()</span>
+          <span class="method-click-advice">click to toggle source</span>
+        </div>
+        
+
+        <div class="method-description">
+          
+          
+          
+
+          
+          <div class="method-source-code" id="record_sync_starttime-source">
+            <pre><span class="ruby-comment"># File app/controllers/people_controller.rb, line 472</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier">record_sync_starttime</span>
+  <span class="ruby-keyword">if</span> <span class="ruby-constant">Site</span>.<span class="ruby-identifier">proxy?</span>
+    <span class="ruby-identifier">uri</span> = <span class="ruby-node">&quot;http://#{dde_master_user}:#{dde_master_password}@#{dde_master_uri}/people/record_sync_starttime/&quot;</span>
+    <span class="ruby-constant">RestClient</span>.<span class="ruby-identifier">post</span>(<span class="ruby-identifier">uri</span>,{<span class="ruby-string">&quot;site_id&quot;</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-constant">Site</span>.<span class="ruby-identifier">current_id</span>})
+  <span class="ruby-keyword">else</span>
+    <span class="ruby-identifier">site_id</span> = <span class="ruby-identifier">params</span>[<span class="ruby-value">:site_id</span>]
+    <span class="ruby-identifier">site_code</span> = <span class="ruby-constant">Site</span>.<span class="ruby-identifier">find</span>(<span class="ruby-identifier">site_id</span>).<span class="ruby-identifier">code</span>
+    <span class="ruby-constant">MasterSyncs</span>.<span class="ruby-identifier">check_for_valid_start_date</span>(<span class="ruby-identifier">site_code</span>) 
+  <span class="ruby-keyword">end</span>
+  <span class="ruby-identifier">render</span> <span class="ruby-value">:text</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-string">'done ...'</span> <span class="ruby-keyword">and</span> <span class="ruby-keyword">return</span>
+<span class="ruby-keyword">end</span></pre>
+          </div><!-- record_sync_starttime-source -->
+          
+        </div>
+
+        
+
+        
+      </div><!-- record_sync_starttime-method -->
+
+    
+      <div id="method-i-show" class="method-detail ">
+        
+        <div class="method-heading">
+          <span class="method-name">show</span><span
+            class="method-args">()</span>
+          <span class="method-click-advice">click to toggle source</span>
+        </div>
+        
+
+        <div class="method-description">
+          
+          <p>GET /people/1 GET /people/1.xml GET /people/1.json</p>
+          
+
+          
+          <div class="method-source-code" id="show-source">
+            <pre><span class="ruby-comment"># File app/controllers/people_controller.rb, line 21</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier">show</span>
+  <span class="ruby-keyword">if</span> <span class="ruby-ivar">@person</span>.<span class="ruby-identifier">nil?</span>
+    <span class="ruby-keyword">if</span> <span class="ruby-constant">Site</span>.<span class="ruby-identifier">master?</span>
+      <span class="ruby-identifier">head</span> <span class="ruby-value">:not_found</span>
+    <span class="ruby-keyword">else</span>
+      <span class="ruby-identifier">show_remote</span>
+    <span class="ruby-keyword">end</span>
+  <span class="ruby-keyword">else</span>
+    <span class="ruby-identifier">respond_to</span> <span class="ruby-keyword">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">format</span><span class="ruby-operator">|</span>
+      <span class="ruby-identifier">format</span>.<span class="ruby-identifier">html</span> <span class="ruby-comment"># show.html.erb</span>
+      <span class="ruby-identifier">format</span>.<span class="ruby-identifier">xml</span>  { <span class="ruby-identifier">render</span> <span class="ruby-value">:xml</span>  =<span class="ruby-operator">&gt;</span> <span class="ruby-ivar">@person</span> }
+      <span class="ruby-identifier">format</span>.<span class="ruby-identifier">json</span> { <span class="ruby-identifier">render</span> <span class="ruby-value">:json</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-ivar">@person</span>.<span class="ruby-identifier">to_json</span> }
+    <span class="ruby-keyword">end</span>
+  <span class="ruby-keyword">end</span>
+<span class="ruby-keyword">end</span></pre>
+          </div><!-- show-source -->
+          
+        </div>
+
+        
+
+        
+      </div><!-- show-method -->
+
+    
+      <div id="method-i-show_remote" class="method-detail ">
+        
+        <div class="method-heading">
+          <span class="method-name">show_remote</span><span
+            class="method-args">()</span>
+          <span class="method-click-advice">click to toggle source</span>
+        </div>
+        
+
+        <div class="method-description">
+          
+          
+          
+
+          
+          <div class="method-source-code" id="show_remote-source">
+            <pre><span class="ruby-comment"># File app/controllers/people_controller.rb, line 247</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier">show_remote</span>
+  <span class="ruby-ivar">@person</span> = <span class="ruby-constant">Person</span>.<span class="ruby-identifier">pull_from_master</span>(<span class="ruby-identifier">params</span>[<span class="ruby-value">:id</span>]) <span class="ruby-keyword">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">response</span>, <span class="ruby-identifier">request</span>, <span class="ruby-identifier">result</span><span class="ruby-operator">|</span>
+    <span class="ruby-keyword">case</span> <span class="ruby-identifier">result</span>
+    <span class="ruby-keyword">when</span> <span class="ruby-constant">Net</span><span class="ruby-operator">::</span><span class="ruby-constant">HTTPNotFound</span>
+      <span class="ruby-identifier">respond_to</span> <span class="ruby-keyword">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">format</span><span class="ruby-operator">|</span>
+        <span class="ruby-identifier">format</span>.<span class="ruby-identifier">html</span> { <span class="ruby-identifier">render</span> <span class="ruby-value">:text</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-string">'Record not found!'</span>, <span class="ruby-value">:status</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-value">:not_found</span> }
+        <span class="ruby-identifier">format</span>.<span class="ruby-identifier">any</span>  { <span class="ruby-identifier">head</span> <span class="ruby-value">:not_found</span> }
+      <span class="ruby-keyword">end</span>
+    <span class="ruby-keyword">else</span>
+      <span class="ruby-identifier">respond_to</span> <span class="ruby-keyword">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">format</span><span class="ruby-operator">|</span>
+        <span class="ruby-identifier">flash</span>[<span class="ruby-value">:error</span>] = <span class="ruby-string">'Remote Service is not available'</span>
+        <span class="ruby-identifier">format</span>.<span class="ruby-identifier">html</span> { <span class="ruby-identifier">redirect_to</span> <span class="ruby-value">:action</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-value">:index</span> }
+        <span class="ruby-identifier">format</span>.<span class="ruby-identifier">any</span>  { <span class="ruby-identifier">head</span> <span class="ruby-value">:service_unavailable</span>, <span class="ruby-value">:retry_after</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-value">60</span> }
+      <span class="ruby-keyword">end</span>
+    <span class="ruby-keyword">end</span>
+    <span class="ruby-keyword">return</span>
+  <span class="ruby-keyword">end</span>
+
+
+  <span class="ruby-keyword">if</span> <span class="ruby-ivar">@person</span>.<span class="ruby-identifier">blank?</span>
+    <span class="ruby-ivar">@person</span> = <span class="ruby-constant">Person</span>.<span class="ruby-identifier">joins</span>(<span class="ruby-value">:national_patient_identifier</span>).<span class="ruby-identifier">where</span>(<span class="ruby-value">:'national_patient_identifiers.value'</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-identifier">params</span>[<span class="ruby-value">:id</span>]).<span class="ruby-identifier">first</span>
+  <span class="ruby-keyword">end</span>
+
+  <span class="ruby-identifier">respond_to</span> <span class="ruby-keyword">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">format</span><span class="ruby-operator">|</span>
+    <span class="ruby-identifier">format</span>.<span class="ruby-identifier">html</span> { <span class="ruby-identifier">render</span> <span class="ruby-value">:action</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-string">'show'</span> }
+    <span class="ruby-identifier">format</span>.<span class="ruby-identifier">json</span> { <span class="ruby-identifier">render</span> <span class="ruby-value">:json</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-ivar">@person</span>.<span class="ruby-identifier">to_json</span> }
+    <span class="ruby-identifier">format</span>.<span class="ruby-identifier">xml</span>  { <span class="ruby-identifier">render</span> <span class="ruby-value">:xml</span>  =<span class="ruby-operator">&gt;</span> <span class="ruby-ivar">@person</span> }
+  <span class="ruby-keyword">end</span>
+<span class="ruby-keyword">end</span></pre>
+          </div><!-- show_remote-source -->
+          
+        </div>
+
+        
+
+        
+      </div><!-- show_remote-method -->
+
+    
+      <div id="method-i-sync_demographics_with_master" class="method-detail ">
+        
+        <div class="method-heading">
+          <span class="method-name">sync_demographics_with_master</span><span
+            class="method-args">()</span>
+          <span class="method-click-advice">click to toggle source</span>
+        </div>
+        
+
+        <div class="method-description">
+          
+          
+          
+
+          
+          <div class="method-source-code" id="sync_demographics_with_master-source">
+            <pre><span class="ruby-comment"># File app/controllers/people_controller.rb, line 277</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier">sync_demographics_with_master</span>
+  <span class="ruby-keyword">if</span> <span class="ruby-constant">Site</span>.<span class="ruby-identifier">proxy?</span>
+    <span class="ruby-identifier">people</span> = <span class="ruby-constant">Person</span>.<span class="ruby-identifier">find</span>(<span class="ruby-identifier">params</span>[<span class="ruby-value">:patient_ids</span>].<span class="ruby-identifier">split</span>(<span class="ruby-string">','</span>))
+    <span class="ruby-identifier">filename</span> = <span class="ruby-constant">Site</span>.<span class="ruby-identifier">current_code</span> <span class="ruby-operator">+</span> <span class="ruby-constant">Time</span>.<span class="ruby-identifier">now</span>().<span class="ruby-identifier">strftime</span>(<span class="ruby-string">'%Y%m%d%H%M%S'</span>) <span class="ruby-operator">+</span> <span class="ruby-string">'.txt'</span>
+    <span class="ruby-node">%xtouch #{Rails.root}/demographics/#{filename}`</span>
+    <span class="ruby-identifier">l</span> = <span class="ruby-constant">Logger</span>.<span class="ruby-identifier">new</span>(<span class="ruby-constant">Rails</span>.<span class="ruby-identifier">root</span>.<span class="ruby-identifier">join</span>(<span class="ruby-string">&quot;demographics&quot;</span>,<span class="ruby-identifier">filename</span>))
+    <span class="ruby-identifier">p</span> = []
+    <span class="ruby-identifier">people</span>.<span class="ruby-identifier">each</span> <span class="ruby-keyword">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">person</span><span class="ruby-operator">|</span>
+      <span class="ruby-identifier">l</span>.<span class="ruby-identifier">info</span> <span class="ruby-node">&quot;#{person.to_json}&quot;</span>
+      <span class="ruby-identifier">p</span> <span class="ruby-operator">&lt;&lt;</span> <span class="ruby-identifier">person</span>.<span class="ruby-identifier">to_json</span>
+    <span class="ruby-keyword">end</span>
+
+    <span class="ruby-identifier">batch_info</span> = {}
+
+    <span class="ruby-identifier">file_info</span> = <span class="ruby-node">%xcksum #{Rails.root}/demographics/#{filename}`</span>.<span class="ruby-identifier">split</span>(<span class="ruby-string">' '</span>)
+    <span class="ruby-identifier">batch_info</span>[<span class="ruby-value">:check_sum</span>] = <span class="ruby-identifier">file_info</span>[<span class="ruby-value">0</span>]
+    <span class="ruby-identifier">batch_info</span>[<span class="ruby-value">:file_size</span>] = <span class="ruby-identifier">file_info</span>[<span class="ruby-value">1</span>]
+    <span class="ruby-identifier">batch_info</span>[<span class="ruby-value">:file_name</span>] = <span class="ruby-identifier">filename</span>
+
+    <span class="ruby-identifier">people_params</span> = {<span class="ruby-string">'people'</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-identifier">p</span>.<span class="ruby-identifier">to_json</span>}
+    <span class="ruby-identifier">people_params</span>.<span class="ruby-identifier">merge!</span>(<span class="ruby-string">'file'</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-identifier">batch_info</span>)
+    <span class="ruby-identifier">people_params</span>.<span class="ruby-identifier">merge!</span>(<span class="ruby-string">'site_code'</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-constant">Site</span>.<span class="ruby-identifier">current_code</span>)
+
+
+    <span class="ruby-identifier">uri</span> = <span class="ruby-node">&quot;http://#{dde_master_user}:#{dde_master_password}@#{dde_master_uri}/people/sync_demographics_with_master/&quot;</span>
+    <span class="ruby-identifier">sync</span> = <span class="ruby-constant">RestClient</span>.<span class="ruby-identifier">post</span>(<span class="ruby-identifier">uri</span>,<span class="ruby-identifier">people_params</span>)
+
+    <span class="ruby-identifier">render</span> <span class="ruby-value">:text</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-string">&quot;updated master&quot;</span> <span class="ruby-keyword">and</span> <span class="ruby-keyword">return</span>
+  <span class="ruby-keyword">else</span>
+    <span class="ruby-identifier">site_code</span> = <span class="ruby-identifier">params</span>[<span class="ruby-string">'site_code'</span>]
+    <span class="ruby-identifier">received_file</span> = <span class="ruby-identifier">params</span>[<span class="ruby-string">'file'</span>]
+    <span class="ruby-identifier">filename</span> = <span class="ruby-identifier">received_file</span>[<span class="ruby-string">'file_name'</span>]
+    <span class="ruby-identifier">patients</span> = <span class="ruby-constant">JSON</span>.<span class="ruby-identifier">parse</span>(<span class="ruby-identifier">params</span>[<span class="ruby-string">'people'</span>])
+
+    <span class="ruby-node">%xtouch #{Rails.root}/demographics/#{filename}`</span>
+    <span class="ruby-identifier">l</span> = <span class="ruby-constant">Logger</span>.<span class="ruby-identifier">new</span>(<span class="ruby-constant">Rails</span>.<span class="ruby-identifier">root</span>.<span class="ruby-identifier">join</span>(<span class="ruby-string">&quot;demographics&quot;</span>,<span class="ruby-identifier">filename</span>))
+    <span class="ruby-identifier">patients</span>.<span class="ruby-identifier">each</span> <span class="ruby-keyword">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">person</span><span class="ruby-operator">|</span>
+      <span class="ruby-identifier">l</span>.<span class="ruby-identifier">info</span> <span class="ruby-node">&quot;#{person}&quot;</span>
+    <span class="ruby-keyword">end</span>
+
+    <span class="ruby-identifier">batch_info</span> = {}
+
+    <span class="ruby-identifier">file_info</span> = <span class="ruby-node">%xcksum #{Rails.root}/demographics/#{filename}`</span>.<span class="ruby-identifier">split</span>(<span class="ruby-string">' '</span>)
+    <span class="ruby-identifier">batch_info</span>[<span class="ruby-value">:check_sum</span>] = <span class="ruby-identifier">file_info</span>[<span class="ruby-value">0</span>]
+    <span class="ruby-identifier">batch_info</span>[<span class="ruby-value">:file_size</span>] = <span class="ruby-identifier">file_info</span>[<span class="ruby-value">1</span>]
+
+    <span class="ruby-keyword">if</span> <span class="ruby-identifier">batch_info</span>[<span class="ruby-value">:check_sum</span>].<span class="ruby-identifier">to_i</span> <span class="ruby-operator">==</span> <span class="ruby-identifier">received_file</span>[<span class="ruby-string">'check_sum'</span>].<span class="ruby-identifier">to_i</span>
+      <span class="ruby-identifier">people</span> = <span class="ruby-identifier">create_from_proxy</span>(<span class="ruby-identifier">patients</span>)
+      <span class="ruby-identifier">render</span> <span class="ruby-value">:text</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-string">&quot;done ...&quot;</span> <span class="ruby-keyword">and</span> <span class="ruby-keyword">return</span>
+    <span class="ruby-keyword">else</span>
+      <span class="ruby-identifier">raise</span> <span class="ruby-node">&quot;NO ....#{patients.length}...... #{batch_info[:file_size].to_s} &gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt; #{received_file['file_size'].to_s}&quot;</span>
+    <span class="ruby-keyword">end</span>
+
+  <span class="ruby-keyword">end</span>
+<span class="ruby-keyword">end</span></pre>
+          </div><!-- sync_demographics_with_master-source -->
+          
+        </div>
+
+        
+
+        
+      </div><!-- sync_demographics_with_master-method -->
+
+    
+      <div id="method-i-sync_demographics_with_proxy" class="method-detail ">
+        
+        <div class="method-heading">
+          <span class="method-name">sync_demographics_with_proxy</span><span
+            class="method-args">()</span>
+          <span class="method-click-advice">click to toggle source</span>
+        </div>
+        
+
+        <div class="method-description">
+          
+          
+          
+
+          
+          <div class="method-source-code" id="sync_demographics_with_proxy-source">
+            <pre><span class="ruby-comment"># File app/controllers/people_controller.rb, line 354</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier">sync_demographics_with_proxy</span>
+   <span class="ruby-keyword">if</span> <span class="ruby-constant">Site</span>.<span class="ruby-identifier">master?</span>
+    <span class="ruby-identifier">people</span> = <span class="ruby-constant">Person</span>.<span class="ruby-identifier">find</span>(<span class="ruby-identifier">params</span>[<span class="ruby-value">:patient_ids</span>].<span class="ruby-identifier">split</span>(<span class="ruby-string">','</span>))
+    <span class="ruby-identifier">site_code</span> = <span class="ruby-identifier">params</span>[<span class="ruby-value">:site_code</span>]
+    <span class="ruby-identifier">filename</span> = <span class="ruby-identifier">site_code</span> <span class="ruby-operator">+</span> <span class="ruby-constant">Time</span>.<span class="ruby-identifier">now</span>().<span class="ruby-identifier">strftime</span>(<span class="ruby-string">'%Y%m%d%H%M%S'</span>) <span class="ruby-operator">+</span> <span class="ruby-string">'M.txt'</span>
+    <span class="ruby-node">%xtouch #{Rails.root}/demographics/#{filename}`</span>
+    <span class="ruby-identifier">l</span> = <span class="ruby-constant">Logger</span>.<span class="ruby-identifier">new</span>(<span class="ruby-constant">Rails</span>.<span class="ruby-identifier">root</span>.<span class="ruby-identifier">join</span>(<span class="ruby-string">&quot;demographics&quot;</span>,<span class="ruby-identifier">filename</span>))
+    <span class="ruby-identifier">p</span> = []
+    <span class="ruby-identifier">people</span>.<span class="ruby-identifier">each</span> <span class="ruby-keyword">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">person</span><span class="ruby-operator">|</span>
+      <span class="ruby-identifier">l</span>.<span class="ruby-identifier">info</span> <span class="ruby-node">&quot;#{person.to_json}&quot;</span>
+      <span class="ruby-identifier">p</span> <span class="ruby-operator">&lt;&lt;</span> <span class="ruby-identifier">person</span>.<span class="ruby-identifier">to_json</span>
+    <span class="ruby-keyword">end</span>
+
+    <span class="ruby-identifier">batch_info</span> = {}
+
+    <span class="ruby-identifier">file_info</span> = <span class="ruby-node">%xcksum #{Rails.root}/demographics/#{filename}`</span>.<span class="ruby-identifier">split</span>(<span class="ruby-string">' '</span>)
+    <span class="ruby-identifier">batch_info</span>[<span class="ruby-value">:check_sum</span>] = <span class="ruby-identifier">file_info</span>[<span class="ruby-value">0</span>]
+    <span class="ruby-identifier">batch_info</span>[<span class="ruby-value">:file_size</span>] = <span class="ruby-identifier">file_info</span>[<span class="ruby-value">1</span>]
+    <span class="ruby-identifier">batch_info</span>[<span class="ruby-value">:file_name</span>] = <span class="ruby-identifier">filename</span>
+
+    <span class="ruby-identifier">people_params</span> = {<span class="ruby-string">'people'</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-identifier">p</span>.<span class="ruby-identifier">to_json</span>}
+    <span class="ruby-identifier">people_params</span>.<span class="ruby-identifier">merge!</span>(<span class="ruby-string">'file'</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-identifier">batch_info</span>)
+    <span class="ruby-identifier">people_params</span>.<span class="ruby-identifier">merge!</span>(<span class="ruby-string">'site_code'</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-identifier">site_code</span>)
+
+    <span class="ruby-identifier">render</span> <span class="ruby-value">:text</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-identifier">people_params</span>.<span class="ruby-identifier">to_json</span>
+  <span class="ruby-keyword">else</span>
+    <span class="ruby-identifier">uri</span> = <span class="ruby-node">&quot;http://#{dde_master_user}:#{dde_master_password}@#{dde_master_uri}/people/sync_demographics_with_proxy/&quot;</span>
+    <span class="ruby-identifier">params</span>.<span class="ruby-identifier">merge!</span>(<span class="ruby-string">&quot;site_code&quot;</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-constant">Site</span>.<span class="ruby-identifier">current_code</span>)
+    <span class="ruby-identifier">sync</span> = <span class="ruby-constant">RestClient</span>.<span class="ruby-identifier">post</span>(<span class="ruby-identifier">uri</span>,<span class="ruby-identifier">params</span>)
+    <span class="ruby-identifier">people_params</span> = <span class="ruby-constant">JSON</span>.<span class="ruby-identifier">parse</span>(<span class="ruby-identifier">sync</span>)
+    <span class="ruby-identifier">received_file</span> = <span class="ruby-identifier">people_params</span>[<span class="ruby-string">'file'</span>]
+    <span class="ruby-identifier">filename</span> = <span class="ruby-identifier">received_file</span>[<span class="ruby-string">'file_name'</span>]
+    <span class="ruby-identifier">patients</span> = <span class="ruby-constant">JSON</span>.<span class="ruby-identifier">parse</span>(<span class="ruby-identifier">people_params</span>[<span class="ruby-string">'people'</span>])
+    <span class="ruby-node">%xtouch #{Rails.root}/demographics/#{filename}`</span>
+    <span class="ruby-identifier">l</span> = <span class="ruby-constant">Logger</span>.<span class="ruby-identifier">new</span>(<span class="ruby-constant">Rails</span>.<span class="ruby-identifier">root</span>.<span class="ruby-identifier">join</span>(<span class="ruby-string">&quot;demographics&quot;</span>,<span class="ruby-identifier">filename</span>))
+    <span class="ruby-identifier">patients</span>.<span class="ruby-identifier">each</span> <span class="ruby-keyword">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">person</span><span class="ruby-operator">|</span>
+      <span class="ruby-identifier">l</span>.<span class="ruby-identifier">info</span> <span class="ruby-node">&quot;#{person}&quot;</span>
+    <span class="ruby-keyword">end</span>
+
+    <span class="ruby-identifier">batch_info</span> = {}
+
+    <span class="ruby-identifier">file_info</span> = <span class="ruby-node">%xcksum #{Rails.root}/demographics/#{filename}`</span>.<span class="ruby-identifier">split</span>(<span class="ruby-string">' '</span>)
+    <span class="ruby-identifier">batch_info</span>[<span class="ruby-value">:check_sum</span>] = <span class="ruby-identifier">file_info</span>[<span class="ruby-value">0</span>]
+    <span class="ruby-identifier">batch_info</span>[<span class="ruby-value">:file_size</span>] = <span class="ruby-identifier">file_info</span>[<span class="ruby-value">1</span>]
+
+    <span class="ruby-keyword">if</span> <span class="ruby-identifier">batch_info</span>[<span class="ruby-value">:check_sum</span>].<span class="ruby-identifier">to_i</span> <span class="ruby-operator">==</span> <span class="ruby-identifier">received_file</span>[<span class="ruby-string">'check_sum'</span>].<span class="ruby-identifier">to_i</span>
+      <span class="ruby-identifier">people</span> = <span class="ruby-identifier">create_from_master</span>(<span class="ruby-identifier">patients</span>)
+      <span class="ruby-identifier">render</span> <span class="ruby-value">:text</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-string">&quot;updated proxy&quot;</span> <span class="ruby-keyword">and</span> <span class="ruby-keyword">return</span>
+    <span class="ruby-keyword">else</span>
+      <span class="ruby-identifier">raise</span> <span class="ruby-node">&quot;NO ....#{patients.length}...... #{batch_info[:file_size].to_s} &gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt; #{received_file['file_size'].to_s}&quot;</span>
+    <span class="ruby-keyword">end</span>
+  <span class="ruby-keyword">end</span>
+<span class="ruby-keyword">end</span></pre>
+          </div><!-- sync_demographics_with_proxy-source -->
+          
+        </div>
+
+        
+
+        
+      </div><!-- sync_demographics_with_proxy-method -->
+
+    
+      <div id="method-i-update" class="method-detail ">
+        
+        <div class="method-heading">
+          <span class="method-name">update</span><span
+            class="method-args">()</span>
+          <span class="method-click-advice">click to toggle source</span>
+        </div>
+        
+
+        <div class="method-description">
+          
+          <p>PUT /people/1 PUT /people/1.xml</p>
+          
+
+          
+          <div class="method-source-code" id="update-source">
+            <pre><span class="ruby-comment"># File app/controllers/people_controller.rb, line 176</span>
+  <span class="ruby-keyword">def</span> <span class="ruby-identifier">update</span>
+    <span class="ruby-keyword">if</span> <span class="ruby-ivar">@person</span>.<span class="ruby-identifier">nil?</span> <span class="ruby-comment"># happens on master if records are 'created' by proxy</span>
+      <span class="ruby-ivar">@person</span> = <span class="ruby-constant">Person</span>.<span class="ruby-identifier">find_or_initialize_from_attributes</span>(<span class="ruby-identifier">params</span>.<span class="ruby-identifier">slice</span>(<span class="ruby-value">:person</span>, <span class="ruby-value">:npid</span>, <span class="ruby-value">:site</span>))
+      <span class="ruby-identifier">success</span> = <span class="ruby-ivar">@person</span>.<span class="ruby-identifier">save</span>
+    <span class="ruby-keyword">else</span>
+      <span class="ruby-identifier">person</span> = (<span class="ruby-identifier">params</span>[<span class="ruby-value">:person</span>])
+      <span class="ruby-keyword">if</span> <span class="ruby-constant">Site</span>.<span class="ruby-identifier">master?</span>
+        <span class="ruby-identifier">person_data_hash</span> = (<span class="ruby-identifier">person</span>[<span class="ruby-string">'data'</span>])
+      <span class="ruby-keyword">else</span>
+        <span class="ruby-identifier">person_data_hash</span> = <span class="ruby-constant">YAML</span><span class="ruby-operator">::</span><span class="ruby-identifier">load</span>(<span class="ruby-identifier">person</span>[<span class="ruby-string">'data_as_yaml'</span>])
+      <span class="ruby-keyword">end</span>
+      <span class="ruby-identifier">person</span>.<span class="ruby-identifier">merge!</span>(<span class="ruby-string">&quot;given_name&quot;</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-identifier">person_data_hash</span>[<span class="ruby-string">'names'</span>][<span class="ruby-string">'given_name'</span>])
+      <span class="ruby-identifier">person</span>.<span class="ruby-identifier">merge!</span>(<span class="ruby-string">&quot;family_name&quot;</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-identifier">person_data_hash</span>[<span class="ruby-string">'names'</span>][<span class="ruby-string">'family_name'</span>])
+      <span class="ruby-identifier">person</span>.<span class="ruby-identifier">merge!</span>(<span class="ruby-string">&quot;gender&quot;</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-identifier">person_data_hash</span>[<span class="ruby-string">'gender'</span>])
+      <span class="ruby-identifier">person</span>.<span class="ruby-identifier">merge!</span>(<span class="ruby-string">&quot;birthdate&quot;</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-identifier">person_data_hash</span>[<span class="ruby-string">'birthdate'</span>])
+      <span class="ruby-identifier">person</span>.<span class="ruby-identifier">merge!</span>(<span class="ruby-string">&quot;birthdate_estimated&quot;</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-identifier">person_data_hash</span>[<span class="ruby-string">'birthdate_estimated'</span>])
+      <span class="ruby-identifier">success</span> = <span class="ruby-ivar">@person</span>.<span class="ruby-identifier">update_attributes</span>(<span class="ruby-identifier">person</span>) <span class="ruby-keyword">do</span> <span class="ruby-comment"># this block is only called on conflict</span>
+        <span class="ruby-identifier">flash</span>[<span class="ruby-value">:error</span>] = <span class="ruby-node">&quot;Conflicting versions: new (#{params[:person][:version_number].last(12)}) vs. old (#{@person.version_number.last(12)}). NO changes have been saved!&quot;</span>
+        <span class="ruby-identifier">handle_local_conflict</span>(<span class="ruby-ivar">@person</span>, <span class="ruby-ivar">@person</span>.<span class="ruby-identifier">dup</span>.<span class="ruby-identifier">reload</span>) <span class="ruby-keyword">and</span> <span class="ruby-keyword">return</span>
+      <span class="ruby-keyword">end</span>
+<span class="ruby-comment">      #redundant as is handled by syncing
+      if success and Site.proxy?
+        @person.push_to_remote do |response, request, result| # this block is only called on error
+          case result
+          when Net::HTTPConflict
+            logger.error &quot;Conflict while updating #{params[:id]} on remote: #{response}&quot;
+            decoded_response = ActiveSupport::JSON.decode(response)
+            remote_person    = Person.initialize_from_attributes(decoded_response)
+            flash[:warning]  = &quot;Conflicting versions: local (#{@person.version_number_was.last(12)}) vs. remote (#{remote_person.version_number.last(12)}). Your changes have been saved locally, so you may also resolve this conflict later.&quot;
+            handle_remote_conflict(@person, remote_person) and return
+          when :connection_refused
+            msg = &quot;No connection to master service while updating #{params[:id]} on remote.&quot;
+            logger.error msg
+            flash[:warning] = msg
+          else
+            flash[:warning] = &quot;An error occured while updating #{params[:id]} remotely: #{result.try(:message)}&quot;
+          end
+        end
+      end
+</span>    <span class="ruby-keyword">end</span>
+
+    <span class="ruby-identifier">respond_to</span> <span class="ruby-keyword">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">format</span><span class="ruby-operator">|</span>
+      <span class="ruby-keyword">if</span> <span class="ruby-identifier">success</span>
+        <span class="ruby-identifier">flash</span>[<span class="ruby-value">:notice</span>] = <span class="ruby-string">'Person was successfully updated.'</span>
+        <span class="ruby-identifier">format</span>.<span class="ruby-identifier">html</span> { <span class="ruby-identifier">redirect_to</span>(<span class="ruby-ivar">@person</span>) }
+        <span class="ruby-identifier">format</span>.<span class="ruby-identifier">xml</span>  { <span class="ruby-identifier">render</span> <span class="ruby-value">:xml</span>  =<span class="ruby-operator">&gt;</span> <span class="ruby-ivar">@person</span>,         <span class="ruby-value">:status</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-value">:ok</span> }
+        <span class="ruby-identifier">format</span>.<span class="ruby-identifier">json</span> { <span class="ruby-identifier">render</span> <span class="ruby-value">:json</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-ivar">@person</span>.<span class="ruby-identifier">to_json</span>, <span class="ruby-value">:status</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-value">:ok</span> }
+      <span class="ruby-keyword">else</span>
+        <span class="ruby-identifier">status</span>        = <span class="ruby-ivar">@person</span>.<span class="ruby-identifier">status</span> <span class="ruby-operator">||</span> <span class="ruby-value">:unprocessable_entity</span>
+        <span class="ruby-identifier">flash</span>[<span class="ruby-value">:error</span>] = <span class="ruby-ivar">@person</span>.<span class="ruby-identifier">status_message</span> <span class="ruby-keyword">unless</span> <span class="ruby-ivar">@person</span>.<span class="ruby-identifier">status_message</span>.<span class="ruby-identifier">blank?</span>
+
+        <span class="ruby-identifier">format</span>.<span class="ruby-identifier">html</span> { <span class="ruby-identifier">render</span> <span class="ruby-value">:action</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-string">'edit'</span> }
+        <span class="ruby-identifier">format</span>.<span class="ruby-identifier">json</span> { <span class="ruby-identifier">render</span> <span class="ruby-value">:json</span>   =<span class="ruby-operator">&gt;</span> <span class="ruby-ivar">@person</span>.<span class="ruby-identifier">to_json</span>(<span class="ruby-value">:include</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-value">:errors</span>), <span class="ruby-value">:status</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-identifier">status</span> }
+        <span class="ruby-identifier">format</span>.<span class="ruby-identifier">xml</span>  { <span class="ruby-identifier">render</span> <span class="ruby-value">:xml</span>    =<span class="ruby-operator">&gt;</span> <span class="ruby-ivar">@person</span>, <span class="ruby-value">:status</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-identifier">status</span> }
+      <span class="ruby-keyword">end</span>
+    <span class="ruby-keyword">end</span>
+  <span class="ruby-keyword">end</span></pre>
+          </div><!-- update-source -->
+          
+        </div>
+
+        
+
+        
+      </div><!-- update-method -->
+
+    
+    </section><!-- public-instance-method-details -->
+  
+     <section id="protected-instance-5Buntitled-5D-method-details" class="method-section section">
+      <h3 class="section-header">Protected Instance Methods</h3>
+
+    
+      <div id="method-i-create_from_master" class="method-detail ">
+        
+        <div class="method-heading">
+          <span class="method-name">create_from_master</span><span
+            class="method-args">(people)</span>
+          <span class="method-click-advice">click to toggle source</span>
+        </div>
+        
+
+        <div class="method-description">
+          
+          
+          
+
+          
+          <div class="method-source-code" id="create_from_master-source">
+            <pre><span class="ruby-comment"># File app/controllers/people_controller.rb, line 542</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier">create_from_master</span>(<span class="ruby-identifier">people</span>)
+  <span class="ruby-identifier">saved_people</span> = []
+  (<span class="ruby-identifier">people</span>).<span class="ruby-identifier">each</span> <span class="ruby-keyword">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">person</span><span class="ruby-operator">|</span>
+    <span class="ruby-identifier">person_obj</span> = <span class="ruby-constant">JSON</span>.<span class="ruby-identifier">parse</span>(<span class="ruby-identifier">person</span>)
+    <span class="ruby-identifier">person_hash</span> = {<span class="ruby-string">'person'</span> =<span class="ruby-operator">&gt;</span> {<span class="ruby-string">&quot;family_name&quot;</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-identifier">person_obj</span>[<span class="ruby-string">'person'</span>][<span class="ruby-string">'data'</span>][<span class="ruby-string">'names'</span>][<span class="ruby-string">'family_name'</span>],
+                                <span class="ruby-string">&quot;given_name&quot;</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-identifier">person_obj</span>[<span class="ruby-string">'person'</span>][<span class="ruby-string">'data'</span>][<span class="ruby-string">'names'</span>][<span class="ruby-string">'given_name'</span>],
+                                <span class="ruby-string">&quot;gender&quot;</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-identifier">person_obj</span>[<span class="ruby-string">'person'</span>][<span class="ruby-string">'data'</span>][<span class="ruby-string">'gender'</span>],
+                                <span class="ruby-string">&quot;birthdate&quot;</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-identifier">person_obj</span>[<span class="ruby-string">'person'</span>][<span class="ruby-string">'data'</span>][<span class="ruby-string">'birthdate'</span>],
+                                <span class="ruby-string">&quot;birthdate_estimated&quot;</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-identifier">person_obj</span>[<span class="ruby-string">'person'</span>][<span class="ruby-string">'data'</span>][<span class="ruby-string">'birthdate_estimated'</span>],
+                                <span class="ruby-string">&quot;data&quot;</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-identifier">person_obj</span>[<span class="ruby-string">'person'</span>][<span class="ruby-string">'data'</span>],
+                                <span class="ruby-string">&quot;creator_site_id&quot;</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-identifier">person_obj</span>[<span class="ruby-string">'npid'</span>][<span class="ruby-string">'assigner_site_id'</span>],
+                                <span class="ruby-string">&quot;creator_id&quot;</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-identifier">person_obj</span>[<span class="ruby-string">'person'</span>][<span class="ruby-string">'creator_id'</span>],
+                                <span class="ruby-string">&quot;version_number&quot;</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-identifier">person_obj</span>[<span class="ruby-string">'person'</span>][<span class="ruby-string">'version_number'</span>],
+                                <span class="ruby-string">&quot;remote_version_number&quot;</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-identifier">person_obj</span>[<span class="ruby-string">'person'</span>][<span class="ruby-string">'remote_version_number'</span>]}}
+
+    <span class="ruby-identifier">npid_hash</span> = {<span class="ruby-string">'npid'</span> =<span class="ruby-operator">&gt;</span> {<span class="ruby-string">&quot;value&quot;</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-identifier">person_obj</span>[<span class="ruby-string">'npid'</span>][<span class="ruby-string">'value'</span>],
+                            <span class="ruby-string">&quot;assigner_site_id&quot;</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-identifier">person_obj</span>[<span class="ruby-string">'npid'</span>][<span class="ruby-string">'assigner_site_id'</span>],
+                            <span class="ruby-string">&quot;assigned_at&quot;</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-identifier">person_obj</span>[<span class="ruby-string">'npid'</span>][<span class="ruby-string">&quot;assigned_at&quot;</span>] }}
+
+    <span class="ruby-identifier">site_hash</span> = {<span class="ruby-string">'site'</span> =<span class="ruby-operator">&gt;</span> {<span class="ruby-string">&quot;id&quot;</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-identifier">person_obj</span>[<span class="ruby-string">'npid'</span>][<span class="ruby-string">'assigner_site_id'</span>] }}
+    
+    <span class="ruby-identifier">person_hash</span>.<span class="ruby-identifier">merge!</span><span class="ruby-identifier">npid_hash</span>
+
+    <span class="ruby-identifier">person_hash</span>.<span class="ruby-identifier">merge!</span><span class="ruby-identifier">site_hash</span>
+
+    <span class="ruby-identifier">old_national_id</span> =  <span class="ruby-identifier">person_obj</span>[<span class="ruby-string">'person'</span>][<span class="ruby-string">'data'</span>][<span class="ruby-string">'patient'</span>][<span class="ruby-string">'identifiers'</span>][<span class="ruby-string">'old_identification_number'</span>] <span class="ruby-keyword">rescue</span> <span class="ruby-keyword">nil</span>
+
+    <span class="ruby-ivar">@person</span> = <span class="ruby-constant">Person</span>.<span class="ruby-identifier">find_or_initialize_from_attributes</span>(<span class="ruby-identifier">person_hash</span>.<span class="ruby-identifier">slice</span>(<span class="ruby-string">'person'</span>, <span class="ruby-string">'npid'</span>, <span class="ruby-string">'site'</span>))
+    <span class="ruby-keyword">if</span> <span class="ruby-ivar">@person</span>.<span class="ruby-identifier">save</span>
+      <span class="ruby-keyword">unless</span> <span class="ruby-identifier">old_national_id</span>.<span class="ruby-identifier">blank?</span>
+       <span class="ruby-constant">LegacyNationalIds</span>.<span class="ruby-identifier">find_or_create_by_value_and_person_id</span>(<span class="ruby-value">:value</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-identifier">old_national_id</span>, <span class="ruby-value">:person_id</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-ivar">@person</span>.<span class="ruby-identifier">id</span>)
+      <span class="ruby-keyword">end</span>
+      <span class="ruby-identifier">saved_people</span> <span class="ruby-operator">&lt;&lt;</span> <span class="ruby-ivar">@person</span>
+    <span class="ruby-keyword">end</span>
+  <span class="ruby-keyword">end</span>
+  <span class="ruby-keyword">return</span> <span class="ruby-identifier">saved_people</span>
+<span class="ruby-keyword">end</span></pre>
+          </div><!-- create_from_master-source -->
+          
+        </div>
+
+        
+
+        
+      </div><!-- create_from_master-method -->
+
+    
+      <div id="method-i-create_from_proxy" class="method-detail ">
+        
+        <div class="method-heading">
+          <span class="method-name">create_from_proxy</span><span
+            class="method-args">(people)</span>
+          <span class="method-click-advice">click to toggle source</span>
+        </div>
+        
+
+        <div class="method-description">
+          
+          
+          
+
+          
+          <div class="method-source-code" id="create_from_proxy-source">
+            <pre><span class="ruby-comment"># File app/controllers/people_controller.rb, line 494</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier">create_from_proxy</span>(<span class="ruby-identifier">people</span>)
+  <span class="ruby-identifier">created_people</span> = []
+  (<span class="ruby-identifier">people</span>).<span class="ruby-identifier">each</span> <span class="ruby-keyword">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">person</span><span class="ruby-operator">|</span>
+    <span class="ruby-identifier">person_obj</span> = <span class="ruby-constant">JSON</span>.<span class="ruby-identifier">parse</span>(<span class="ruby-identifier">person</span>)
+    <span class="ruby-keyword">if</span> <span class="ruby-identifier">person_obj</span>[<span class="ruby-string">'npid'</span>].<span class="ruby-identifier">blank?</span>
+      <span class="ruby-identifier">logger</span> = <span class="ruby-constant">Logger</span>.<span class="ruby-identifier">new</span>(<span class="ruby-constant">Rails</span>.<span class="ruby-identifier">root</span>.<span class="ruby-identifier">join</span>(<span class="ruby-string">&quot;log&quot;</span>,<span class="ruby-string">'syncing_error.txt'</span>))
+      <span class="ruby-identifier">logger</span>.<span class="ruby-identifier">error</span> <span class="ruby-node">&quot;#{person_obj['person']['data']['names']['family_name']},
+                    #{person_obj['person']['data']['names']['given_name']},
+                    #{person_obj['person']['data']['gender']}&quot;</span>
+      <span class="ruby-keyword">next</span>
+    <span class="ruby-keyword">end</span>
+    <span class="ruby-identifier">person_hash</span> = {<span class="ruby-string">'person'</span> =<span class="ruby-operator">&gt;</span> {<span class="ruby-string">&quot;family_name&quot;</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-identifier">person_obj</span>[<span class="ruby-string">'person'</span>][<span class="ruby-string">'data'</span>][<span class="ruby-string">'names'</span>][<span class="ruby-string">'family_name'</span>],
+                                <span class="ruby-string">&quot;given_name&quot;</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-identifier">person_obj</span>[<span class="ruby-string">'person'</span>][<span class="ruby-string">'data'</span>][<span class="ruby-string">'names'</span>][<span class="ruby-string">'given_name'</span>],
+                                <span class="ruby-string">&quot;gender&quot;</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-identifier">person_obj</span>[<span class="ruby-string">'person'</span>][<span class="ruby-string">'data'</span>][<span class="ruby-string">'gender'</span>],
+                                <span class="ruby-string">&quot;birthdate&quot;</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-identifier">person_obj</span>[<span class="ruby-string">'person'</span>][<span class="ruby-string">'data'</span>][<span class="ruby-string">'birthdate'</span>],
+                                <span class="ruby-string">&quot;birthdate_estimated&quot;</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-identifier">person_obj</span>[<span class="ruby-string">'person'</span>][<span class="ruby-string">'data'</span>][<span class="ruby-string">'birthdate_estimated'</span>],
+                                <span class="ruby-string">&quot;data&quot;</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-identifier">person_obj</span>[<span class="ruby-string">'person'</span>][<span class="ruby-string">'data'</span>],
+                                <span class="ruby-string">&quot;creator_site_id&quot;</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-identifier">person_obj</span>[<span class="ruby-string">'npid'</span>][<span class="ruby-string">'assigner_site_id'</span>],
+                                <span class="ruby-string">&quot;creator_id&quot;</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-identifier">person_obj</span>[<span class="ruby-string">'person'</span>][<span class="ruby-string">'creator_id'</span>],
+                                <span class="ruby-string">&quot;version_number&quot;</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-identifier">person_obj</span>[<span class="ruby-string">'person'</span>][<span class="ruby-string">'version_number'</span>],
+                                <span class="ruby-string">&quot;remote_version_number&quot;</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-identifier">person_obj</span>[<span class="ruby-string">'person'</span>][<span class="ruby-string">'remote_version_number'</span>]}}
+
+    <span class="ruby-identifier">npid_hash</span> = {<span class="ruby-string">'npid'</span> =<span class="ruby-operator">&gt;</span> {<span class="ruby-string">&quot;value&quot;</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-identifier">person_obj</span>[<span class="ruby-string">'npid'</span>][<span class="ruby-string">'value'</span>],
+                            <span class="ruby-string">&quot;assigner_site_id&quot;</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-identifier">person_obj</span>[<span class="ruby-string">'person'</span>][<span class="ruby-string">'creator_site_id'</span>],
+                            <span class="ruby-string">&quot;assigned_at&quot;</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-identifier">person_obj</span>[<span class="ruby-string">'npid'</span>][<span class="ruby-string">&quot;assigned_at&quot;</span>] }}
+                  
+    <span class="ruby-identifier">site_hash</span> = {<span class="ruby-string">'site'</span> =<span class="ruby-operator">&gt;</span> {<span class="ruby-string">&quot;id&quot;</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-identifier">person_obj</span>[<span class="ruby-string">'person'</span>][<span class="ruby-string">'creator_site_id'</span>] }}
+
+    <span class="ruby-identifier">person_hash</span>.<span class="ruby-identifier">merge!</span><span class="ruby-identifier">npid_hash</span>
+
+    <span class="ruby-identifier">person_hash</span>.<span class="ruby-identifier">merge!</span><span class="ruby-identifier">site_hash</span>
+
+    <span class="ruby-identifier">old_national_id</span> =  <span class="ruby-identifier">person_obj</span>[<span class="ruby-string">'person'</span>][<span class="ruby-string">'data'</span>][<span class="ruby-string">'patient'</span>][<span class="ruby-string">'identifiers'</span>][<span class="ruby-string">'old_identification_number'</span>] <span class="ruby-keyword">rescue</span> <span class="ruby-keyword">nil</span>
+
+    <span class="ruby-ivar">@person</span> = <span class="ruby-constant">Person</span>.<span class="ruby-identifier">find_or_initialize_from_attributes</span>(<span class="ruby-identifier">person_hash</span>.<span class="ruby-identifier">slice</span>(<span class="ruby-string">'person'</span>, <span class="ruby-string">'npid'</span>, <span class="ruby-string">'site'</span>))
+    <span class="ruby-keyword">if</span> <span class="ruby-ivar">@person</span>.<span class="ruby-identifier">save</span>
+      <span class="ruby-keyword">unless</span> <span class="ruby-identifier">old_national_id</span>.<span class="ruby-identifier">blank?</span>
+       <span class="ruby-constant">LegacyNationalIds</span>.<span class="ruby-identifier">find_or_create_by_value_and_person_id</span>(<span class="ruby-value">:value</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-identifier">old_national_id</span>, <span class="ruby-value">:person_id</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-ivar">@person</span>.<span class="ruby-identifier">id</span>)
+      <span class="ruby-keyword">end</span>
+
+      <span class="ruby-constant">NationalIdSite</span>.<span class="ruby-identifier">find_or_create_by_national_id_and_site_id</span>(<span class="ruby-value">:national_id</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-identifier">person_obj</span>[<span class="ruby-string">'npid'</span>][<span class="ruby-string">'value'</span>],
+                             <span class="ruby-value">:site_id</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-identifier">person_obj</span>[<span class="ruby-string">'person'</span>][<span class="ruby-string">'creator_site_id'</span>])
+      <span class="ruby-identifier">created_people</span> <span class="ruby-operator">&lt;&lt;</span> <span class="ruby-ivar">@person</span>
+    <span class="ruby-keyword">end</span>
+  <span class="ruby-keyword">end</span>
+  <span class="ruby-keyword">return</span> <span class="ruby-identifier">created_people</span>
+<span class="ruby-keyword">end</span></pre>
+          </div><!-- create_from_proxy-source -->
+          
+        </div>
+
+        
+
+        
+      </div><!-- create_from_proxy-method -->
+
+    
+      <div id="method-i-default_path" class="method-detail ">
+        
+        <div class="method-heading">
+          <span class="method-name">default_path</span><span
+            class="method-args">()</span>
+          <span class="method-click-advice">click to toggle source</span>
+        </div>
+        
+
+        <div class="method-description">
+          
+          
+          
+
+          
+          <div class="method-source-code" id="default_path-source">
+            <pre><span class="ruby-comment"># File app/controllers/people_controller.rb, line 601</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier">default_path</span>
+  <span class="ruby-identifier">people_path</span>
+<span class="ruby-keyword">end</span></pre>
+          </div><!-- default_path-source -->
+          
+        </div>
+
+        
+
+        
+      </div><!-- default_path-method -->
+
+    
+      <div id="method-i-handle_local_conflict" class="method-detail ">
+        
+        <div class="method-heading">
+          <span class="method-name">handle_local_conflict</span><span
+            class="method-args">(local_person, remote_person)</span>
+          <span class="method-click-advice">click to toggle source</span>
+        </div>
+        
+
+        <div class="method-description">
+          
+          
+          
+
+          
+          <div class="method-source-code" id="handle_local_conflict-source">
+            <pre><span class="ruby-comment"># File app/controllers/people_controller.rb, line 580</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier">handle_local_conflict</span>(<span class="ruby-identifier">local_person</span>, <span class="ruby-identifier">remote_person</span>)
+  <span class="ruby-ivar">@local_person</span>  = <span class="ruby-identifier">local_person</span>
+  <span class="ruby-ivar">@remote_person</span> = <span class="ruby-identifier">remote_person</span>
+
+  <span class="ruby-identifier">respond_to</span> <span class="ruby-keyword">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">format</span><span class="ruby-operator">|</span>
+    <span class="ruby-identifier">format</span>.<span class="ruby-identifier">html</span> { <span class="ruby-identifier">render</span> <span class="ruby-value">:action</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-string">'conflict'</span> }
+    <span class="ruby-identifier">format</span>.<span class="ruby-identifier">json</span> { <span class="ruby-identifier">render</span> <span class="ruby-value">:json</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-ivar">@local_person</span>.<span class="ruby-identifier">to_json</span>, <span class="ruby-value">:status</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-value">:conflict</span> }
+  <span class="ruby-keyword">end</span>
+<span class="ruby-keyword">end</span></pre>
+          </div><!-- handle_local_conflict-source -->
+          
+        </div>
+
+        
+
+        
+      </div><!-- handle_local_conflict-method -->
+
+    
+      <div id="method-i-handle_remote_conflict" class="method-detail ">
+        
+        <div class="method-heading">
+          <span class="method-name">handle_remote_conflict</span><span
+            class="method-args">(local_person, remote_person)</span>
+          <span class="method-click-advice">click to toggle source</span>
+        </div>
+        
+
+        <div class="method-description">
+          
+          
+          
+
+          
+          <div class="method-source-code" id="handle_remote_conflict-source">
+            <pre><span class="ruby-comment"># File app/controllers/people_controller.rb, line 590</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier">handle_remote_conflict</span>(<span class="ruby-identifier">local_person</span>, <span class="ruby-identifier">remote_person</span>)
+  <span class="ruby-ivar">@local_person</span>  = <span class="ruby-identifier">local_person</span>
+  <span class="ruby-ivar">@remote_person</span> = <span class="ruby-identifier">remote_person</span>
+  <span class="ruby-ivar">@local_person</span>.<span class="ruby-identifier">remote_version_number</span> = <span class="ruby-ivar">@remote_person</span>.<span class="ruby-identifier">version_number</span>
+
+  <span class="ruby-identifier">respond_to</span> <span class="ruby-keyword">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">format</span><span class="ruby-operator">|</span>
+    <span class="ruby-identifier">format</span>.<span class="ruby-identifier">html</span> { <span class="ruby-identifier">render</span> <span class="ruby-value">:action</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-string">'conflict'</span> }
+    <span class="ruby-identifier">format</span>.<span class="ruby-identifier">json</span> { <span class="ruby-identifier">render</span> <span class="ruby-value">:json</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-ivar">@local_person</span>.<span class="ruby-identifier">to_json</span>, <span class="ruby-value">:status</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-value">:conflict</span> }
+  <span class="ruby-keyword">end</span>
+<span class="ruby-keyword">end</span></pre>
+          </div><!-- handle_remote_conflict-source -->
+          
+        </div>
+
+        
+
+        
+      </div><!-- handle_remote_conflict-method -->
+
+    
+      <div id="method-i-load_person" class="method-detail ">
+        
+        <div class="method-heading">
+          <span class="method-name">load_person</span><span
+            class="method-args">()</span>
+          <span class="method-click-advice">click to toggle source</span>
+        </div>
+        
+
+        <div class="method-description">
+          
+          
+          
+
+          
+          <div class="method-source-code" id="load_person-source">
+            <pre><span class="ruby-comment"># File app/controllers/people_controller.rb, line 605</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier">load_person</span>
+  <span class="ruby-ivar">@person</span> = <span class="ruby-constant">Person</span>.<span class="ruby-identifier">find_by_npid_value</span>(<span class="ruby-identifier">params</span>[<span class="ruby-value">:id</span>])
+  <span class="ruby-ivar">@person</span> <span class="ruby-operator">||=</span> <span class="ruby-constant">Person</span>.<span class="ruby-identifier">find</span>(<span class="ruby-identifier">params</span>[<span class="ruby-value">:id</span>]) <span class="ruby-keyword">if</span> <span class="ruby-constant">Site</span>.<span class="ruby-identifier">proxy?</span>
+<span class="ruby-keyword">rescue</span> <span class="ruby-constant">ActiveRecord</span><span class="ruby-operator">::</span><span class="ruby-constant">RecordNotFound</span>
+  <span class="ruby-comment"># noop</span>
+<span class="ruby-keyword">end</span></pre>
+          </div><!-- load_person-source -->
+          
+        </div>
+
+        
+
+        
+      </div><!-- load_person-method -->
+
+    
+      <div id="method-i-update_proxy_sync" class="method-detail ">
+        
+        <div class="method-heading">
+          <span class="method-name">update_proxy_sync</span><span
+            class="method-args">()</span>
+          <span class="method-click-advice">click to toggle source</span>
+        </div>
+        
+
+        <div class="method-description">
+          
+          
+          
+
+          
+          <div class="method-source-code" id="update_proxy_sync-source">
+            <pre><span class="ruby-comment"># File app/controllers/people_controller.rb, line 487</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier">update_proxy_sync</span>
+  <span class="ruby-identifier">last_updated_date</span> = <span class="ruby-constant">ProxySyncs</span>.<span class="ruby-identifier">last_updated_datetime</span>
+  <span class="ruby-identifier">max_person_updated_date</span> = <span class="ruby-constant">Person</span>.<span class="ruby-identifier">maximum</span>(<span class="ruby-value">:created_at</span>)
+  <span class="ruby-constant">ProxySyncs</span>.<span class="ruby-identifier">create</span>(<span class="ruby-value">:start_date</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-identifier">last_updated_date</span>, 
+    <span class="ruby-value">:end_date</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-identifier">max_person_updated_date</span>)
+<span class="ruby-keyword">end</span></pre>
+          </div><!-- update_proxy_sync-source -->
+          
+        </div>
+
+        
+
+        
+      </div><!-- update_proxy_sync-method -->
+
+    
+    </section><!-- protected-instance-method-details -->
+  
+     <section id="private-instance-5Buntitled-5D-method-details" class="method-section section">
+      <h3 class="section-header">Private Instance Methods</h3>
+
+    
+      <div id="method-i-reassign_national_identification" class="method-detail ">
+        
+        <div class="method-heading">
+          <span class="method-name">reassign_national_identification</span><span
+            class="method-args">(person_id)</span>
+          <span class="method-click-advice">click to toggle source</span>
+        </div>
+        
+
+        <div class="method-description">
+          
+          
+          
+
+          
+          <div class="method-source-code" id="reassign_national_identification-source">
+            <pre><span class="ruby-comment"># File app/controllers/people_controller.rb, line 614</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier">reassign_national_identification</span>(<span class="ruby-identifier">person_id</span>)
+  <span class="ruby-identifier">person</span> = <span class="ruby-constant">Person</span>.<span class="ruby-identifier">find</span>(<span class="ruby-identifier">person_id</span>)
+
+  <span class="ruby-identifier">npid</span> = <span class="ruby-constant">NationalPatientIdentifier</span>.<span class="ruby-identifier">where</span>(<span class="ruby-value">:person_id</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-identifier">person</span>.<span class="ruby-identifier">id</span>).<span class="ruby-identifier">first</span>
+  <span class="ruby-keyword">if</span> <span class="ruby-identifier">npid</span>.<span class="ruby-identifier">blank?</span>
+     <span class="ruby-identifier">npid</span> = <span class="ruby-constant">NationalPatientIdentifier</span>.<span class="ruby-identifier">get_blank_decimal_num_identifier</span>(<span class="ruby-identifier">person</span>.<span class="ruby-identifier">id</span>)
+     <span class="ruby-keyword">unless</span> <span class="ruby-identifier">npid</span>.<span class="ruby-identifier">blank?</span>
+        <span class="ruby-identifier">npid</span>.<span class="ruby-identifier">force_void</span>(<span class="ruby-node">&quot;Assigned new National Identifier: originally assigned to patient with person_id: #{person.id}&quot;</span>)
+     <span class="ruby-keyword">end</span>
+  <span class="ruby-keyword">else</span>
+    <span class="ruby-identifier">npid</span>.<span class="ruby-identifier">voided</span> = <span class="ruby-value">1</span>
+    <span class="ruby-identifier">npid</span>.<span class="ruby-identifier">person_id</span> = <span class="ruby-keyword">nil</span>
+    <span class="ruby-identifier">npid</span>.<span class="ruby-identifier">void_reason</span> = <span class="ruby-node">&quot;Assigned new National Identifier: originally assigned to patient with person_id: #{person_id}&quot;</span>
+    <span class="ruby-identifier">npid</span>.<span class="ruby-identifier">save</span>
+  <span class="ruby-keyword">end</span>
+
+  <span class="ruby-identifier">person</span>.<span class="ruby-identifier">assign_npid</span>
+  <span class="ruby-identifier">npid</span> = <span class="ruby-identifier">person</span>.<span class="ruby-identifier">national_patient_identifier</span>
+  <span class="ruby-identifier">npid</span>.<span class="ruby-identifier">assigned_at</span> = <span class="ruby-constant">Time</span>.<span class="ruby-identifier">now</span>()
+  <span class="ruby-identifier">npid</span>.<span class="ruby-identifier">assigner_id</span> = <span class="ruby-constant">User</span>.<span class="ruby-identifier">current_user</span>
+  <span class="ruby-identifier">npid</span>.<span class="ruby-identifier">save</span>
+  <span class="ruby-keyword">return</span> <span class="ruby-identifier">person</span>
+
+<span class="ruby-keyword">end</span></pre>
+          </div><!-- reassign_national_identification-source -->
+          
+        </div>
+
+        
+
+        
+      </div><!-- reassign_national_identification-method -->
+
+    
+    </section><!-- private-instance-method-details -->
+  
+  </section><!-- 5Buntitled-5D -->
+
+</div><!-- documentation -->
+
+
+<footer id="validator-badges">
+  <p><a href="http://validator.w3.org/check/referer">[Validate]</a>
+  <p>Generated by <a href="https://github.com/rdoc/rdoc">RDoc</a> 3.12.2.
+  <p>Generated with the <a href="http://deveiate.org/projects/Darkfish-Rdoc/">Darkfish Rdoc Generator</a> 3.
+</footer>
+
