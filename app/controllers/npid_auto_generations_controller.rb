@@ -223,7 +223,7 @@ class NpidAutoGenerationsController < ApplicationController
       end
     else
       user = User.find_by_name("support")
-      subject = "Test DDE Notification" 
+      subject = "DDE Notification" 
       body = "The site currently has " + available_npids.to_s + " available national ids and its threshold is " + set_threshold.to_s 
 			Notifications.notify(user,Site.current_name,subject,body).deliver
     end
