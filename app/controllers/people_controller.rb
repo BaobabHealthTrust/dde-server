@@ -43,6 +43,86 @@ class PeopleController < ApplicationController
     person = reassign_national_identification(params[:person_id])
     render :text => person.to_json and return
   end
+  
+  #............................................................................
+  def find_demographics
+
+    given_name_code = params[:person][:names]["given_name"].soundex 
+    family_name_code = params[:person][:names]["family_name"].soundex 
+    gender = params[:person]["gender"]          
+    
+    if params[:person]['birth_year'] == "Unknown"                            
+      birthdate = Date.new(Date.today.year - params[:person]["age_estimate"].to_i, 7, 1)
+    else                                                                     
+      year = params[:person]["birth_year"].to_i                              
+      month = params[:person]["birth_month"].to_i                            
+      day = params[:person]["birth_day"].to_i                                
+                                                                              
+      month_i = (month || 0).to_i                                            
+      month_i = Date::MONTHNAMES.index(month) if month_i == 0 || month_i.blank?
+      month_i = Date::ABBR_MONTHNAMES.index(month) if month_i == 0 || month_i.blank?
+                                                                              
+      if month_i == 0 || month == "Unknown"                                  
+        birthdate = Date.new(year.to_i,7,1)                                  
+      elsif day.blank? || day == "Unknown" || day == 0                       
+        birthdate = Date.new(year.to_i,month_i,15)                           
+      else                                                                   
+        birthdate = Date.new(year.to_i,month_i,day.to_i)                     
+      end                                                                    
+    end
+
+    start_birthdate = (birthdate - 5.year)
+    end_birthdate = (birthdate + 5.year)
+
+    ta = params[:person][:addresses]['county_district']                   
+    home_district = params[:person][:addresses]['address2']               
+    home_village = params[:person][:addresses]['neighborhood_cell'] 
+
+    ta = '"county_district":"' + ta 
+    home_district = '"address2":"' + home_district
+    home_village = '"neighborhood_cell":"' + home_village 
+
+
+    @people = Person.joins("INNER JOIN national_patient_identifiers i 
+      ON i.person_id = people.id AND i.voided = 0 INNER JOIN person_name_codes c 
+      ON c.person_id = people.id").where("(given_name_code LIKE (?) 
+      AND family_name_code LIKE (?)) AND people.gender = ? AND
+      birthdate >='#{start_birthdate}' AND birthdate <='#{end_birthdate}' AND 
+      (people.data LIKE (?) AND people.data LIKE (?) AND people.data LIKE (?))
+      ","%#{given_name_code}","%#{family_name_code}%",gender,
+      "%#{ta}%","%#{home_district}%","%#{home_village}%").select("people.*, i.value").group("people.id")
+ 
+    case @people.size
+    when 0
+      if Site.master?
+        head :not_found
+      else
+#       find_remote
+        respond_to do |format|
+          format.json do |f|
+            render :text => {}.to_json
+          end
+        end
+      end
+    when 1
+      respond_to do |format|
+        format.html do |f|
+          @person = @people.first
+          render :action => 'show'
+        end
+        format.xml  { render :xml  => @people }
+        format.json { render :json => @people.to_json }
+      end
+    else
+      respond_to do |format|
+        format.html { render :action => 'index',         :status => :multiple_choices }
+        format.xml  { render :xml    => @people,         :status => :multiple_choices }
+        format.json { render :json   => @people.to_json } #, :status => :multiple_choices }
+      end
+    end
+  end
+  #............................................................................
+
 
   # GET /people/find
   # GET /people/find.xml?given_name=:given_name&family_name=:family_name
