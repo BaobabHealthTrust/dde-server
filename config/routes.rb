@@ -34,12 +34,16 @@ DdeServer::Application.routes.draw do
     end
 
     collection do
-      post :sync_demographics_with_master, :sync_demographics_with_proxy, :sync_demographics_with_client,:find,
-           :proxy_people_to_sync, :demographics_to_sync, :master_people_to_sync, :record_successful_sync,
-           :replace_national_id, :post_back_person, :record_sync_starttime, :find_demographics
-      get :find, :sync_demographics_with_master, :sync_demographics_with_proxy, :sync_demographics_with_client,
-          :proxy_people_to_sync, :demographics_to_sync, :master_people_to_sync, :record_successful_sync,
-          :replace_national_id,:reassign_identication, :post_back_person ,:record_sync_starttime, :find_demographics
+      post :sync_demographics_with_master, :sync_demographics_with_proxy, 
+           :sync_demographics_with_client,:find, :proxy_people_to_sync, 
+           :demographics_to_sync, :master_people_to_sync, :record_successful_sync,
+           :replace_national_id, :post_back_person, :record_sync_starttime, 
+           :find_demographics, :create_footprint
+      get :find, :sync_demographics_with_master, :sync_demographics_with_proxy, 
+          :sync_demographics_with_client, :proxy_people_to_sync, :demographics_to_sync, 
+          :master_people_to_sync, :record_successful_sync,:replace_national_id,
+          :reassign_identication, :post_back_person, :record_sync_starttime, 
+          :find_demographics, :create_footprint
     end
   end
 

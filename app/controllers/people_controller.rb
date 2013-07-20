@@ -561,6 +561,18 @@ class PeopleController < ApplicationController
     render :text => 'done ...' and return
   end
    
+  def create_footprint                                                          
+    if Site.proxy?
+      footprint = Footprint.new()
+      footprint.value = params[:value]
+      footprint.site_id = Site.current_id
+      footprint.app_location_id = params[:location_id]
+      footprint.save
+      render :text => "foot print created ...." and return
+    else
+    end
+  end
+
   protected
 
   
