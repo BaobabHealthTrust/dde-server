@@ -570,6 +570,29 @@ class PeopleController < ApplicationController
       footprint.save
       render :text => "foot print created ...." and return
     else
+      site_code = params['site_code']
+      received_file = params['file']
+      filename = received_file['file_name']
+      fprints = JSON.parse(params['footprints'])
+
+      `touch #{Rails.root}/footprints/#{filename}`
+      l = Logger.new(Rails.root.join("footprints",filename))
+      fprints.each do |footprint|
+        l.info "#{footprint}"
+      end
+
+      batch_info = {}
+
+      file_info = `cksum #{Rails.root}/footprints/#{filename}`.split(' ')
+      batch_info[:check_sum] = file_info[0]
+      batch_info[:file_size] = file_info[1]
+
+      if batch_info[:check_sum].to_i == received_file['check_sum'].to_i
+        create_master_footprints(fprints)
+        render :text => "done ..." and return
+      else
+        raise "NO ....#{fprints.length}...... #{batch_info[:file_size].to_s} >>>>>>>>>>>>>>>> #{received_file['file_size'].to_s}"
+      end
     end
   end
 
@@ -795,6 +818,23 @@ class PeopleController < ApplicationController
     npid.save
     return person
 
+  end
+
+  def create_master_footprints(footprints)
+    footprints = footprints.split(';')
+    (footprints || []).each do |footprint|
+      value = footprint.split(',')[0]
+      site_id = footprint.split(',')[1]
+      workstation_location = footprint.split(',')[2]
+      interaction_datetime  = footprint.split(',')[3].to_date.strftime('%Y-%m-%d %H:%M:%S')
+
+      f = MasterFootprints.new()
+      f.interaction_datetime = interaction_datetime
+      f.workstation_location = workstation_location
+      f.site_id = site_id
+      f.save
+    end
+    return true
   end
 
 end

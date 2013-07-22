@@ -3,7 +3,7 @@ class CreateFootprints < ActiveRecord::Migration
     create_table :footprints do |t|
       t.string :value
       t.integer :site_id
-      t.integer :workstation_location
+      t.string :workstation_location
 
       t.timestamps
     end
