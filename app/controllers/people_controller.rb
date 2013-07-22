@@ -573,13 +573,11 @@ class PeopleController < ApplicationController
       site_code = params['site_code']
       received_file = params['file']
       filename = received_file['file_name']
-      fprints = JSON.parse(params['footprints'])
+      fprints = params['footprints']
 
       `touch #{Rails.root}/footprints/#{filename}`
       l = Logger.new(Rails.root.join("footprints",filename))
-      fprints.each do |footprint|
-        l.info "#{footprint}"
-      end
+      l.info "#{footprint}"
 
       batch_info = {}
 
@@ -606,7 +604,7 @@ class PeopleController < ApplicationController
       
       footprints = []
       if not failed_sync.blank?
-        fprints = Footprint.where("created_at >= ?",failed_sync)
+        fprints = Footprint.where("created_at <= ?",failed_sync)
       elsif not last_sync.blank?
         fprints = Footprint.where("created_at > ?",last_sync)
       else
@@ -643,11 +641,13 @@ class PeopleController < ApplicationController
         l.info "#{footprints}"
 
         file_info = `cksum #{Rails.root}/footprints/#{filename}`.split(' ')     
+        batch_info = {}
+
         batch_info[:check_sum] = file_info[0]
         batch_info[:file_size] = file_info[1]
         batch_info[:file_name] = filename
 
-        footprints_params = {'footprints' => footprints.join(';').to_json}
+        footprints_params = {'footprints' => footprints.join(';')}
         footprints_params.merge!('file' => batch_info)
         footprints_params.merge!('site_code' => Site.current_code)
 
