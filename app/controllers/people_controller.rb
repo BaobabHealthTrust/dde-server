@@ -612,7 +612,11 @@ class PeopleController < ApplicationController
       end
 
       (fprints || []).each do |footprint|
-        footprints << "#{footprint.value},#{footprint.site_id},#{footprint.workstation_location},#{footprint.created_at}"
+        if footprints.blank?
+          footprints << "#{footprint.value},#{footprint.site_id},#{footprint.workstation_location},#{footprint.created_at}"
+        else
+          footprints << ";#{footprint.value},#{footprint.site_id},#{footprint.workstation_location},#{footprint.created_at}"
+        end
       end
 
       count = 1
@@ -647,7 +651,7 @@ class PeopleController < ApplicationController
         batch_info[:file_size] = file_info[1]
         batch_info[:file_name] = filename
 
-        footprints_params = {'footprints' => footprints.join(';')}
+        footprints_params = {'footprints' => footprints.join('')}
         footprints_params.merge!('file' => batch_info)
         footprints_params.merge!('site_code' => Site.current_code)
 
@@ -656,7 +660,7 @@ class PeopleController < ApplicationController
       end
         
       unless footprint_batch[1].blank?
-        footprint_tracker = FootprintTracker.where("start_datetime IS NOT NULL AND end_birthdate IS NULL").last
+        footprint_tracker = FootprintTracker.where("start_datetime IS NOT NULL AND end_datetime IS NULL").last
         footprint_tracker.end_datetime = Time.now()
         footprint_tracker.save
       end
@@ -834,6 +838,7 @@ class PeopleController < ApplicationController
       f.interaction_datetime = interaction_datetime
       f.workstation_location = workstation_location
       f.site_id = site_id
+      f.value = value
       f.save
     end
     return true
