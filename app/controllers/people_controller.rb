@@ -566,11 +566,80 @@ class PeopleController < ApplicationController
       footprint = Footprint.new()
       footprint.value = params[:value]
       footprint.site_id = Site.current_id
-      footprint.app_location_id = params[:location_id]
+      footprint.workstation_location = params[:workstation_location]
       footprint.save
       render :text => "foot print created ...." and return
     else
     end
+  end
+
+  def push_footprints
+    if Site.proxy?
+      failed_sync = FootprintTracker.where("start_datetime IS NOT NULL 
+        AND end_datetime IS NULL").minimum(:start_datetime)
+      
+      last_sync = FootprintTracker.where("start_datetime IS NOT NULL 
+        AND end_datetime IS NOT NULL").maximum(:end_datetime) if failed_sync.blank?
+      
+      footprints = []
+      if not failed_sync.blank?
+        fprints = Footprint.where("created_at >= ?",failed_sync)
+      elsif not last_sync.blank?
+        fprints = Footprint.where("created_at > ?",last_sync)
+      else
+        fprints = Footprint.all
+      end
+
+      (fprints || []).each do |footprint|
+        footprints << "#{footprint.value},#{footprint.site_id},#{footprint.workstation_location},#{footprint.created_at}"
+      end
+
+      count = 1
+      footprint_batch = {}
+      footprint_batch[count] = []
+
+      (footprints || []).each do |footprint|
+        if footprint_batch[count].length < 1001
+          footprint_batch[count] << footprint
+        else
+          count+=1
+          footprint_batch[count] = [footprints]
+        end
+      end
+
+      unless footprint_batch[1].blank?
+        footprint_tracker = FootprintTracker.new()
+        footprint_tracker.start_datetime = Time.now()
+        #footprint_tracker.save
+      end
+
+      (footprint_batch || {}).each do |key, footprints|
+        filename = Site.current_code + Time.now().strftime('%Y%m%d%H%M%S') + '.txt'
+        `touch #{Rails.root}/footprints/#{filename}`
+        l = Logger.new(Rails.root.join("footprints",filename))
+        file_info = `cksum #{Rails.root}/demographics/#{filename}`.split(' ')     
+        batch_info[:check_sum] = file_info[0]
+        batch_info[:file_size] = file_info[1]
+        batch_info[:file_name] = filename
+
+        footprints_params = {'footprints' => footprints.join(';').to_json}
+        footprints_params.merge!('file' => batch_info)
+        footprints_params.merge!('site_code' => Site.current_code)
+
+        uri = "http://#{dde_master_user}:#{dde_master_password}@#{dde_master_uri}/people/create_footprint/"
+        RestClient.post(uri,footprints_params)
+      end
+        
+      unless footprint_batch[1].blank?
+        footprint_tracker = FootprintTracker.where("start_datetime IS NOT NULL AND end_birthdate IS NULL").last
+        footprint_tracker.end_datetime = Time.now()
+        #footprint_tracker.save
+      end
+
+      
+    end
+    
+    render :text => "done ...." and return 
   end
 
   protected
