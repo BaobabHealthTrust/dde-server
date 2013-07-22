@@ -640,7 +640,9 @@ class PeopleController < ApplicationController
         filename = Site.current_code + Time.now().strftime('%Y%m%d%H%M%S') + '.txt'
         `touch #{Rails.root}/footprints/#{filename}`
         l = Logger.new(Rails.root.join("footprints",filename))
-        file_info = `cksum #{Rails.root}/demographics/#{filename}`.split(' ')     
+        l.info "#{footprints}"
+
+        file_info = `cksum #{Rails.root}/footprints/#{filename}`.split(' ')     
         batch_info[:check_sum] = file_info[0]
         batch_info[:file_size] = file_info[1]
         batch_info[:file_name] = filename
