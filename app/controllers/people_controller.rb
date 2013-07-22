@@ -612,10 +612,11 @@ class PeopleController < ApplicationController
       end
 
       (fprints || []).each do |footprint|
+        created_at = footprint.created_at.to_date.strftime('%Y-%m-%d %H:%M:%S')
         if footprints.blank?
-          footprints << "#{footprint.value},#{footprint.site_id},#{footprint.workstation_location},#{footprint.created_at}"
+          footprints << "#{footprint.value},#{footprint.site_id},#{footprint.workstation_location},#{created_at}"
         else
-          footprints << ";#{footprint.value},#{footprint.site_id},#{footprint.workstation_location},#{footprint.created_at}"
+          footprints << ";#{footprint.value},#{footprint.site_id},#{footprint.workstation_location},#{created_at}"
         end
       end
 
@@ -832,9 +833,12 @@ class PeopleController < ApplicationController
       value = footprint.split(',')[0]
       site_id = footprint.split(',')[1]
       workstation_location = footprint.split(',')[2]
-      interaction_datetime  = footprint.split(',')[3].to_date.strftime('%Y-%m-%d %H:%M:%S')
+      interaction_datetime  = footprint.split(',')[3]
 
-      f = MasterFootprint.new()
+      f = MasterFootprint.where("interaction_datetime = ? AND site_id = ?
+        AND workstation_location = ? AND value = ?",interaction_datetime,
+        site_id,workstation_location,value)
+      f = MasterFootprint.new() if f.blank?
       f.interaction_datetime = interaction_datetime
       f.workstation_location = workstation_location
       f.site_id = site_id
