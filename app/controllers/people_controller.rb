@@ -577,7 +577,7 @@ class PeopleController < ApplicationController
 
       `touch #{Rails.root}/footprints/#{filename}`
       l = Logger.new(Rails.root.join("footprints",filename))
-      l.info "#{footprint}"
+      l.info "#{fprints}"
 
       batch_info = {}
 
