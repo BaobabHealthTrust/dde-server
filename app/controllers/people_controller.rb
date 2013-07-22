@@ -640,6 +640,7 @@ class PeopleController < ApplicationController
       end
 
       (footprint_batch || {}).each do |key, footprints|
+        next if footprints.blank?
         filename = Site.current_code + Time.now().strftime('%Y%m%d%H%M%S') + '.txt'
         `touch #{Rails.root}/footprints/#{filename}`
         l = Logger.new(Rails.root.join("footprints",filename))
