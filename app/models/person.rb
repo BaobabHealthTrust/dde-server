@@ -38,7 +38,7 @@ class Person < ActiveRecord::Base
   end
   
   #before_save :set_remote_version_number
-  after_save :save_npid
+  self.after_save :save_npid
 
   validates_presence_of :national_patient_identifier, :data
 
@@ -330,7 +330,7 @@ class Person < ActiveRecord::Base
     end
   end
 
-  def after_save
+  def self.after_save
     PersonNameCode.create_name_code(self)
   end
 
