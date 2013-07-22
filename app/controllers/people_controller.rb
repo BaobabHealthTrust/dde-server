@@ -633,7 +633,7 @@ class PeopleController < ApplicationController
       unless footprint_batch[1].blank?
         footprint_tracker = FootprintTracker.new()
         footprint_tracker.start_datetime = Time.now()
-        #footprint_tracker.save
+        footprint_tracker.save
       end
 
       (footprint_batch || {}).each do |key, footprints|
@@ -656,7 +656,7 @@ class PeopleController < ApplicationController
       unless footprint_batch[1].blank?
         footprint_tracker = FootprintTracker.where("start_datetime IS NOT NULL AND end_birthdate IS NULL").last
         footprint_tracker.end_datetime = Time.now()
-        #footprint_tracker.save
+        footprint_tracker.save
       end
 
       
@@ -828,7 +828,7 @@ class PeopleController < ApplicationController
       workstation_location = footprint.split(',')[2]
       interaction_datetime  = footprint.split(',')[3].to_date.strftime('%Y-%m-%d %H:%M:%S')
 
-      f = MasterFootprints.new()
+      f = MasterFootprint.new()
       f.interaction_datetime = interaction_datetime
       f.workstation_location = workstation_location
       f.site_id = site_id
