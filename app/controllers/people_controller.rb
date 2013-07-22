@@ -612,7 +612,7 @@ class PeopleController < ApplicationController
       end
 
       (fprints || []).each do |footprint|
-        created_at = footprint.created_at.to_date.strftime('%Y-%m-%d %H:%M:%S')
+        created_at = footprint.created_at.strftime('%Y-%m-%d %H:%M:%S')
         if footprints.blank?
           footprints << "#{footprint.value},#{footprint.site_id},#{footprint.workstation_location},#{created_at}"
         else
@@ -633,7 +633,7 @@ class PeopleController < ApplicationController
         end
       end
 
-      unless footprint_batch[1].blank?
+      if not footprint_batch[1].blank? and failed_sync.blank?
         footprint_tracker = FootprintTracker.new()
         footprint_tracker.start_datetime = Time.now()
         footprint_tracker.save
@@ -661,7 +661,7 @@ class PeopleController < ApplicationController
       end
         
       unless footprint_batch[1].blank?
-        footprint_tracker = FootprintTracker.where("start_datetime IS NOT NULL AND end_datetime IS NULL").last
+        footprint_tracker = FootprintTracker.where("start_datetime IS NOT NULL AND end_datetime IS NULL").first
         footprint_tracker.end_datetime = Time.now()
         footprint_tracker.save
       end
@@ -837,8 +837,11 @@ class PeopleController < ApplicationController
 
       f = MasterFootprint.where("interaction_datetime = ? AND site_id = ?
         AND workstation_location = ? AND value = ?",interaction_datetime,
-        site_id,workstation_location,value)
-      f = MasterFootprint.new() if f.blank?
+        site_id,workstation_location,value).first rescue nil
+    
+      next unless f.blank? 
+        
+      f = MasterFootprint.new() 
       f.interaction_datetime = interaction_datetime
       f.workstation_location = workstation_location
       f.site_id = site_id
