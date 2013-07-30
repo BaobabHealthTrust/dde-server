@@ -565,7 +565,6 @@ class PeopleController < ApplicationController
     if Site.proxy?
       footprint = Footprint.new()
       footprint.value = params[:value]
-      footprint.site_id = Site.current_id
       footprint.application_name = params[:application_name]
       footprint.save
       render :text => "foot print created ...." and return
@@ -614,9 +613,9 @@ class PeopleController < ApplicationController
       (fprints || []).each do |footprint|
         created_at = footprint.created_at.strftime('%Y-%m-%d %H:%M:%S')
         if footprints.blank?
-          footprints << "#{footprint.value},#{footprint.site_id},#{footprint.application_name},#{created_at}"
+          footprints << "#{footprint.value},#{Site.current_id},#{footprint.application_name},#{created_at}"
         else
-          footprints << ";#{footprint.value},#{footprint.site_id},#{footprint.application_name},#{created_at}"
+          footprints << ";#{footprint.value},#{Site.current_id},#{footprint.application_name},#{created_at}"
         end
       end
 
