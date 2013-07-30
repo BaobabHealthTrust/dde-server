@@ -566,7 +566,7 @@ class PeopleController < ApplicationController
       footprint = Footprint.new()
       footprint.value = params[:value]
       footprint.site_id = Site.current_id
-      footprint.workstation_location = params[:workstation_location]
+      footprint.application_name = params[:application_name]
       footprint.save
       render :text => "foot print created ...." and return
     else
@@ -614,9 +614,9 @@ class PeopleController < ApplicationController
       (fprints || []).each do |footprint|
         created_at = footprint.created_at.strftime('%Y-%m-%d %H:%M:%S')
         if footprints.blank?
-          footprints << "#{footprint.value},#{footprint.site_id},#{footprint.workstation_location},#{created_at}"
+          footprints << "#{footprint.value},#{footprint.site_id},#{footprint.application_name},#{created_at}"
         else
-          footprints << ";#{footprint.value},#{footprint.site_id},#{footprint.workstation_location},#{created_at}"
+          footprints << ";#{footprint.value},#{footprint.site_id},#{footprint.application_name},#{created_at}"
         end
       end
 
@@ -833,18 +833,20 @@ class PeopleController < ApplicationController
     (footprints || []).each do |footprint|
       value = footprint.split(',')[0]
       site_id = footprint.split(',')[1]
-      workstation_location = footprint.split(',')[2]
+      application_name = footprint.split(',')[2].to_time
       interaction_datetime  = footprint.split(',')[3]
 
-      f = MasterFootprint.where("interaction_datetime = ? AND site_id = ?
-        AND workstation_location = ? AND value = ?",interaction_datetime,
-        site_id,workstation_location,value).first rescue nil
+      f = MasterFootprint.where("(interaction_datetime >= ? AND 
+        interaction_datetime <=?) AND site_id = ? AND application_name = ? 
+        AND value = ?",interaction_datetime.strftime('%Y-%m-%d 00:00:00'),
+        interaction_datetime.strftime('%Y-%m-%d 23:59:59'), site_id,
+        application_name,value).first rescue nil
     
       next unless f.blank? 
         
       f = MasterFootprint.new() 
       f.interaction_datetime = interaction_datetime
-      f.workstation_location = workstation_location
+      f.application_name = application_name
       f.site_id = site_id
       f.value = value
       f.save
