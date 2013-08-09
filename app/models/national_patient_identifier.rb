@@ -46,11 +46,9 @@ class NationalPatientIdentifier < ActiveRecord::Base
 
   min = SITE_CONFIG[:base_npid].to_i
   max = min + SITE_CONFIG[:npid_range].to_i
-  @@possible_ids ||= (min..max).map
+  seed = SITE_CONFIG[:npid_seed].to_i
   
-  @@generated_ids ||= NationalPatientIdentifier.select('decimal_num').map(&:decimal_num)
-  @@last_id = nil
-  @@last_id ||= NationalPatientIdentifier.last.id rescue nil
+  @lfsr_ids = LFSR::Size27.new max, seed
 
   def self.find_or_create_from_attributes(attrs, options = {:update => false})
     if attrs['value']
@@ -115,16 +113,8 @@ EOF
     end
   end
   
-  def self.next_random_num
-    if @@last_id
-      @@generated_ids += NationalPatientIdentifier.select('id').where(['id > ?', @@last_id]).map(&:id)
-    else
-      @@generated_ids = NationalPatientIdentifier.select('id').map(&:id)
-    end
-    @@last_id = NationalPatientIdentifier.select('id').last.id rescue nil
-    available_ids = @@possible_ids - @@generated_ids
-    
-    available_ids[rand(available_ids.length)]
+  def self.next_random_num   
+    @lfsr_ids.next_i  
   end
 
 end
