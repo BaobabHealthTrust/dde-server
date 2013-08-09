@@ -36,3 +36,4 @@ integration:
   npid_version: 4                                                    
   base_npid: 40000000                                                       
   npid_range: 10000000   # no. of ids from base_npid to pick random numbers from
+  npid_seed: 123456
