@@ -252,21 +252,23 @@ class PeopleController < ApplicationController
   end
 
   def create_for_sub_proxy
+
+    params[:demographics].each do |demographic|
       version = Guid.new.to_s
-      person_hash = {'person' => {"family_name" => params['person']['family_name'],
-                                  "given_name" => params['person']['given_name'],
-                                  "gender" => params['person']['gender'],
-                                  "birthdate" => params['person']['birthdate'],
-                                  "birthdate_estimated" => params['person']['birthdate_estimated'],
-                                  "data" => params['person'],
+      person_hash = {'person' => {"family_name" => demographic['person']['family_name'],
+                                  "given_name" => demographic['person']['given_name'],
+                                  "gender" => demographic['person']['gender'],
+                                  "birthdate" => demographic['person']['birthdate'],
+                                  "birthdate_estimated" => demographic['person']['birthdate_estimated'],
+                                  "data" => demographic['person'],
                                   "creator_site_id" => Site.current_id,
                                   "creator_id" => User.current_user.id,
                                   "version_number" => version,
                                   "remote_version_number" => version}}
 
-      npid_hash = {'npid' => {"value" => params['npid']['value'],
+      npid_hash = {'npid' => {"value" => demographic['npid']['value'],
                               "assigner_site_id" => Site.current_id,
-                              "assigned_at" => params['npid']["assigned_at"] }}
+                              "assigned_at" => demographic['npid']["assigned_at"] }}
 
       site_hash = {'site' => {"id" => Site.current_id }}
 
@@ -275,9 +277,8 @@ class PeopleController < ApplicationController
       person_hash.merge!site_hash
 
       @person = Person.find_or_initialize_from_attributes(person_hash.slice('person', 'npid', 'site'))
-      success = @person.save        
-      
-     return success
+      @person.save        
+    end
   end
 
   # PUT /people/1
