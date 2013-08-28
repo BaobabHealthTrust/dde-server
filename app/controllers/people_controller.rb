@@ -253,7 +253,8 @@ class PeopleController < ApplicationController
 
   def create_for_sub_proxy
 
-    params[:demographics].each do |demographic|
+    JSON.parse(params['demographics']).each do |key, demographic|
+
       version = Guid.new.to_s
       person_hash = {'person' => {"family_name" => demographic['person']['family_name'],
                                   "given_name" => demographic['person']['given_name'],
@@ -265,6 +266,7 @@ class PeopleController < ApplicationController
                                   "creator_id" => User.current_user.id,
                                   "version_number" => version,
                                   "remote_version_number" => version}}
+
 
       npid_hash = {'npid' => {"value" => demographic['npid']['value'],
                               "assigner_site_id" => Site.current_id,
@@ -279,6 +281,8 @@ class PeopleController < ApplicationController
       @person = Person.find_or_initialize_from_attributes(person_hash.slice('person', 'npid', 'site'))
       @person.save        
     end
+    
+    render :text => "OK"
   end
 
   # PUT /people/1
