@@ -251,6 +251,35 @@ class PeopleController < ApplicationController
     end
   end
 
+  def create_for_sub_proxy
+      version = Guid.new.to_s
+      person_hash = {'person' => {"family_name" => params['person']['family_name'],
+                                  "given_name" => params['person']['given_name'],
+                                  "gender" => params['person']['gender'],
+                                  "birthdate" => params['person']['birthdate'],
+                                  "birthdate_estimated" => params['person']['birthdate_estimated'],
+                                  "data" => params['person'],
+                                  "creator_site_id" => Site.current_id,
+                                  "creator_id" => User.current_user.id,
+                                  "version_number" => version,
+                                  "remote_version_number" => version}}
+
+      npid_hash = {'npid' => {"value" => params['npid']['value'],
+                              "assigner_site_id" => Site.current_id,
+                              "assigned_at" => params['npid']["assigned_at"] }}
+
+      site_hash = {'site' => {"id" => Site.current_id }}
+
+      person_hash.merge!npid_hash
+
+      person_hash.merge!site_hash
+
+      @person = Person.find_or_initialize_from_attributes(person_hash.slice('person', 'npid', 'site'))
+      success = @person.save        
+      
+     return success
+  end
+
   # PUT /people/1
   # PUT /people/1.xml
   def update
