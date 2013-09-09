@@ -597,10 +597,16 @@ class PeopleController < ApplicationController
    
   def create_footprint                                                          
     if Site.proxy?
-      footprint = Footprint.new()
-      footprint.value = params[:value]
-      footprint.application_name = params[:application_name]
-      footprint.save
+      f = Footprint.where("DATE(created_at) = CURRENT_DATE() 
+        AND value = ? AND application_name = ?",params[:value],
+        params[:application_name]).first rescue nil                    
+                                                                                
+      if f.blank?
+        footprint = Footprint.new()
+        footprint.value = params[:value]
+        footprint.application_name = params[:application_name]
+        footprint.save
+      end
       render :text => "foot print created ...." and return
     else
       site_code = params['site_code']
