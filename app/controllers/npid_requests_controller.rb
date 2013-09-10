@@ -12,9 +12,9 @@ class NpidRequestsController < ApplicationController
     if Site.proxy?
       params[:npid_request].merge!('site_code' => Site.current_code)
     end
-
+ 
     @npid_request = NpidRequest.new params[:npid_request]
-
+  
     respond_to do |format|
       if @npid_request.save
         @npids = @npid_request.npids
@@ -53,12 +53,24 @@ class NpidRequestsController < ApplicationController
       end
       resp = "#{ack}" 
     else
-      @npid_request = NpidRequest.new params[:npid_request]
+
+      if !params[:site_code].blank? and !params[:count].blank?
+      npid_hash = Hash.new
+      npid_hash[:npid_request] = {:site_code => params[:site_code],
+                                  :count => params[:count]
+                                 }
+      @npid_request = NpidRequest.new npid_hash
+      filename = (params[:site_code]) + Time.now().strftime('%Y%m%d%H%M%S') + '.txt'
+      `touch #{Rails.root}/npids/#{filename}`
+      else
+       @npid_request = NpidRequest.new params[:npid_request]
+       filename = (params[:npid_request]['site_code']) + Time.now().strftime('%Y%m%d%H%M%S') + '.txt'
+      `touch #{Rails.root}/npids/#{filename}`
+      end
+
       saved = @npid_request.save
       ids = @npid_request.npids.map(&:value) 
       
-      filename = (params[:npid_request]['site_code']) + Time.now().strftime('%Y%m%d%H%M%S') + '.txt'
-      `touch #{Rails.root}/npids/#{filename}`
       l = Logger.new(Rails.root.join("npids",filename)) 
 
       (ids).each do |id|
