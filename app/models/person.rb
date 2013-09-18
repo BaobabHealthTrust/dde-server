@@ -280,7 +280,7 @@ class Person < ActiveRecord::Base
 
     Person.joins(:person_name_codes).where("given_name_code LIKE '%#{given_name_code}%' 
       AND family_name_code LIKE '%#{family_name_code}%' AND gender = ?", 
-      gender).map do |person|
+      gender).limit(20).map do |person|
         JSON.parse(person.to_json)
     end
   end

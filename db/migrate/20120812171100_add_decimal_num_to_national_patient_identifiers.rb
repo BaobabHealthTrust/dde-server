@@ -13,7 +13,7 @@ class AddDecimalNumToNationalPatientIdentifiers < ActiveRecord::Migration
       
       npid.decimal_num = num
       npid.save rescue nil
-    end
+    end rescue nil
   end
 
   def self.down

@@ -307,27 +307,6 @@ class PeopleController < ApplicationController
         flash[:error] = "Conflicting versions: new (#{params[:person][:version_number].last(12)}) vs. old (#{@person.version_number.last(12)}). NO changes have been saved!"
         handle_local_conflict(@person, @person.dup.reload) and return
       end
-=begin
-      #redundant as is handled by syncing
-      if success and Site.proxy?
-        @person.push_to_remote do |response, request, result| # this block is only called on error
-          case result
-          when Net::HTTPConflict
-            logger.error "Conflict while updating #{params[:id]} on remote: #{response}"
-            decoded_response = ActiveSupport::JSON.decode(response)
-            remote_person    = Person.initialize_from_attributes(decoded_response)
-            flash[:warning]  = "Conflicting versions: local (#{@person.version_number_was.last(12)}) vs. remote (#{remote_person.version_number.last(12)}). Your changes have been saved locally, so you may also resolve this conflict later."
-            handle_remote_conflict(@person, remote_person) and return
-          when :connection_refused
-            msg = "No connection to master service while updating #{params[:id]} on remote."
-            logger.error msg
-            flash[:warning] = msg
-          else
-            flash[:warning] = "An error occured while updating #{params[:id]} remotely: #{result.try(:message)}"
-          end
-        end
-      end
-=end
     end
 
     respond_to do |format|
