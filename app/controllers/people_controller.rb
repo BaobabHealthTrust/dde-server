@@ -691,6 +691,43 @@ class PeopleController < ApplicationController
     render :text => "done ...." and return 
   end
 
+  def push_demographics_to_traditional_authority
+    last_updated_datetime = MasterSyncTraditionalAuthority.last_updated_datetime(params[:district] , params[:traditional_authority])
+    people = MasterSyncTraditionalAuthority.people_to_push(params[:district],params[:traditional_authority],last_updated_datetime)
+    max_created_datetime = nil
+    person_hash = {}
+
+    (people || []).each do |person, i|
+      max_created_datetime = person.created_at.to_time if max_created_datetime.blank?
+      if person.created_at.to_time > max_created_datetime
+        max_created_datetime = person.created_at.to_time
+      end
+
+      person_hash[person.value] = {
+        "family_name" => person.family_name,
+        "given_name" => person.given_name,
+        "gender" => person.gender,
+        "birthdate" => person.birthdate,
+        "birthdate_estimated" => person.birthdate_estimated,
+        "data" => person.data ,
+        "creator_site_id" => person.creator_site_id,
+        "creator_id" => person.creator_id,
+        "version_number" => person.version_number,
+        "remote_version_number" => person.remote_version_number
+      }
+    end
+
+    MasterSyncTraditionalAuthority.update_transaction_end_datetime(params[:district],
+      params[:traditional_authority],max_created_datetime) unless max_created_datetime.blank?
+
+    render :text => person_hash.to_json and return
+  end
+
+  def acknowledge_traditional_authority_push
+    render :text => MasterSyncTraditionalAuthority.acknowledge_push(params[:district],
+      params[:traditional_authority]) and return
+  end
+
   protected
 
   
