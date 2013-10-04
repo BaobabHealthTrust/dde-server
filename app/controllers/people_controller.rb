@@ -693,7 +693,8 @@ class PeopleController < ApplicationController
 
   def push_demographics_to_traditional_authority
     last_updated_datetime = MasterSyncTraditionalAuthority.last_updated_datetime(params[:district] , params[:traditional_authority])
-    people = MasterSyncTraditionalAuthority.people_to_push(params[:district],params[:traditional_authority],last_updated_datetime)
+    people = MasterSyncTraditionalAuthority.people_to_push(params[:district],
+      params[:traditional_authority], params[:site_code], last_updated_datetime)
     max_created_datetime = nil
     person_hash = {}
 
