@@ -887,10 +887,11 @@ class PeopleController < ApplicationController
   def create_master_footprints(footprints)
     footprints = footprints.split(';')
     (footprints || []).each do |footprint|
+
       value = footprint.split(',')[0]
       site_id = footprint.split(',')[1]
-      application_name = footprint.split(',')[2].to_time
-      interaction_datetime  = footprint.split(',')[3]
+      application_name = footprint.split(',')[2]
+      interaction_datetime  = footprint.split(',')[3].to_time
 
       f = MasterFootprint.where("(interaction_datetime >= ? AND 
         interaction_datetime <=?) AND site_id = ? AND application_name = ? 
