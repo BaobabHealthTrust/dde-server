@@ -29,7 +29,7 @@ class FootPrintService
       LogErr.info("Sent footprints to master successfully .... #{ids.join(',')}")
     end
 
-    #RestClient.get("http://admin:admin@localhost:#{ProxyPort}/people/record_successful_sync")
+    RestClient.get("http://admin:admin@localhost:#{ProxyPort}/people/record_successful_footprint_push")
   end
 
   def self.compile_ids(current_ids)
