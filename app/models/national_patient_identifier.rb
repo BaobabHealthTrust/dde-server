@@ -48,7 +48,7 @@ class NationalPatientIdentifier < ActiveRecord::Base
   max = min + SITE_CONFIG[:npid_range].to_i
   @@possible_ids ||= (min..max).map
   
-  @@generated_ids ||= NationalPatientIdentifier.select('decimal_num').map(&:decimal_num)
+  @@generated_ids ||= NationalPatientIdentifier.select('decimal_num').map(&:decimal_num) rescue nil
   @@last_id = nil
   @@last_id ||= NationalPatientIdentifier.last.id rescue nil
 
