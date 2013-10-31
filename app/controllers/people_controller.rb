@@ -591,11 +591,14 @@ class PeopleController < ApplicationController
       site_code = params['site_code']
       received_file = params['file']
       filename = received_file['file_name']
-      fprints = params['footprints']
+      footprints = JSON.parse(params['footprints'])
 
       `touch #{Rails.root}/footprints/#{filename}`
       l = Logger.new(Rails.root.join("footprints",filename))
-      l.info "#{fprints}"
+      footprints.each do |footprint|
+        l.info "#{footprint}"
+      end
+
 
       batch_info = {}
 
@@ -604,10 +607,10 @@ class PeopleController < ApplicationController
       batch_info[:file_size] = file_info[1]
 
       if batch_info[:check_sum].to_i == received_file['check_sum'].to_i
-        create_master_footprints(fprints)
+        create_master_footprints(footprints)
         render :text => "done ..." and return
       else
-        raise "NO ....#{fprints.length}...... #{batch_info[:file_size].to_s} >>>>>>>>>>>>>>>> #{received_file['file_size'].to_s}"
+        raise "NO ....#{footprints.length}...... #{batch_info[:file_size].to_s} >>>>>>>>>>>>>>>> #{received_file['file_size'].to_s}"
       end
     end
   end
@@ -689,6 +692,54 @@ class PeopleController < ApplicationController
     end
     
     render :text => "done ...." and return 
+  end
+
+  def push_footprints_to_master
+    if Site.proxy?
+      footprints = Footprint.find(params[:footprint_ids].split(','))
+      filename = Site.current_code + Time.now().strftime('%Y%m%d%H%M%S') + '.txt'
+      `touch #{Rails.root}/footprints/#{filename}`
+      l = Logger.new(Rails.root.join("footprints",filename))
+      f = []
+      footprints.each do |footprint|
+        l.info "#{footprint.to_json}"
+        f << footprint.to_json
+      end
+   
+      batch_info = {}
+      file_info = `cksum #{Rails.root}/footprints/#{filename}`.split(' ')
+      batch_info[:check_sum] = file_info[0]
+      batch_info[:file_size] = file_info[1]
+      batch_info[:file_name] = filename
+
+      footprints_params = {'footprints' => f.to_json}
+      footprints_params.merge!('file' => batch_info)
+      footprints_params.merge!('site_code' => Site.current_code)
+
+      uri = "http://#{dde_master_user}:#{dde_master_password}@#{dde_master_uri}/people/create_footprint/"
+      RestClient.post(uri,footprints_params)
+      render :text => "footprints sent to master" and return
+    end     
+  end
+     
+  def footprints_to_push
+    if Site.proxy?
+      failed_sync = FootprintTracker.where("start_datetime IS NOT NULL
+        AND end_datetime IS NULL").minimum(:start_datetime)
+
+      last_sync = FootprintTracker.where("start_datetime IS NOT NULL
+        AND end_datetime IS NOT NULL").maximum(:end_datetime) if failed_sync.blank?
+
+      if not failed_sync.blank?
+        footprints = Footprint.where("created_at <= ?",failed_sync).order(:id).map(&:id)
+      elsif not last_sync.blank?
+        footprints = Footprint.where("created_at > ?",last_sync).order(:id).map(&:id)
+      else
+        footprints = Footprint.order(:id).map(&:id)
+      end
+    end
+
+    render :text => footprints.sort.to_json
   end
 
   def push_demographics_to_traditional_authority
