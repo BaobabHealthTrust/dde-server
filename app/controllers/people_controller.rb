@@ -696,6 +696,16 @@ class PeopleController < ApplicationController
 
   def push_footprints_to_master
     if Site.proxy?
+      
+      failed_sync = FootprintTracker.where("start_datetime IS NOT NULL
+        AND end_datetime IS NULL").minimum(:start_datetime)
+
+      if failed_sync.blank?
+        footprint_tracker = FootprintTracker.new()
+        footprint_tracker.start_datetime = Time.now()
+        footprint_tracker.save
+      end
+
       footprints = Footprint.find(params[:footprint_ids].split(','))
       filename = Site.current_code + Time.now().strftime('%Y%m%d%H%M%S') + '.txt'
       `touch #{Rails.root}/footprints/#{filename}`
@@ -740,6 +750,15 @@ class PeopleController < ApplicationController
     end
 
     render :text => footprints.sort.to_json
+  end
+
+  def record_successful_footprint_push
+    if Site.proxy?
+      footprint_tracker = FootprintTracker.where("start_datetime IS NOT NULL AND end_datetime IS NULL").first
+      footprint_tracker.end_datetime = Time.now()
+      footprint_tracker.save
+    end
+    render :text => 'done ...' and return
   end
 
   def push_demographics_to_traditional_authority

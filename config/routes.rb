@@ -40,7 +40,7 @@ DdeServer::Application.routes.draw do
            :replace_national_id, :post_back_person, :record_sync_starttime, 
            :find_demographics, :create_footprint, :push_footprints,:create_for_sub_proxy,
            :push_demographics_to_traditional_authority,:acknowledge_traditional_authority_push,
-           :footprints_to_push, :push_footprints_to_master
+           :footprints_to_push, :push_footprints_to_master, :record_successful_footprint_push
            
 
       get :find, :sync_demographics_with_master, :sync_demographics_with_proxy, 
@@ -49,7 +49,7 @@ DdeServer::Application.routes.draw do
           :reassign_identication, :post_back_person, :record_sync_starttime, 
           :find_demographics, :create_footprint, :push_footprints,:create_for_sub_proxy,
           :push_demographics_to_traditional_authority,:acknowledge_traditional_authority_push,
-          :footprints_to_push, :push_footprints_to_master
+          :footprints_to_push, :push_footprints_to_master, :record_successful_footprint_push
     end
   end
 
