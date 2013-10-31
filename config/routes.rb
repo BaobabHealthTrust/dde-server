@@ -39,13 +39,17 @@ DdeServer::Application.routes.draw do
            :demographics_to_sync, :master_people_to_sync, :record_successful_sync,
            :replace_national_id, :post_back_person, :record_sync_starttime, 
            :find_demographics, :create_footprint, :push_footprints,:create_for_sub_proxy,
-           :push_demographics_to_traditional_authority,:acknowledge_traditional_authority_push
+           :push_demographics_to_traditional_authority,:acknowledge_traditional_authority_push,
+           :footprints_to_push, :push_footprints_to_master
+           
+
       get :find, :sync_demographics_with_master, :sync_demographics_with_proxy, 
           :sync_demographics_with_client, :proxy_people_to_sync, :demographics_to_sync, 
           :master_people_to_sync, :record_successful_sync,:replace_national_id,
           :reassign_identication, :post_back_person, :record_sync_starttime, 
           :find_demographics, :create_footprint, :push_footprints,:create_for_sub_proxy,
-          :push_demographics_to_traditional_authority,:acknowledge_traditional_authority_push
+          :push_demographics_to_traditional_authority,:acknowledge_traditional_authority_push,
+          :footprints_to_push, :push_footprints_to_master
     end
   end
 
