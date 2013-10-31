@@ -20,7 +20,6 @@ class FootPrintService
   end  
 
   def self.send_footprints_file(file)
-
     (file || {}).each do |key,ids|
       param = "footprint_ids=#{ids.join(',')}"
       uri = "http://admin:admin@localhost:#{ProxyPort}/people/push_footprints_to_master?#{param}"
@@ -41,7 +40,7 @@ class FootPrintService
     ids = []
 
     (current_ids.sort || []).each do |footprint_id|
-      if (footprint_ids_batch[count].length < 101) 
+      if (footprint_ids_batch[count].length < 100)
         ids << footprint_id                                             
         footprint_ids_batch[count] = ids                                         
       else                                         
