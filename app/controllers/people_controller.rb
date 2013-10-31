@@ -589,6 +589,7 @@ class PeopleController < ApplicationController
       render :text => "foot print created ...." and return
     else
       site_code = params['site_code']
+      site_id = Site.find_by_code(site_code).id
       received_file = params['file']
       filename = received_file['file_name']
       footprints = JSON.parse(params['footprints'])
@@ -599,7 +600,6 @@ class PeopleController < ApplicationController
         l.info "#{footprint}"
       end
 
-
       batch_info = {}
 
       file_info = `cksum #{Rails.root}/footprints/#{filename}`.split(' ')
@@ -607,7 +607,7 @@ class PeopleController < ApplicationController
       batch_info[:file_size] = file_info[1]
 
       if batch_info[:check_sum].to_i == received_file['check_sum'].to_i
-        create_master_footprints(footprints)
+        create_master_footprints(footprints,site_id)
         render :text => "done ..." and return
       else
         raise "NO ....#{footprints.length}...... #{batch_info[:file_size].to_s} >>>>>>>>>>>>>>>> #{received_file['file_size'].to_s}"
@@ -935,14 +935,12 @@ class PeopleController < ApplicationController
 
   end
 
-  def create_master_footprints(footprints)
-    footprints = footprints.split(';')
+  def create_master_footprints(footprints,site_id)
     (footprints || []).each do |footprint|
-
-      value = footprint.split(',')[0]
-      site_id = footprint.split(',')[1]
-      application_name = footprint.split(',')[2]
-      interaction_datetime  = footprint.split(',')[3].to_time
+      footprint_obj = JSON.parse(footprint)
+      value = footprint_obj['footprint']['value']
+      application_name = footprint_obj['footprint']['application_name']
+      interaction_datetime  = footprint_obj['footprint']['created_at'].to_time
 
       f = MasterFootprint.where("(interaction_datetime >= ? AND 
         interaction_datetime <=?) AND site_id = ? AND application_name = ? 
