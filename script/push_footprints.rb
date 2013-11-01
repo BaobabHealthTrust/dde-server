@@ -14,9 +14,8 @@ class FootPrintService
     results = RestClient.get("http://admin:admin@localhost:#{ProxyPort}/people/footprints_to_push")
     current_ids = JSON.parse(results)
     footprint_ids_batch = self.compile_ids(current_ids)
-    puts footprint_ids_batch.inspect
     self.send_footprints_file(footprint_ids_batch) unless footprint_ids_batch.blank?
-    #puts "Sync completed ...."
+    puts "Footprint push  completed ..."
   end  
 
   def self.send_footprints_file(file)
