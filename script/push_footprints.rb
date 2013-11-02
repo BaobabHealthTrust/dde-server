@@ -3,9 +3,7 @@ require 'rest-client'
 require 'json'
 require 'rails'
 
-Modulepath = File.expand_path($PROGRAM_NAME)
-AppPath = Modulepath.gsub($PROGRAM_NAME,"")
-LogErr = Logger.new(File.join(AppPath,'log/footprints.log'))
+LogErr = Logger.new('/var/www/dde-server/log/push_footprints.log')
 ProxyPort = 3001
 
 class FootPrintService
