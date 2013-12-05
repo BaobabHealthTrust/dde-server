@@ -115,4 +115,36 @@ class SitesController < ApplicationController
     end
   end
 
+  def last_sync(site_code)
+    if Site.master?
+      site_name = Site.find_by_code(site_code).name rescue nil
+      return "Unknown Site" if site_name.blank?
+      complete_sync = nil
+      last_incomplete_sync = MasterSyncs.where("site_code = '#{site_code}'
+                                    AND created_date IS NOT NULL
+                                    AND updated_date IS NULL").
+                              order("created_date DESC").
+                              select("created_date").
+                              limit(1)
+
+      unless last_incomplete_sync.blank?
+           complete_sync = false
+           return site_name,complete_sync,last_incomplete_sync.first.created_date
+      else
+           last_sync = MasterSyncs.where("site_code = '#{site_code}'
+                                          AND created_date IS NOT NULL
+                                          AND updated_date IS NOT NULL").
+                                          order("updated_date DESC").
+                                          select("updated_date").
+                                          limit(1)
+           unless last_sync.blank?
+             complete_sync = true
+             return site_name,complete_sync,last_sync.first.updated_date
+           else
+             return site_name,complete_sync
+           end
+      end  
+    end
+  end
+
 end
