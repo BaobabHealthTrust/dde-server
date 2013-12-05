@@ -115,10 +115,12 @@ class SitesController < ApplicationController
     end
   end
 
-  def last_sync(site_code)
-    if Site.master?
+  def last_sync
+  
+    if Site.master? and params[:site_code]
+      site_code = params[:site_code]
       site_name = Site.find_by_code(site_code).name rescue nil
-      return "Unknown Site" if site_name.blank?
+      return "Unknown Site".to_json if site_name.blank?
       complete_sync = nil
       last_incomplete_sync = MasterSyncs.where("site_code = '#{site_code}'
                                     AND created_date IS NOT NULL
@@ -129,7 +131,7 @@ class SitesController < ApplicationController
 
       unless last_incomplete_sync.blank?
            complete_sync = false
-           return site_name,complete_sync,last_incomplete_sync.first.created_date
+           render :text => [site_name,complete_sync,last_incomplete_sync.first.created_date].to_json and return
       else
            last_sync = MasterSyncs.where("site_code = '#{site_code}'
                                           AND created_date IS NOT NULL
@@ -139,12 +141,17 @@ class SitesController < ApplicationController
                                           limit(1)
            unless last_sync.blank?
              complete_sync = true
-             return site_name,complete_sync,last_sync.first.updated_date
+             render :text => [site_name,complete_sync,last_sync.first.updated_date].to_json and return
            else
-             return site_name,complete_sync
+             render :text => [site_name,complete_sync].to_json and return
            end
       end  
     end
+  end
+
+  def site_codes
+    site_codes = Site.all.collect {|site| site.code}
+    render :text => site_codes.to_json and return
   end
 
 end

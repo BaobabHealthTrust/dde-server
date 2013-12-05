@@ -5,7 +5,7 @@ DdeServer::Application.routes.draw do
   resources :sites do
     collection do
       get :index_remote,:last_sync
-      post :last_sync
+      post :last_sync,:site_codes
     end
   end
 
