@@ -13,8 +13,9 @@ class SyncOuputService
        sync_output = RestClient.get("http://admin:admin@localhost:#{MasterPort}/sites/last_sync?site_code=#{code}")
        output = JSON.parse(sync_output)
        output_string = "Site : #{output[0]}"
-       output_string += " ### Complete Sync? : #{output[1]}" unless output[1].blank?
-       output_string += " ### Date : #{output[2]}" unless output[1].blank?
+       output_string += " ### Complete Sync? : #{output[1]}" unless output[1].nil?
+       output_string += " ### Never Synced Before" if output[1].nil?
+       output_string += " ### Date : #{output[2]}" unless output[1].nil?
        puts output_string
     end
   end
