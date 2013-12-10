@@ -72,7 +72,8 @@ class NpidRequest
     if self.count and self.count > 0
       last_number = nil
       site = Site.where(:code => self.site_code).first
-      ids = NationalPatientIdentifier.where('assigner_site_id = ? AND (pulled IS NULL OR pulled != 1)', site.id).limit(self.count)
+      ids = NationalPatientIdentifier.where('assigner_site_id = ? 
+        AND (pulled IS NULL OR pulled != 1)', site.id).shuffle[0..self.count]
       
       ids = (1 .. self.count).map do
         id = NationalPatientIdentifier.create!(
