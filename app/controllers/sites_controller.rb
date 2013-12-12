@@ -137,11 +137,11 @@ class SitesController < ApplicationController
                                           AND created_date IS NOT NULL
                                           AND updated_date IS NOT NULL").
                                           order("updated_date DESC").
-                                          select("updated_date").
+                                          select("updated_at").
                                           limit(1)
            unless last_sync.blank?
              complete_sync = true
-             render :text => [site_name,complete_sync,last_sync.first.updated_date].to_json and return
+             render :text => [site_name,complete_sync,last_sync.first.updated_at.strftime('%Y-%b-%d %H:%M:%S')].to_json and return
            else
              render :text => [site_name,complete_sync].to_json and return
            end
