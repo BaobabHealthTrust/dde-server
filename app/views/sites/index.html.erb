@@ -2,6 +2,7 @@
 
 <table class="table">
   <tr>
+    <th>#</th>
     <th>Name</th>
     <th>Code</th>
     <th>Annotations</th>
@@ -14,6 +15,7 @@
 
   <% @sites.each do |site| %>
     <tr>
+      <td><%= site.id %></td>
       <td><%= link_to site.name, site %></td>
       <td><%= site.code %></td>
       <td><%= site.annotations %></td>
