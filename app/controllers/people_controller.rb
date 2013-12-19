@@ -326,6 +326,47 @@ class PeopleController < ApplicationController
     end
   end
 
+  def update_demographics
+
+    national_id = params["person"]["data"]["patient"]["identifiers"]["national_id"]
+    npid = NationalPatientIdentifier.find_by_value(national_id)
+    person = npid.person
+    creator_site_id = person.creator_site_id
+    creator_id = person.creator_site_id
+    version_number = person.version_number
+    remote_version_number  = person.remote_version_number
+    value = npid.value
+    assigned_at = npid.assigned_at
+
+
+    person_hash = {'person' => {"family_name" => params['person']['data']['names']['family_name'],
+                                  "given_name" => params['person']['data']['names']['given_name'],
+                                  "gender" => params['person']['data']['gender'],
+                                  "birthdate" => params['person']['data']['birthdate'],
+                                  "birthdate_estimated" => params['person']['data']['birthdate_estimated'],
+                                  "data" => params['person']['data'],
+                                  "creator_site_id" => creator_site_id,
+                                  "creator_id" => creator_id,
+                                  "version_number" => version_number,
+                                  "remote_version_number" => remote_version_number}}
+
+      npid_hash = {'npid' => {"value" => value,
+                              "assigner_site_id" => creator_site_id,
+                              "assigned_at" => assigned_at }}
+
+      site_hash = {'site' => {"id" => creator_site_id }}
+
+      person_hash.merge!npid_hash
+
+      person_hash.merge!site_hash
+
+
+
+      @person = Person.find_or_initialize_from_attributes(person_hash.slice('person', 'npid', 'site'))
+      @person.save
+      render :text => "updated demographics" and return
+  end
+
   # DELETE /people/1
   # DELETE /people/1.xml
   def destroy
