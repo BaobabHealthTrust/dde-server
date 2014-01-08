@@ -578,7 +578,42 @@ class PeopleController < ApplicationController
       else
         people_ids = Person.where("creator_site_id <> ?",site_id).select(:id).order(:id).map(&:id)
         MasterSyncs.check_for_valid_start_date(site_code) unless people_ids.blank?
-        render :text => people_ids.sort.to_json and return
+        
+        #render :text => people_ids.sort.to_json and return
+      site_code = params[:site_code]
+      people_ids = Person.where("creator_site_id <> ?",site_code).select(:id).order(:id).map(&:id)
+      filename = site_code.to_s + Time.now().strftime('%Y%m%d%H%M%S') + 'M.txt'
+      `touch #{Rails.root}/initial_sync/#{filename}`
+      l = Logger.new(Rails.root.join("initial_sync",filename))
+      p = []
+      count = 0
+      
+      people_ids.each do |person_id|
+           if count > 1000
+             filename = site_code.to_s + Time.now().strftime('%Y%m%d%H%M%S') + 'M.txt'
+             `touch #{Rails.root}/initial_sync/#{filename}`
+             l = Logger.new(Rails.root.join("initial_sync",filename))
+             p = []
+             count = 0
+             batch_info = {}
+
+             file_info = `cksum #{Rails.root}/initial_sync/#{filename}`.split(' ')
+             batch_info[:check_sum] = file_info[0]
+             batch_info[:file_size] = file_info[1]
+             batch_info[:file_name] = filename
+
+             person_ids = {'person_ids' => p.to_json}
+
+             render :text => person_ids.to_json and return
+           end
+
+           l.info "#{person_id.to_json}"
+           p << person_id.to_json
+           count += 1
+           
+      end
+
+      
       end
     end
   end
