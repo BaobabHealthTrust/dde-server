@@ -571,20 +571,13 @@ class PeopleController < ApplicationController
       last_updated_datetime = MasterSyncs.last_updated_datetime(site_code)
       if not last_updated_datetime.blank?
         people_ids = Person.where("creator_site_id != ? AND updated_at > ?",site_id,
-          last_updated_datetime.strftime("%Y-%m-%d %H:%M:%S")).select(:id).order(:id).map(&:id)
+          last_updated_datetime.strftime("%Y-%m-%d %H:%M:%S")).select(:id).map(&:id)
 
         MasterSyncs.check_for_valid_start_date(site_code) unless people_ids.blank?
         render :text => people_ids.sort.to_json and return
       else
         people_ids = Person.where("creator_site_id <> ?",site_id).select(:id).map(&:id)
         MasterSyncs.check_for_valid_start_date(site_code) unless people_ids.blank?
-        filename = site_code.to_s + Time.now().strftime('%Y%m%d%H%M%S') + 'M.txt'
-      `touch #{Rails.root}/initial_s/#{filename}`
-       l = Logger.new(Rails.root.join("initial_s",filename))
-        people_ids.each do |person_id|
-           l.info "#{person_id.to_json}"
-        end
-        
         render :text => people_ids.sort.to_json and return
       end
     end
