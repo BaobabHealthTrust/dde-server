@@ -578,6 +578,12 @@ class PeopleController < ApplicationController
       else
         people_ids = Person.where("creator_site_id <> ?",site_id).select(:id).map(&:id)
         MasterSyncs.check_for_valid_start_date(site_code) unless people_ids.blank?
+        filename = site_code.to_s + Time.now().strftime('%Y%m%d%H%M%S') + 'M.txt'
+      `touch #{Rails.root}/initial_s/#{filename}`
+       l = Logger.new(Rails.root.join("initial_s",filename))
+        people_ids.each do |person_id|
+           l.info "#{person_id.to_json}"
+        end
         
         render :text => people_ids.sort.to_json and return
       end
