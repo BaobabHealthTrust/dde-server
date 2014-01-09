@@ -1,5 +1,6 @@
 require 'rubygems'
 require 'rest-client'
+require 'restclient'
 require 'json'
 require 'rails'
 
@@ -20,7 +21,8 @@ class SyncService
   end
 
   def self.get_demographics_from_master
-    results = RestClient.get("http://admin:admin@localhost:#{ProxyPort}/people/master_people_to_sync")
+    @url = "http://admin:admin@localhost:#{ProxyPort}/people/master_people_to_sync"
+    results = RestClient::Request.execute(:method => :get, :url => @url, :timeout => 90000000)
     current_ids = JSON.parse(results) rescue JSON.parse(results.gsub('"',''))
 
     (self.compile_ids(current_ids) || {}).each do |key,ids|
