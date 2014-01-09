@@ -576,7 +576,7 @@ class PeopleController < ApplicationController
         MasterSyncs.check_for_valid_start_date(site_code) unless people_ids.blank?
         render :text => people_ids.sort.to_json and return
       else
-        people_ids = Person.where("creator_site_id <> ?",site_id).select(:id).order(:id).map(&:id)
+        people_ids = Person.where("creator_site_id <> ?",site_id).select(:id).map(&:id)
         MasterSyncs.check_for_valid_start_date(site_code) unless people_ids.blank?
         
         render :text => people_ids.sort.to_json and return
