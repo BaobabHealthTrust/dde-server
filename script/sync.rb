@@ -1,6 +1,5 @@
 require 'rubygems'
 require 'rest-client'
-require 'restclient'
 require 'json'
 require 'rails'
 
@@ -10,7 +9,8 @@ ProxyPort = 3001
 class SyncService
 
   def self.get_available_ids
-    results = RestClient.get("http://admin:admin@localhost:#{ProxyPort}/people/proxy_people_to_sync")
+    @url = "http://admin:admin@localhost:#{ProxyPort}/people/proxy_people_to_sync"
+    results = RestClient::Request.execute(:method => :get, :url => @url, :timeout => 90000000)
     current_ids = JSON.parse(results)
 
     patients_ids_batch = self.compile_ids(current_ids)
@@ -27,13 +27,15 @@ class SyncService
 
     (self.compile_ids(current_ids) || {}).each do |key,ids|
       param = "patient_ids=#{ids.join(',')}"
-      RestClient.get("http://admin:admin@localhost:#{ProxyPort}/people/sync_demographics_with_proxy?#{param}")
+      @url = "http://admin:admin@localhost:#{ProxyPort}/people/sync_demographics_with_proxy?#{param}"
+      RestClient::Request.execute(:method => :get, :url => @url, :timeout => 90000000)
       puts "Got from master successfully .... #{ids.join(',')}"
       LogErr.info("Got from master successfully .... #{ids.join(',')}")
     end
     
     unless current_ids.blank?
-      RestClient.get("http://admin:admin@localhost:#{ProxyPort}/people/record_successful_sync?update_master=true")
+      @url = "http://admin:admin@localhost:#{ProxyPort}/people/record_successful_sync?update_master=true"
+      RestClient::Request.execute(:method => :get, :url => @url, :timeout => 90000000)
     end
   end
 
@@ -43,12 +45,13 @@ class SyncService
       param = "patient_ids=#{ids.join(',')}"
       uri = "http://admin:admin@localhost:#{ProxyPort}/people/sync_demographics_with_master?#{param}"
       puts "url #{uri}"
-      RestClient.get(uri)
+      RestClient::Request.execute(:method => :get, :url => uri, :timeout => 90000000)
       puts "Send to master successfully .... #{ids.join(',')}"
       LogErr.info("Send to master successfully .... #{ids.join(',')}")
     end
 
-    RestClient.get("http://admin:admin@localhost:#{ProxyPort}/people/record_successful_sync")
+    @url = "http://admin:admin@localhost:#{ProxyPort}/people/record_successful_sync"
+    RestClient::Request.execute(:method => :get, :url => @url, :timeout => 90000000)
   end
 
   def self.compile_ids(current_ids)
