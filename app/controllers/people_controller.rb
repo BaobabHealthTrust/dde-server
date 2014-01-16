@@ -55,7 +55,7 @@ class PeopleController < ApplicationController
       birthdate = Date.new(Date.today.year - params[:person]["age_estimate"].to_i, 7, 1)
     else                                                                     
       year = params[:person]["birth_year"].to_i                              
-      month = params[:person]["birth_month"].to_i                            
+      month = params[:person]["birth_month"]                           
       day = params[:person]["birth_day"].to_i                                
                                                                               
       month_i = (month || 0).to_i                                            
