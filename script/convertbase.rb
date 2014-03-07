@@ -3,7 +3,7 @@ require 'rest-client'
 require 'json'
 require 'rails'
 class ConvertBase
-def converttobase30
+def self.converttobase30
 ref_ids = RefId.where(:trigesimal_value => nil).limit(500000)
     ref_ids.each do |ref_id|
       begin
