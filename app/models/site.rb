@@ -19,6 +19,9 @@ class Site < ActiveRecord::Base
   has_many :national_patient_identifiers,
       :foreign_key => :assigner_site_id
 
+
+  self.per_page = 10
+
   def available_npids
     if SITE_CONFIG[:mode] == 'master'
       self.national_patient_identifiers.where(:pulled => nil)
