@@ -3,8 +3,7 @@ class SitesController < ApplicationController
   # GET /sites
   # GET /sites.xml
   def index
-    #@sites = Site.all
-    @sites = Site.page(params[:page])
+    @sites = Site.all
 
     respond_to do |format|
       format.html # index.html.erb

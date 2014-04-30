@@ -23,7 +23,7 @@ class NpidAutoGenerationsController < ApplicationController
   end
 
   def index
-    @npid_settings = NpidAutoGeneration.page(params[:page]).all
+    @npid_settings = NpidAutoGeneration.all
 
     if Site.master?
       npid_set_sites = NpidAutoGeneration.count
