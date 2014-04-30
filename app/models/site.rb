@@ -20,7 +20,6 @@ class Site < ActiveRecord::Base
       :foreign_key => :assigner_site_id
 
 
-  self.per_page = 10
 
   def available_npids
     if SITE_CONFIG[:mode] == 'master'
