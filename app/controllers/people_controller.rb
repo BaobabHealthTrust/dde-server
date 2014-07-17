@@ -889,8 +889,6 @@ class PeopleController < ApplicationController
          LegacyNationalIds.find_or_create_by_value_and_person_id(:value => old_national_id, :person_id => @person.id)
         end
 
-        NationalIdSite.find_or_create_by_national_id_and_site_id(:national_id => person_obj['npid']['value'],
-                               :site_id => person_obj['person']['creator_site_id'])
         created_people << @person
       end
     end
