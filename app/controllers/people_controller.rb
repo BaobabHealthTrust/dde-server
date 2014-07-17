@@ -183,7 +183,6 @@ class PeopleController < ApplicationController
   # GET /people/new.xml
   def new
     @person = Person.new
-
     respond_to do |format|
       format.html # new.html.erb
       format.xml  { render :xml => @person }
@@ -854,13 +853,13 @@ class PeopleController < ApplicationController
     created_people = []
     (people).each do |person|
       person_obj = JSON.parse(person)
-      if person_obj['npid'].blank?
-        logger = Logger.new(Rails.root.join("log",'syncing_error.txt'))
-        logger.error "#{person_obj['person']['data']['names']['family_name']},
-                      #{person_obj['person']['data']['names']['given_name']},
-                      #{person_obj['person']['data']['gender']}"
+      
+      if person_obj.blank? || person_obj['person'].blank? || person_obj['npid'].blank? || person_obj['person']['data'].blank? || person_obj['person']['data']['names']['family_name'].blank? || person_obj['person']['data']['names']['given_name'].blank? || person_obj['person']['data']['gender'].blank?    
         next
       end
+
+
+
       person_hash = {'person' => {"family_name" => person_obj['person']['data']['names']['family_name'],
                                   "given_name" => person_obj['person']['data']['names']['given_name'],
                                   "gender" => person_obj['person']['data']['gender'],
