@@ -10,4 +10,7 @@ module ApplicationHelper
     content_tag :div, msgs.join.html_safe, :class => 'flash'
   end
 
+  def app_version
+      `git describe`.gsub(/\n/, '')
+  end
 end
