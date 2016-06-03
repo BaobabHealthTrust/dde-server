@@ -9,6 +9,8 @@ config/email.yml
 *.swp
 *.swo
 *.txt
+*.lock
+*.log
 notes
 doc
 development.sql
